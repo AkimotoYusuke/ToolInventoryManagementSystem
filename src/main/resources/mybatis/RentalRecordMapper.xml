@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.RentalRecordMapper">
+
+	<select id="selectLatestByToolId" resultType="RentalRecord">
+		SELECT
+			rental_records.id, rental_records.employee_id, rental_records.tool_id,
+			rental_records.borrowed_at, rental_records.returned_at,
+			employees.name AS employee_name
+		FROM rental_records
+		JOIN employees
+		ON rental_records.employee_id = employees.id
+		WHERE rental_records.tool_id = #{toolId}
+		ORDER BY rental_records.borrowed_at DESC
+		LIMIT 0, #{num}
+	</select>
+
+	<insert id="addBorrowedRecord" parameterType="RentalRecord" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO rental_records (employee_id, tool_id, borrowed_at)
+		VALUES (#{employeeId}, #{toolId}, NOW())
+	</insert>
+
+	<update id="addReturnedRecord" parameterType="int">
+		UPDATE rental_records
+		SET returned_at = NOW()
+		WHERE tool_id = #{toolId}
+		AND returned_at IS NULL
+	</update>
+
+	<select id="countBorrowingByEmployeeId" resultType="int" parameterType="int">
+		SELECT COUNT(*) FROM rental_records
+		WHERE employee_id = #{employeeId}
+		AND returned_at IS NULL
+	</select>
+
+	<select id="selectBorrowingRecordByToolId" resultType="RentalRecord" parameterType="int">
+		SELECT * FROM rental_records
+		WHERE tool_id = #{toolId}
+		AND returned_at IS NULL
+	</select>
+
+</mapper>

@@ -1,0 +1,20 @@
+package com.example.app.service;
+
+import java.util.List;
+
+import com.example.app.domain.RentalRecord;
+
+public interface RentalRecordService {
+
+	// ある工具の最新の出庫履歴
+	List<RentalRecord> getLatestRentalRecordListByToolId(int toolId, int num) throws Exception;
+	// 工具を出庫する
+	void borrowTool(int employeeId, int toolId) throws Exception;
+	// 工具を入庫する
+	void returnTool(int toolId) throws Exception;
+	// 依頼者が工具を借りられる状態か判別する
+	boolean isAbleToBorrow(int employeeId, int limitation) throws Exception;
+	// 本人による返却か確認する
+	boolean byAuthenticatedEmployee(int employeeId, int toolId) throws Exception;
+
+}

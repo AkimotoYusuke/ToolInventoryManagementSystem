@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th= "http://www.thymeleaf.org">
+<head th:replace="~{admin/parts/common :: html_head()}"></head>
+<body>
+  <header th:replace="~{admin/parts/common :: header()}"></header>
+  
+  <div class="container">
+    <h1 class="my-4 h3">従業員リスト</h1>
+
+    <div class="row">
+      <div class="col-md-12">
+        <p>
+          <a th:href="@{/admin/employee/add}" class="btn btn-primary">従業員の追加</a>
+          <a th:href="@{/admin/tool/list}" class="btn btn-light">工具リスト</a>
+        </p>
+        
+        <div class="alert alert-success" th:if="${message}">
+           [[${message}]]
+        </div>
+      
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>ログインID</th>
+              <th>氏名</th>
+              <th>権限</th>
+              <th>編集</th>
+              <th>削除</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="employee : ${employeeList}">
+              <td>[[${employee.loginId}]]</td>
+              <td>[[${employee.name}]]</td>
+              <td>[[${employee.authorityType.name}]]</td>
+              <td><a th:href="@{/admin/employee/edit/{id}(id=${employee.id})}" class="btn btn-warning btn-sm">編集</a></td>
+              <td>
+				  <a th:if="${(employee.id == session.loginStatus.id)}">ログイン中の管理者は削除不可</a>
+				  <a th:if="${(employee.id != session.loginStatus.id)}" th:href="@{/admin/employee/delete/{id}(id=${employee.id})}" class="btn btn-danger btn-sm delete">削除</a>
+			  </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div th:replace="~{widget/pagination :: pagination(${totalPages}, ${currentPage}, 'admin/employee/list')}"></div>
+      </div><!-- /.col- -->
+    </div><!-- /.row -->
+  </div><!-- /.container -->
+  
+  <th:block th:replace="~{admin/parts/common :: javascripts()}"></th:block>
+</body>
+</html>

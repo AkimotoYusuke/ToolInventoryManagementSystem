@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+<link th:href="@{/css/style.css}" rel="stylesheet">
+<title>工具入出庫依頼</title>
+</head>
+<body>
+  <header>
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="">工具入出庫依頼</a>
+        <ul class="navbar-nav">
+          <li class="nav-item text-light">[[${session.loginStatus.name}]] [<a th:href="@{/logout}">ログアウト</a>]</li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  
+  <div class="container">
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div th:if="${message != null}" class="alert alert-success">[[${message}]]</div>
+      
+        <h2 class="h4">出庫中の工具</h2>
+        <div th:if="${#lists.size(borrowingList) < 1}" class="alert alert-primary">出庫中の工具はありません</div>
+        <table th:if="${#lists.size(borrowingList) >= 1}" class="table table-bordered">
+          <thead>
+            <tr>
+			  <th>管理番号</th>
+              <th>品名</th>
+              <th>詳細情報</th>
+              <th>メーカー</th>
+              <th>入庫依頼</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="tool : ${borrowingList}">
+			  <td>[[${tool.mgmtId}]]</td>
+              <td>[[${tool.name}]]</td>
+              <td>[[${tool.detailInfo}]]</td>
+              <td>[[${tool.makerType.name}]]</td>
+              <td><a th:href="@{/rental/return/{id}(id=${tool.id})}" class="btn btn-danger btn-sm">入庫依頼</a></td>
+            </tr>
+          </tbody>
+        </table>
+  
+        <h2 class="h4 mt-5">出庫可能な工具</h2>
+        <div th:if="${#lists.size(toolList) < 1}" class="alert alert-danger">出庫可能な工具はありません</div>
+        <table th:if="${#lists.size(toolList) >= 1}"  class="table table-bordered">
+          <thead>
+            <tr>
+              <th>管理番号</th>
+              <th>品名</th>
+              <th>詳細情報</th>
+              <th>メーカー</th>
+              <th>出庫依頼</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="tool : ${toolList}">
+              <td>[[${tool.mgmtId}]]</td>
+              <td>[[${tool.name}]]</td>
+              <td>[[${tool.detailInfo}]]</td>
+              <td>[[${tool.makerType.name}]]</td>
+              <td><a th:href="@{/rental/borrow/{id}(id=${tool.id})}" class="btn btn-success btn-sm">出庫依頼</a></td>
+            </tr>
+          </tbody>
+        </table>
+  
+        <div th:replace="~{widget/pagination :: pagination(${totalPages}, ${currentPage}, 'rental')}"></div>
+      </div><!-- /.col- -->
+    </div><!-- /.row -->
+  </div><!-- /.container -->
+  <script src="js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
