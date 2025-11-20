@@ -14,7 +14,9 @@
 			tools.id, tools.mgmt_id, tools.name,
 			tools.detail_info, tools.created, tools.status,
 			tools.maker_type_id, maker_types.name AS maker_type_name,
-			tools.rental_id
+			tools.rental_id,
+			tools.reserved,
+			tools.reserved_employee_id
 		FROM tools
 		JOIN maker_types
 		ON tools.maker_type_id = maker_types.id
@@ -65,6 +67,12 @@
 		WHERE status = 'ACT'
 	</select>
 	
+	<select id="selectReservedByEmployeeId" parameterType="int" resultMap="tool">
+    	<include refid="selectAndJoin" />
+		WHERE tools.reserved_employee_id = #{employeeId}
+		ORDER BY tools.id ASC
+	</select>
+	
 	<select id="selectBorrowingByEmployeeId" parameterType="int" resultMap="tool">
     	<include refid="selectAndJoin" />
 		LEFT JOIN rental_records
@@ -77,6 +85,7 @@
 		<include refid="selectAndJoin" />
 		WHERE tools.status = 'ACT'
 		AND rental_id IS NULL
+		AND reserved = 0
 		ORDER BY tools.mgmt_id
 		LIMIT #{offset}, #{num}
 	</select>
@@ -85,7 +94,20 @@
 		SELECT COUNT(*) FROM tools
 		WHERE status = 'ACT'
 		AND rental_id IS NULL
+		AND reserved = 0
 	</select>
+	
+	<update id="editReserved">
+		UPDATE tools
+		SET reserved = 1, reserved_employee_id = #{employeeId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="editCanceled">
+		UPDATE tools
+		SET reserved = 0, reserved_employee_id = null
+		WHERE id = #{id}
+	</update>
 
 	<update id="addBorrowedRecord">
 		UPDATE tools

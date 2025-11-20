@@ -24,28 +24,51 @@
       <div class="col-md-12">
         <div th:if="${message != null}" class="alert alert-success">[[${message}]]</div>
       
-        <h2 class="h4">出庫中の工具</h2>
-        <div th:if="${#lists.size(borrowingList) < 1}" class="alert alert-primary">出庫中の工具はありません</div>
-        <table th:if="${#lists.size(borrowingList) >= 1}" class="table table-bordered">
-          <thead>
-            <tr>
+		        <h2 class="h4">出庫中の工具</h2>
+		        <div th:if="${#lists.size(borrowingList) < 1}" class="alert alert-primary">出庫中の工具はありません</div>
+		        <table th:if="${#lists.size(borrowingList) >= 1}" class="table table-bordered">
+		          <thead>
+		            <tr>
+					  <th>管理番号</th>
+		              <th>品名</th>
+		              <th>詳細情報</th>
+		              <th>メーカー</th>
+		              <th>入庫依頼</th>
+		            </tr>
+		          </thead>
+		          <tbody>
+		            <tr th:each="tool : ${borrowingList}">
+					  <td>[[${tool.mgmtId}]]</td>
+		              <td>[[${tool.name}]]</td>
+		              <td>[[${tool.detailInfo}]]</td>
+		              <td>[[${tool.makerType.name}]]</td>
+		              <td><a th:href="@{/rental/return/{id}(id=${tool.id})}" class="btn btn-danger btn-sm">入庫依頼</a></td>
+		            </tr>
+		          </tbody>
+		        </table>
+		
+		<h2 class="h4">予約済の工具</h2>
+		<div th:if="${#lists.size(reservedList) < 1}" class="alert alert-primary">予約済の工具はありません</div>
+		<table th:if="${#lists.size(reservedList) >= 1}" class="table table-bordered">
+		  <thead>
+		    <tr>
 			  <th>管理番号</th>
-              <th>品名</th>
-              <th>詳細情報</th>
-              <th>メーカー</th>
-              <th>入庫依頼</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr th:each="tool : ${borrowingList}">
+		      <th>品名</th>
+		      <th>詳細情報</th>
+		      <th>メーカー</th>
+		      <th>入庫依頼</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr th:each="tool : ${reservedList}">
 			  <td>[[${tool.mgmtId}]]</td>
-              <td>[[${tool.name}]]</td>
-              <td>[[${tool.detailInfo}]]</td>
-              <td>[[${tool.makerType.name}]]</td>
-              <td><a th:href="@{/rental/return/{id}(id=${tool.id})}" class="btn btn-danger btn-sm">入庫依頼</a></td>
-            </tr>
-          </tbody>
-        </table>
+		      <td>[[${tool.name}]]</td>
+		      <td>[[${tool.detailInfo}]]</td>
+		      <td>[[${tool.makerType.name}]]</td>
+		      <td><a th:href="@{/rental/cancel/{id}(id=${tool.id})}" class="btn btn-danger btn-sm">キャンセル</a></td>
+		    </tr>
+		  </tbody>
+		</table>
   
         <h2 class="h4 mt-5">出庫可能な工具</h2>
         <div th:if="${#lists.size(toolList) < 1}" class="alert alert-danger">出庫可能な工具はありません</div>
@@ -65,7 +88,7 @@
               <td>[[${tool.name}]]</td>
               <td>[[${tool.detailInfo}]]</td>
               <td>[[${tool.makerType.name}]]</td>
-              <td><a th:href="@{/rental/borrow/{id}(id=${tool.id})}" class="btn btn-success btn-sm">出庫依頼</a></td>
+              <td><a th:href="@{/rental/reserve/{id}(id=${tool.id})}" class="btn btn-success btn-sm">予約</a></td>
             </tr>
           </tbody>
         </table>

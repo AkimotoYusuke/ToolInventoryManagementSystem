@@ -19,12 +19,18 @@ public interface ToolMapper {
 	List<Tool> selectLimited(@Param("offset") int offset, @Param("num") int num) throws Exception;
     long countActive() throws Exception;
     
+    // ある依頼者の予約済のリストを取得
+    List<Tool> selectReservedByEmployeeId(int employeeId) throws Exception;
     // ある依頼者の出庫中のリストを取得
     List<Tool> selectBorrowingByEmployeeId(int employeeId) throws Exception;
     // 出庫可能な工具のリストを取得(LIMIT句あり)
     List<Tool> selectBorrowableWithOffset(@Param("offset") int offset, @Param("num") int num) throws Exception;
     // 出庫可能な工具の数を取得(ページ番号用)
     long countBorrowable() throws Exception;
+    // 工具に「予約済」と「予約者」を記録
+    void editReserved(@Param("id") int toolId, @Param("employeeId") int employeeId) throws Exception;
+    // 工具に「キャンセル」の為、「予約済」と「予約者」を削除
+    void editCanceled(int toolId) throws Exception;
     // 工具に「出庫中」を記録
     void addBorrowedRecord(@Param("id") int toolId, @Param("rentalId") int rentalId) throws Exception;
     // 工具に「入庫済」を記録

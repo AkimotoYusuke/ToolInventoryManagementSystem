@@ -27,6 +27,8 @@ public class Tool {
 	private LocalDateTime created;
 	private String status;
 
+	private Boolean reserved;
+	private int reservedEmployeeId;
 	private Integer rentalId;
-
+	
 }

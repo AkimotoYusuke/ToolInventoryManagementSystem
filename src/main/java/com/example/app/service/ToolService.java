@@ -17,13 +17,15 @@ public interface ToolService {
 	List<Tool> getToolListPerPage(int page, int numPerPage) throws Exception;
     int getTotalPages(int numPerPage) throws Exception;
     
-    // ある生徒が現在借りている教材の取得
+    // ある依頼者が現在予約済工具の取得
+    List<Tool> getReservedToolList(int employeeId) throws Exception;
+    // ある依頼者が現在出庫済工具の取得
     List<Tool> getBorrowingToolList(int employeeId) throws Exception;
-    // 貸し出し可能な教材のリスト(ページごと)
+    // 出庫可能な工具のリスト(ページごと)
     List<Tool> getBorrowableToolListPerPage(int page, int numPerPage) throws Exception;
-    // 教材が貸し出し可能な教材のページ数
+    // 工具が出庫可能な工具のページ数
     int getTotalBorrowableToolPages(int numPerPage) throws Exception;
-    // 教材が貸し出し可能か否か判別
+    // 工具が出庫可能か否か判別
     boolean isBorrowable(Integer toolId) throws Exception;
 
 	List<MakerType> getMakerTypeList() throws Exception;

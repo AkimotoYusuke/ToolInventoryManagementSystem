@@ -23,7 +23,17 @@ public class RentalRecordServiceImpl implements RentalRecordService {
 	public List<RentalRecord> getLatestRentalRecordListByToolId(int toolId, int num) throws Exception {
 		return rentalRecordMapper.selectLatestByToolId(toolId, num);
 	}
-
+	
+	@Override
+	public void reserveTool(int employeeId, int toolId) throws Exception {
+		rentalMapper.editReserved(toolId, employeeId);
+	}
+	
+	@Override
+	public void cancelTool(int toolId) throws Exception {
+		rentalMapper.editCanceled(toolId);
+	}
+		
 	@Override
 	public void borrowTool(int employeeId, int toolId) throws Exception {
 		RentalRecord rentalRecord = new RentalRecord();
@@ -42,6 +52,20 @@ public class RentalRecordServiceImpl implements RentalRecordService {
 	@Override
 	public boolean isAbleToBorrow(int employeeId, int limitation) throws Exception {
 		return rentalRecordMapper.countBorrowingByEmployeeId(employeeId) < limitation;
+	}
+	
+	@Override
+	public boolean cancelByAuthenticatedEmployee(int employeeId, int toolId) throws Exception {
+		RentalRecord record = rentalRecordMapper.selectBorrowingRecordByToolId(toolId);
+		if(record == null) {
+			return false;
+		}
+
+		if(!record.getEmployeeId().equals(employeeId)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
