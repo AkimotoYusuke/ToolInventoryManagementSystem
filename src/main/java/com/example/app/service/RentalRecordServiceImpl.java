@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.app.domain.RentalRecord;
+import com.example.app.domain.Tool;
 import com.example.app.mapper.RentalRecordMapper;
 import com.example.app.mapper.ToolMapper;
 
@@ -56,12 +57,12 @@ public class RentalRecordServiceImpl implements RentalRecordService {
 	
 	@Override
 	public boolean cancelByAuthenticatedEmployee(int employeeId, int toolId) throws Exception {
-		RentalRecord record = rentalRecordMapper.selectBorrowingRecordByToolId(toolId);
-		if(record == null) {
+		Tool tool = rentalMapper.selectById(toolId);
+		if(tool == null) {
 			return false;
 		}
 
-		if(!record.getEmployeeId().equals(employeeId)) {
+		if(tool.getReservedEmployeeId() != (employeeId)) {
 			return false;
 		}
 

@@ -49,26 +49,70 @@
 		
 		<h2 class="h4">予約済の工具</h2>
 		<div th:if="${#lists.size(reservedList) < 1}" class="alert alert-primary">予約済の工具はありません</div>
-		<table th:if="${#lists.size(reservedList) >= 1}" class="table table-bordered">
-		  <thead>
-		    <tr>
-			  <th>管理番号</th>
-		      <th>品名</th>
-		      <th>詳細情報</th>
-		      <th>メーカー</th>
-		      <th>入庫依頼</th>
-		    </tr>
-		  </thead>
-		  <tbody>
-		    <tr th:each="tool : ${reservedList}">
-			  <td>[[${tool.mgmtId}]]</td>
-		      <td>[[${tool.name}]]</td>
-		      <td>[[${tool.detailInfo}]]</td>
-		      <td>[[${tool.makerType.name}]]</td>
-		      <td><a th:href="@{/rental/cancel/{id}(id=${tool.id})}" class="btn btn-danger btn-sm">キャンセル</a></td>
-		    </tr>
-		  </tbody>
-		</table>
+		<div class="shippingInfo" th:if="${#lists.size(reservedList) >= 1}">
+			<form class="form" action="" method="post" th:object="${shippingRecord}">
+				<h3 class="h5">発送情報の入力</h3>
+				<div>
+					<label class="mb-1">受取人の氏名： <input type="text" th:field="*{recipientName}"></label>
+					<label class="mb-1">受取人の住所： <input type="text" th:field="*{recipientAddress}"></label>　
+					<label class="mb-1">受取人の電話番号： <input type="text" th:field="*{recipientPhone}"></label>
+					<div >
+						<lavel class="error-message mt-2" th:errors="*{recipientName}"></lavel>
+						<lavel class="error-message mt-2" th:errors="*{recipientAddress}"></lavel>
+						<lavel class="error-message mt-2" th:errors="*{recipientPhone}"></lavel>
+					</div>
+				</div>
+				<div>
+					<label class="mb-1">差出人の氏名： <input type="text" th:field="*{senderName}"></label>　
+					<label class="mb-1">差出人の住所： <input type="text" th:field="*{senderAddress}"></label>　
+					<label class="mb-1">差出人の電話番号： <input type="text" th:field="*{senderPhone}"></label>
+					<div >
+						<lavel class="error-message mt-2" th:errors="*{senderName}"></lavel>
+						<lavel class="error-message mt-2" th:errors="*{senderAddress}"></lavel>
+						<lavel class="error-message mt-2" th:errors="*{senderPhone}"></lavel>
+					</div>
+				</div>
+				<div>
+					<label class="mb-1">発送方法/希望サービス： <input type="text" th:field="*{shippingMethod}"></label>　
+					<label class="mb-1">発送希望日：<input type="date" th:field="*{shipDate}"></label>　
+					<label class="mb-1">到着希望日：<input type="date" th:field="*{arrivalDate}"></label>
+					<div >
+						<lavel class="error-message mt-2" th:errors="*{shippingMethod}"></lavel>
+						<lavel class="error-message mt-2" th:errors="*{shipDate}"></lavel>
+						<lavel class="error-message mt-2" th:errors="*{arrivalDate}"></lavel>
+					</div>
+				</div>
+				<div>
+					<label class="mb-1">備考： <input type="text" th:field="*{note}"> </label>　
+					<label class="mb-1">送料の作番： <input type="text" th:field="*{shippingNumber}"></label>　
+					<input class="btn btn-primary" type="submit" value="出庫依頼"/>
+					<div >
+						<lavel class="error-message mt-2" th:errors="*{note}"></lavel>
+						<lavel class="error-message mt-2" th:errors="*{shippingNumber}"></lavel>
+					</div>
+				</div>
+			</form>
+			<table class="table table-bordered shippingInfoTable">
+			  <thead>
+			    <tr>
+				  <th>管理番号</th>
+			      <th>品名</th>
+			      <th>詳細情報</th>
+			      <th>メーカー</th>
+			      <th>入庫依頼</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <tr th:each="tool : ${reservedList}">
+				  <td>[[${tool.mgmtId}]]</td>
+			      <td>[[${tool.name}]]</td>
+			      <td>[[${tool.detailInfo}]]</td>
+			      <td>[[${tool.makerType.name}]]</td>
+			      <td><a th:href="@{/rental/cancel/{id}(id=${tool.id})}" class="btn btn-danger btn-sm">キャンセル</a></td>
+			    </tr>
+			  </tbody>
+			</table>
+		</div>
   
         <h2 class="h4 mt-5">出庫可能な工具</h2>
         <div th:if="${#lists.size(toolList) < 1}" class="alert alert-danger">出庫可能な工具はありません</div>

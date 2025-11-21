@@ -1,14 +1,21 @@
 package com.example.app.controller;
 
+import java.util.List;
+
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.app.domain.ShippingRecord;
+import com.example.app.domain.Tool;
 import com.example.app.login.LoginStatus;
 import com.example.app.service.RentalRecordService;
 import com.example.app.service.ToolService;
@@ -41,12 +48,25 @@ public class RentalController {
 		model.addAttribute("totalPages", totalPages);
 		// 現在のページ番号
 		model.addAttribute("currentPage", page);
+		
 		// 現在、予約済工具のリスト
-			model.addAttribute("reservedList", toolService.getReservedToolList(loginStatus.getId()));
+		List<Tool> reservedToolList = toolService.getReservedToolList(loginStatus.getId());
+		model.addAttribute("reservedList", reservedToolList);
+		if (reservedToolList != null) {
+			ShippingRecord shippingRecord = new ShippingRecord();
+			if(model.getAttribute("shippingRecord") != null) {
+				shippingRecord = (ShippingRecord) model.getAttribute("shippingRecord");
+			}
+			shippingRecord.setSenderAddress("東京本社 工具管理センター");
+			model.addAttribute("errors", model.getAttribute("errors"));
+			model.addAttribute("shippingRecord", shippingRecord);
+		}
+			
 		// 現在、借りている工具のリスト
 		model.addAttribute("borrowingList", toolService.getBorrowingToolList(loginStatus.getId()));
 		// 貸し出し可能な工具のリスト
 		model.addAttribute("toolList", toolService.getBorrowableToolListPerPage(page, NUM_PER_PAGE));
+		
 		return "list-rental";
 	}
 
@@ -86,7 +106,7 @@ public class RentalController {
 			@PathVariable("toolId") Integer toolId) throws Exception {
 		// 本人によるキャンセルか確認
 		LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
-		if (!rentalRecordService.byAuthenticatedEmployee(loginStatus.getId(), toolId)) {
+		if (!rentalRecordService.cancelByAuthenticatedEmployee(loginStatus.getId(), toolId)) {
 			System.out.println("他の従業員によるキャンセル");
 		} else {
 			rentalRecordService.cancelTool(toolId);
@@ -96,6 +116,38 @@ public class RentalController {
 		int previousPage = (int) session.getAttribute("page");
 		return "redirect:/rental?page=" + previousPage;
 	}
+	
+//「出庫依頼」ボタン
+@PostMapping("/rental")
+public String borrowMaterial(
+		@Valid ShippingRecord shippingRecord,
+		Errors errors,
+		Model model,
+		RedirectAttributes redirectAttributes) throws Exception {
+	System.out.println("出庫依頼ボタン：POST内");
+	if(errors.hasErrors()) {
+		System.out.println("エラー検知");
+		System.out.println(errors);
+//		model.addAttribute("shippingRecord",shippingRecord);
+		//redirectAttributes.addFlashAttribute("shippingRecord", shippingRecord);
+		//redirectAttributes.addFlashAttribute("errors", errors);
+		int page = (int) session.getAttribute("page");
+	  return "redirect:/rental?page=" + page;
+		// return "list-rental";
+	}
+	
+	LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
+	
+	int previousPage = (int) session.getAttribute("page");
+
+	// 問題がなければ、「出庫依頼」処理を実行
+//	rentalRecordService.borrowTool(loginStatus.getId(), toolId);
+	
+	// 出庫依頼後に戻るページ(⇒ページ数が減って、元のページが無くなった場合は最終ページ)
+	int totalPages = toolService.getTotalBorrowableToolPages(NUM_PER_PAGE);
+	int page = previousPage <= totalPages ? previousPage : totalPages;
+	return "redirect:/rental?page=" + page;
+}
 	
 ////「出庫依頼」ボタン
 //	@GetMapping("/rental/borrow/{toolId}")

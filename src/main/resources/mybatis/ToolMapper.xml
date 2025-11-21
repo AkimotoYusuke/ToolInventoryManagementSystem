@@ -120,5 +120,5 @@
 		SET rental_id = NULL
 		WHERE id = #{id}
 	</update>
-
+	
 </mapper>
