@@ -20,6 +20,17 @@
   </nav>
 </header>
 
+<header th:fragment="employee_header()">
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" th:href="@{/rental}">工具入出庫依頼</a>
+      <ul class="navbar-nav">
+        <li class="nav-item text-light">[[${session.loginStatus.name}]] [<a th:href="@{/logout}">ログアウト</a>]</li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
 <th:block th:fragment="javascripts()">
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/js/button-action.js}"></script>

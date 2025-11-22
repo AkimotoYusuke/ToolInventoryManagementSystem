@@ -20,27 +20,35 @@ public class ShippingRecord {
 	@Size(max = 30)
 	private String recipientName;
 	
-	@NotNull
+	@NotBlank
+	@Size(max = 8)
+	private String recipientPostCode;
+	
+	@NotBlank
 	@Size(max = 100)
 	private String recipientAddress;
 	
-	@NotNull
+	@NotBlank
 	@Size(max = 20)
 	private String recipientPhone;
 	
-	@NotNull
+	@NotBlank
 	@Size(max = 30)
 	private String senderName;
 	
-	@NotNull
+	@NotBlank
+	@Size(max = 8)
+	private String senderPostCode;
+	
+	@NotBlank
 	@Size(max = 100)
 	private String senderAddress;
 	
-	@NotNull
+	@NotBlank
 	@Size(max = 20)
 	private String senderPhone;
 	
-	@NotNull
+	@NotBlank
 	@Size(max = 30)
 	private String shippingMethod;
 	
@@ -51,15 +59,18 @@ public class ShippingRecord {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate arrivalDate;
 	
-	@Size(max = 255)
-	private String note;
-	
 	@NotBlank
 	@Size(max = 10)
 	private String shippingNumber;
 	
+	@Size(max = 255)
+	private String note;
+	
+	private Integer employeeId;
 	private Integer rentalRecordId;
-	private LocalDateTime ShipmentRequestAt;
-	private LocalDateTime ShipmentAt;
+	private LocalDateTime shippingAddAt;
+	private LocalDateTime shippingDeleteAt;
+	private LocalDateTime shippingRequestAt;
+	private LocalDateTime shippedAt;
 
 }

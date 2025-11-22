@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.mapper.ShippingRecordMapper">
+
+<!--	<resultMap id="employee" type="Employee" autoMapping="true">-->
+<!--		<association property="authorityType" javaType="AuthorityType">-->
+<!--			<id property="id" column="authority_type_id" />-->
+<!--			<result property="name" column="authority_type_name" />-->
+<!--		</association>-->
+<!--	</resultMap>-->
+
+<!--	<sql id="selectAndJoin">-->
+<!--		SELECT-->
+<!--			employees.id, employees.name,-->
+<!--			employees.login_id, employees.login_pass, employees.status,-->
+<!--			employees.authority_type_id, authority_types.name AS authority_type_name-->
+<!--		FROM employees-->
+<!--		JOIN authority_types-->
+<!--		ON employees.authority_type_id = authority_types.id-->
+<!--	</sql>-->
+
+<!--	<select id="selectAll" resultMap="employee">-->
+<!--		<include refid="selectAndJoin" />-->
+<!--		WHERE employees.status = 'ACT'-->
+<!--	</select>-->
+
+	<select id="selectById" parameterType="int" resultType="ShippingRecord">
+		SELECT * FROM shipping_records
+		WHERE employee_id = #{id}
+		AND shipping_delete_at IS NULL
+		AND shipping_request_at IS NULL
+		AND shipped_at IS NULL;
+	</select>
+
+<!--	<select id="selectByLoginId" parameterType="string" resultMap="employee">-->
+<!--		<include refid="selectAndJoin" />-->
+<!--		WHERE employees.login_id COLLATE utf8mb4_0900_as_cs = #{loginId}-->
+<!--	</select>-->
+	
+<!--	<select id="selectByLoginIdAndStatusAct" parameterType="string" resultMap="employee">-->
+<!--		<include refid="selectAndJoin" />-->
+<!--		WHERE employees.login_id COLLATE utf8mb4_0900_as_cs = #{loginId}-->
+<!--		AND employees.status = 'ACT'-->
+<!--	</select>-->
+
+<!--	<update id="setDeleteById" parameterType="int">-->
+<!--		UPDATE employees SET status = 'DEL'-->
+<!--		WHERE id = #{id}-->
+<!--	</update>-->
+
+	<insert id="insert" parameterType="ShippingRecord">
+		INSERT INTO shipping_records (recipient_name, recipient_post_code, recipient_address, recipient_phone,
+			sender_name, sender_post_code, sender_address, sender_phone,
+			shipping_method, ship_date, arrival_date, shipping_number,note,
+			employee_id, shipping_add_at)
+		VALUES (#{recipientName}, #{recipientPostCode}, #{recipientAddress}, #{recipientPhone},
+			#{senderName}, #{senderPostCode}, #{senderAddress}, #{senderPhone},
+			#{shippingMethod}, #{shipDate}, #{arrivalDate}, #{shippingNumber}, #{note},
+			#{employeeId}, NOW())
+	</insert>
+
+<!--	<update id="update" parameterType="Employee">-->
+<!--		UPDATE employees-->
+<!--		SET name = #{name},-->
+<!--			login_id = #{loginId}, login_pass = #{loginPass},-->
+<!--			authority_type_id = #{authorityType.id}-->
+<!--		WHERE id = #{id}-->
+<!--	</update>-->
+
+<!--	<select id="selectLimited" resultMap="employee">-->
+<!--		<include refid="selectAndJoin" />-->
+<!--		WHERE employees.status = 'ACT'-->
+<!--		LIMIT #{offset}, #{num}-->
+<!--	</select>-->
+
+<!--	<select id="countActive" resultType="long">-->
+<!--		SELECT COUNT(*) FROM employees-->
+<!--		WHERE status = 'ACT'-->
+<!--	</select>-->
+
+</mapper>

@@ -18,6 +18,7 @@ import com.example.app.domain.ShippingRecord;
 import com.example.app.domain.Tool;
 import com.example.app.login.LoginStatus;
 import com.example.app.service.RentalRecordService;
+import com.example.app.service.ShippingRecordService;
 import com.example.app.service.ToolService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class RentalController {
 
 	private final ToolService toolService;
 	private final RentalRecordService rentalRecordService;
+	private final ShippingRecordService shippingRecordService;
 	private final HttpSession session;
 
 	@GetMapping({ "/", "/rental" })
@@ -49,18 +51,21 @@ public class RentalController {
 		// 現在のページ番号
 		model.addAttribute("currentPage", page);
 		
+		// 発送情報
+		model.addAttribute("shippingRecord", shippingRecordService.getShippingRecordById(loginStatus.getId()));
+		
 		// 現在、予約済工具のリスト
 		List<Tool> reservedToolList = toolService.getReservedToolList(loginStatus.getId());
 		model.addAttribute("reservedList", reservedToolList);
-		if (reservedToolList != null) {
-			ShippingRecord shippingRecord = new ShippingRecord();
-			if(model.getAttribute("shippingRecord") != null) {
-				shippingRecord = (ShippingRecord) model.getAttribute("shippingRecord");
-			}
-			shippingRecord.setSenderAddress("東京本社 工具管理センター");
-			model.addAttribute("errors", model.getAttribute("errors"));
-			model.addAttribute("shippingRecord", shippingRecord);
-		}
+//		if (reservedToolList != null) {
+//			ShippingRecord shippingRecord = new ShippingRecord();
+////			if(model.getAttribute("shippingRecord") != null) {
+////				shippingRecord = (ShippingRecord) model.getAttribute("shippingRecord");
+////			}
+//			shippingRecord.setSenderAddress("東京本社 工具管理センター");
+////			model.addAttribute("errors", model.getAttribute("errors"));
+//			model.addAttribute("shippingRecord", shippingRecord);
+//		}
 			
 		// 現在、借りている工具のリスト
 		model.addAttribute("borrowingList", toolService.getBorrowingToolList(loginStatus.getId()));

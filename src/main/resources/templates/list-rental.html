@@ -8,16 +8,7 @@
 <title>工具入出庫依頼</title>
 </head>
 <body>
-  <header>
-    <nav class="navbar navbar-dark bg-dark">
-      <div class="container">
-        <a class="navbar-brand" href="">工具入出庫依頼</a>
-        <ul class="navbar-nav">
-          <li class="nav-item text-light">[[${session.loginStatus.name}]] [<a th:href="@{/logout}">ログアウト</a>]</li>
-        </ul>
-      </div>
-    </nav>
-  </header>
+  <header th:replace="~{admin/parts/common :: employee_header()}"></header>
   
   <div class="container">
     <div class="row mt-4">
@@ -50,48 +41,31 @@
 		<h2 class="h4">予約済の工具</h2>
 		<div th:if="${#lists.size(reservedList) < 1}" class="alert alert-primary">予約済の工具はありません</div>
 		<div class="shippingInfo" th:if="${#lists.size(reservedList) >= 1}">
-			<form class="form" action="" method="post" th:object="${shippingRecord}">
-				<h3 class="h5">発送情報の入力</h3>
-				<div>
-					<label class="mb-1">受取人の氏名： <input type="text" th:field="*{recipientName}"></label>
-					<label class="mb-1">受取人の住所： <input type="text" th:field="*{recipientAddress}"></label>　
-					<label class="mb-1">受取人の電話番号： <input type="text" th:field="*{recipientPhone}"></label>
-					<div >
-						<lavel class="error-message mt-2" th:errors="*{recipientName}"></lavel>
-						<lavel class="error-message mt-2" th:errors="*{recipientAddress}"></lavel>
-						<lavel class="error-message mt-2" th:errors="*{recipientPhone}"></lavel>
-					</div>
-				</div>
-				<div>
-					<label class="mb-1">差出人の氏名： <input type="text" th:field="*{senderName}"></label>　
-					<label class="mb-1">差出人の住所： <input type="text" th:field="*{senderAddress}"></label>　
-					<label class="mb-1">差出人の電話番号： <input type="text" th:field="*{senderPhone}"></label>
-					<div >
-						<lavel class="error-message mt-2" th:errors="*{senderName}"></lavel>
-						<lavel class="error-message mt-2" th:errors="*{senderAddress}"></lavel>
-						<lavel class="error-message mt-2" th:errors="*{senderPhone}"></lavel>
-					</div>
-				</div>
-				<div>
-					<label class="mb-1">発送方法/希望サービス： <input type="text" th:field="*{shippingMethod}"></label>　
-					<label class="mb-1">発送希望日：<input type="date" th:field="*{shipDate}"></label>　
-					<label class="mb-1">到着希望日：<input type="date" th:field="*{arrivalDate}"></label>
-					<div >
-						<lavel class="error-message mt-2" th:errors="*{shippingMethod}"></lavel>
-						<lavel class="error-message mt-2" th:errors="*{shipDate}"></lavel>
-						<lavel class="error-message mt-2" th:errors="*{arrivalDate}"></lavel>
-					</div>
-				</div>
-				<div>
-					<label class="mb-1">備考： <input type="text" th:field="*{note}"> </label>　
-					<label class="mb-1">送料の作番： <input type="text" th:field="*{shippingNumber}"></label>　
-					<input class="btn btn-primary" type="submit" value="出庫依頼"/>
-					<div >
-						<lavel class="error-message mt-2" th:errors="*{note}"></lavel>
-						<lavel class="error-message mt-2" th:errors="*{shippingNumber}"></lavel>
-					</div>
-				</div>
-			</form>
+			「発送情報の入力」ボタンより、発送先の入力をしてください
+			<a th:href="@{/shipping/add}" class="btn btn-primary">発送情報の入力</a>
+			<p>発送情報の詳細は、下記、発送番号のリンクより確認の程、お願いいたします</p>
+			<table class="table table-bordered shippingInfoTable">
+			  <thead>
+			    <tr>
+				  <th>発送番号</th>
+			      <th>受取人の氏名</th>
+			      <th>受取人の住所</th>
+			      <th>発送希望日</th>
+			      <th>編集</th>
+				  <th>削除</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <tr th:object="${shippingRecord}">
+				  <td>[[*{id}]]</td>
+			      <td>[[*{recipientName}]]</td>
+			      <td>[[*{recipientAddress}]]</td>
+			      <td>[[*{shipDate}]]</td>
+				  <td><a th:href="@{/shipping/edit/{id}(id=*{employeeId})}" class="btn btn-warning btn-sm">編集</a></td>
+			      <td><a th:href="@{/shipping/delete/{id}(id=*{employeeId})}" class="btn btn-danger btn-sm delete">削除</a></td>
+			    </tr>
+			  </tbody>
+			</table>
 			<table class="table table-bordered shippingInfoTable">
 			  <thead>
 			    <tr>
