@@ -26,7 +26,12 @@
 
 	<select id="selectById" parameterType="int" resultType="ShippingRecord">
 		SELECT * FROM shipping_records
-		WHERE employee_id = #{id}
+		WHERE id = #{id}
+	</select>
+
+	<select id="selectByEmployeeId" parameterType="int" resultType="ShippingRecord">
+		SELECT * FROM shipping_records
+		WHERE employee_id = #{employeeId}
 		AND shipping_delete_at IS NULL
 		AND shipping_request_at IS NULL
 		AND shipped_at IS NULL;
@@ -43,10 +48,10 @@
 <!--		AND employees.status = 'ACT'-->
 <!--	</select>-->
 
-<!--	<update id="setDeleteById" parameterType="int">-->
-<!--		UPDATE employees SET status = 'DEL'-->
-<!--		WHERE id = #{id}-->
-<!--	</update>-->
+	<update id="setDeleteById" parameterType="int">
+		UPDATE shipping_records SET shipping_delete_at = NOW()
+		WHERE id = #{id}
+	</update>
 
 	<insert id="insert" parameterType="ShippingRecord">
 		INSERT INTO shipping_records (recipient_name, recipient_post_code, recipient_address, recipient_phone,
@@ -59,13 +64,13 @@
 			#{employeeId}, NOW())
 	</insert>
 
-<!--	<update id="update" parameterType="Employee">-->
-<!--		UPDATE employees-->
-<!--		SET name = #{name},-->
-<!--			login_id = #{loginId}, login_pass = #{loginPass},-->
-<!--			authority_type_id = #{authorityType.id}-->
-<!--		WHERE id = #{id}-->
-<!--	</update>-->
+	<update id="update" parameterType="ShippingRecord">
+		UPDATE shipping_records
+		SET recipient_name = #{recipientName}, recipient_post_code = #{recipientPostCode}, recipient_address = #{recipientAddress}, recipient_phone = #{recipientPhone},
+			sender_name = #{senderName}, sender_post_code = #{senderPostCode}, sender_address = #{senderAddress}, sender_phone = #{senderPhone},
+			shipping_method = #{shippingMethod}, ship_date = #{shipDate}, arrival_date = #{arrivalDate}, shipping_number = #{shippingNumber}, note = #{note}
+		WHERE id = #{id}
+	</update>
 
 <!--	<select id="selectLimited" resultMap="employee">-->
 <!--		<include refid="selectAndJoin" />-->

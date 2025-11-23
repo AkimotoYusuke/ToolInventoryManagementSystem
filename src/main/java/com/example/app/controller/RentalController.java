@@ -51,8 +51,8 @@ public class RentalController {
 		// 現在のページ番号
 		model.addAttribute("currentPage", page);
 		
-		// 発送情報
-		model.addAttribute("shippingRecord", shippingRecordService.getShippingRecordById(loginStatus.getId()));
+		// 依頼者の発送情報
+		model.addAttribute("shippingRecord", shippingRecordService.getShippingRecordByEmployeeId(loginStatus.getId()));
 		
 		// 現在、予約済工具のリスト
 		List<Tool> reservedToolList = toolService.getReservedToolList(loginStatus.getId());
@@ -84,20 +84,21 @@ public class RentalController {
 
 		int previousPage = (int) session.getAttribute("page");
 
-		// 借りている工具数が最大値を超えていないか確認
-		if (!rentalRecordService.isAbleToBorrow(loginStatus.getId(), BORROWABLE_LIMIT)) {
-			redirectAttributes.addFlashAttribute("message", "貸し出し可能な工具数は" + BORROWABLE_LIMIT + "個までです");
-			return "redirect:/rental?page=" + previousPage;
-		}
+//		// 借りている工具数が最大値を超えていないか確認
+//		if (!rentalRecordService.isAbleToBorrow(loginStatus.getId(), BORROWABLE_LIMIT)) {
+//			redirectAttributes.addFlashAttribute("message", "貸し出し可能な工具数は" + BORROWABLE_LIMIT + "個までです");
+//			return "redirect:/rental?page=" + previousPage;
+//		}
 
-		// 借りようとしている工具が貸し出されていないか確認
-		if (!toolService.isBorrowable(toolId)) {
-			redirectAttributes.addFlashAttribute("message", "工具は貸し出し中、または削除済みです");
-			return "redirect:/rental?page=" + previousPage;
-		}
+//		// 借りようとしている工具が貸し出されていないか確認
+//		if (!toolService.isBorrowable(toolId)) {
+//			redirectAttributes.addFlashAttribute("message", "工具は貸し出し中、または削除済みです");
+//			return "redirect:/rental?page=" + previousPage;
+//		}
 
 		// 問題がなければ、「予約」処理を実行
 		rentalRecordService.reserveTool(loginStatus.getId(), toolId);
+		redirectAttributes.addFlashAttribute("message", "予約しました。");
 		
 		// 予約後に戻るページ(⇒ページ数が減って、元のページが無くなった場合は最終ページ)
 		int totalPages = toolService.getTotalBorrowableToolPages(NUM_PER_PAGE);
@@ -108,7 +109,8 @@ public class RentalController {
 //「キャンセル」ボタン
 	@GetMapping("/rental/cancel/{toolId}")
 	public String returnMaterial(
-			@PathVariable("toolId") Integer toolId) throws Exception {
+			@PathVariable("toolId") Integer toolId,
+			RedirectAttributes redirectAttributes) throws Exception {
 		// 本人によるキャンセルか確認
 		LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
 		if (!rentalRecordService.cancelByAuthenticatedEmployee(loginStatus.getId(), toolId)) {
@@ -116,6 +118,8 @@ public class RentalController {
 		} else {
 			rentalRecordService.cancelTool(toolId);
 		}
+		
+		redirectAttributes.addFlashAttribute("message", "キャンセルしました。");
 
 		// キャンセル後に戻るページ(元のページ)
 		int previousPage = (int) session.getAttribute("page");
@@ -123,7 +127,7 @@ public class RentalController {
 	}
 	
 //「出庫依頼」ボタン
-@PostMapping("/rental")
+@PostMapping("/rental/shippingRequest")
 public String borrowMaterial(
 		@Valid ShippingRecord shippingRecord,
 		Errors errors,
@@ -143,15 +147,12 @@ public String borrowMaterial(
 	
 	LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
 	
-	int previousPage = (int) session.getAttribute("page");
-
 	// 問題がなければ、「出庫依頼」処理を実行
 //	rentalRecordService.borrowTool(loginStatus.getId(), toolId);
 	
-	// 出庫依頼後に戻るページ(⇒ページ数が減って、元のページが無くなった場合は最終ページ)
-	int totalPages = toolService.getTotalBorrowableToolPages(NUM_PER_PAGE);
-	int page = previousPage <= totalPages ? previousPage : totalPages;
-	return "redirect:/rental?page=" + page;
+		//出庫依頼後に戻るページ(元のページ)
+		int previousPage = (int) session.getAttribute("page");
+		return "redirect:/rental?page=" + previousPage;
 }
 	
 ////「出庫依頼」ボタン

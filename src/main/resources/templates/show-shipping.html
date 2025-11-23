@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th= "http://www.thymeleaf.org">
+<head th:replace="~{admin/parts/common :: employee_html_head()}"></head>
+<body>
+  <header th:replace="~{admin/parts/common :: employee_header()}"></header>
+  
+  <div class="container" th:object="${shippingRecord}">
+	  <h1 class="my-4 h3">発送番号：[[*{id}]]</h1>
+	  
+	  <div class="row">
+	    <div class="col-md-12">
+	      <table class="table table-bordered">
+	        <tbody>
+			  <tr>
+	            <th>受取人の氏名</th>
+	            <td>[[*{recipientName}]]</td>
+	          </tr>
+	          <tr>
+	            <th>受取人の郵便番号</th>
+	            <td>[[*{recipientPostCode}]]</td>
+	          </tr>
+	          <tr>
+	            <th>受取人の住所</th>
+	            <td>[[*{recipientAddress}]]</td>
+	          </tr>
+	          <tr>
+	            <th>受取人の電話番号</th>
+	            <td>[[*{recipientPhone}]]</td>
+	          </tr>
+			  <tr>
+  	            <th>差出人の氏名</th>
+  	            <td>[[*{senderName}]]</td>
+  	          </tr>
+  	          <tr>
+  	            <th>差出人の郵便番号</th>
+  	            <td>[[*{senderPostCode}]]</td>
+  	          </tr>
+  	          <tr>
+  	            <th>差出人の住所</th>
+  	            <td>[[*{senderAddress}]]</td>
+  	          </tr>
+  	          <tr>
+  	            <th>差出人の電話番号</th>
+  	            <td>[[*{senderPhone}]]</td>
+  	          </tr>
+			  <tr>
+	            <th>発送方法/希望サービス</th>
+	            <td>[[*{shippingMethod}]]</td>
+	          </tr>
+	          <tr>
+	            <th>発送希望日</th>
+	            <td>[[*{shipDate}]]</td>
+	          </tr>
+	          <tr>
+	            <th>到着希望日</th>
+	            <td>[[*{arrivalDate}]]</td>
+	          </tr>
+	          <tr>
+	            <th>送料の作番</th>
+	            <td>[[*{shippingNumber}]]</td>
+	          </tr>
+			  <tr>
+  	            <th>備考</th>
+  	            <td>[[*{note}]]</td>
+  	          </tr>
+	        </tbody>
+	      </table>
+	
+	      <p>
+	        <a th:href="@{/rental(page=${session.page})}" class="btn btn-primary">トップに戻る</a>
+	      </p>
+	      
+	    </div><!-- /.col- -->
+	  </div><!-- /.row -->
+  </div><!-- /.container -->
+	
+  <th:block th:replace="~{admin/parts/common :: javascripts()}"></th:block>
+</body>
+</html>

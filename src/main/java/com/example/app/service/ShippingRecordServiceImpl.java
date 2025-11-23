@@ -25,6 +25,11 @@ public class ShippingRecordServiceImpl implements ShippingRecordService {
 	public ShippingRecord getShippingRecordById(Integer id) throws Exception {
 		return shippingRecordMapper.selectById(id);
 	}
+	
+	@Override
+	public ShippingRecord getShippingRecordByEmployeeId(Integer employeeId) throws Exception {
+		return shippingRecordMapper.selectByEmployeeId(employeeId);
+	}
 //	
 //	@Override
 //	public Employee getEmployeeByLoginId(String logingId) throws Exception {
@@ -35,25 +40,22 @@ public class ShippingRecordServiceImpl implements ShippingRecordService {
 //	public Employee getEmployeeByLoginIdAndStatusAct(String logingId) throws Exception {
 //		return employeeMapper.selectByLoginIdAndStatusAct(logingId);
 //	}
-//
-//	@Override
-//	public void deleteEmployeeById(Integer id) throws Exception {
-//		employeeMapper.setDeleteById(id);
-//	}
+
+	@Override
+	public void deleteShippingRecordById(Integer id) throws Exception {
+		shippingRecordMapper.setDeleteById(id);
+	}
 
 	@Override
 	public void addShippingRecord(ShippingRecord shippingRecord) throws Exception {
 		shippingRecordMapper.insert(shippingRecord);
 	}
 
-//	@Override
-//	public void editEmployee(Employee employee) throws Exception {
-//		String password = employee.getLoginPass();
-//		String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-//		employee.setLoginPass(hashedPassword);
-//		employeeMapper.update(employee);
-//	}
-//
+	@Override
+	public void editShippingRecord(ShippingRecord shippingRecord) throws Exception {
+		shippingRecordMapper.update(shippingRecord);
+	}
+
 //	@Override
 //	public boolean isExsitingEmployee(String loginId) throws Exception {
 //		Employee employee = employeeMapper.selectByLoginId(loginId);
