@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.app.domain.RentalRecord;
 import com.example.app.domain.Tool;
 import com.example.app.mapper.RentalRecordMapper;
+import com.example.app.mapper.ShippingRecordMapper;
 import com.example.app.mapper.ToolMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RentalRecordServiceImpl implements RentalRecordService {
 
+	private final ShippingRecordMapper shippingRecordMapper;
 	private final RentalRecordMapper rentalRecordMapper;
 	private final ToolMapper rentalMapper;
 
@@ -34,14 +36,25 @@ public class RentalRecordServiceImpl implements RentalRecordService {
 	public void cancelTool(int toolId) throws Exception {
 		rentalMapper.editCanceled(toolId);
 	}
+	
+	@Override
+	public void borrowRequestTool(int shippingRecordsId, int employeeId, int toolId) throws Exception {
+		shippingRecordMapper.addShippingRequest(shippingRecordsId);
+		RentalRecord rentalRecord = new RentalRecord();
+		rentalRecord.setShippingId(shippingRecordsId);
+		rentalRecord.setEmployeeId(employeeId);
+		rentalRecord.setToolId(toolId);
+		rentalRecordMapper.addBorrowingRequestRecord(rentalRecord);
+		rentalMapper.addBorrowingRequestRecord(toolId, employeeId, shippingRecordsId, rentalRecord.getId());
+	}
 		
 	@Override
 	public void borrowTool(int employeeId, int toolId) throws Exception {
-		RentalRecord rentalRecord = new RentalRecord();
-		rentalRecord.setEmployeeId(employeeId);
-		rentalRecord.setToolId(toolId);
-		rentalRecordMapper.addBorrowedRecord(rentalRecord);
-		rentalMapper.addBorrowedRecord(toolId, rentalRecord.getId());
+//		RentalRecord rentalRecord = new RentalRecord();
+//		rentalRecord.setEmployeeId(employeeId);
+//		rentalRecord.setToolId(toolId);
+//		rentalRecordMapper.addBorrowedRecord(rentalRecord);
+//		rentalMapper.addBorrowedRecord(toolId, employeeId, rentalRecord.getId());
 	}
 
 	@Override

@@ -71,6 +71,12 @@
 			shipping_method = #{shippingMethod}, ship_date = #{shipDate}, arrival_date = #{arrivalDate}, shipping_number = #{shippingNumber}, note = #{note}
 		WHERE id = #{id}
 	</update>
+	
+	<update id="addShippingRequest" parameterType="int">
+		UPDATE shipping_records
+		SET shipping_request_at = NOW()
+		WHERE id = #{id}
+	</update>
 
 <!--	<select id="selectLimited" resultMap="employee">-->
 <!--		<include refid="selectAndJoin" />-->

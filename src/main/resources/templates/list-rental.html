@@ -40,34 +40,36 @@
 				<a th:href="@{/shipping/add}" class="btn btn-primary">発送情報の入力</a>
 			</div>
 			<div th:if="${shippingRecord != null}">
-				<p>発送情報の詳細は、下記、発送番号のリンクより確認の程、お願いいたします</p>
-				<p>確定の場合、「出庫依頼」ボタンを押して工具管理センターへ連絡してください(TEL：012-345-678)　
-					<a th:href="@{/rental/shippingRequest}" class="btn btn-primary">出庫依頼</a>
-				</p>
-				<table class="table table-bordered shippingInfoTable">
-				  <thead>
-				    <tr>
-					  <th>発送番号</th>
-				      <th>受取人の氏名</th>
-				      <th>受取人の住所</th>
-				      <th>発送希望日</th>
-					  <th>到着希望日</th>
-				      <th>編集</th>
-					  <th>削除</th>
-				    </tr>
-				  </thead>
-				  <tbody>
-				    <tr th:object="${shippingRecord}">
-					  <td><a th:href="@{/shipping/show/{id}(id=*{id})}">[[*{id}]]</a></td>
-				      <td>[[*{recipientName}]]</td>
-				      <td>[[*{recipientAddress}]]</td>
-				      <td>[[*{shipDate}]]</td>
-					  <td>[[*{arrivalDate}]]</td>
-					  <td><a th:href="@{/shipping/edit/{id}(id=*{id})}" class="btn btn-warning btn-sm">編集</a></td>
-				      <td><a th:href="@{/shipping/delete/{id}(id=*{id})}" class="btn btn-danger btn-sm delete">削除</a></td>
-				    </tr>
-				  </tbody>
-				</table>
+				<div th:object="${shippingRecord}">
+					<p>発送情報の詳細は、下記、発送番号のリンクより確認の程、お願いいたします</p>
+					<p>確定の場合、「出庫依頼」ボタンを押して工具管理センターへ連絡してください(TEL：012-345-678)　
+						<a th:href="@{/rental/request/{id}(id=*{id})}" class="btn btn-primary">出庫依頼</a>
+					</p>
+					<table class="table table-bordered shippingInfoTable">
+					  <thead>
+					    <tr>
+						  <th>発送番号</th>
+					      <th>受取人の氏名</th>
+					      <th>受取人の住所</th>
+					      <th>発送希望日</th>
+						  <th>到着希望日</th>
+					      <th>編集</th>
+						  <th>削除</th>
+					    </tr>
+					  </thead>
+					  <tbody>
+					    <tr>
+						  <td><a th:href="@{/shipping/show/{id}(id=*{id})}">[[*{id}]]</a></td>
+					      <td>[[*{recipientName}]]</td>
+					      <td>[[*{recipientAddress}]]</td>
+					      <td>[[*{shipDate}]]</td>
+						  <td>[[*{arrivalDate}]]</td>
+						  <td><a th:href="@{/shipping/edit/{id}(id=*{id})}" class="btn btn-warning btn-sm">編集</a></td>
+					      <td><a th:href="@{/shipping/delete/{id}(id=*{id})}" class="btn btn-danger btn-sm delete">削除</a></td>
+					    </tr>
+					  </tbody>
+					</table>
+				</div>
 			</div>
 			<table class="table table-bordered shippingInfoTable">
 			  <thead>

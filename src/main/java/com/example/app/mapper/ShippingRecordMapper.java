@@ -15,6 +15,7 @@ public interface ShippingRecordMapper {
 	void setDeleteById(Integer id) throws Exception;
 	void insert(ShippingRecord shippingRecord) throws Exception;
 	void update(ShippingRecord shippingRecord) throws Exception;
+	void addShippingRequest(Integer id) throws Exception;
 //	List<Employee> selectLimited(@Param("offset") int offset, @Param("num") int num) throws Exception;
 //    long countActive() throws Exception;
 

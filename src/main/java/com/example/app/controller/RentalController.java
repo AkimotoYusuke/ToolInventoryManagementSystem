@@ -3,18 +3,14 @@ package com.example.app.controller;
 import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.app.domain.ShippingRecord;
 import com.example.app.domain.Tool;
 import com.example.app.login.LoginStatus;
 import com.example.app.service.RentalRecordService;
@@ -57,15 +53,6 @@ public class RentalController {
 		// 現在、予約済工具のリスト
 		List<Tool> reservedToolList = toolService.getReservedToolList(loginStatus.getId());
 		model.addAttribute("reservedList", reservedToolList);
-//		if (reservedToolList != null) {
-//			ShippingRecord shippingRecord = new ShippingRecord();
-////			if(model.getAttribute("shippingRecord") != null) {
-////				shippingRecord = (ShippingRecord) model.getAttribute("shippingRecord");
-////			}
-//			shippingRecord.setSenderAddress("東京本社 工具管理センター");
-////			model.addAttribute("errors", model.getAttribute("errors"));
-//			model.addAttribute("shippingRecord", shippingRecord);
-//		}
 			
 		// 現在、借りている工具のリスト
 		model.addAttribute("borrowingList", toolService.getBorrowingToolList(loginStatus.getId()));
@@ -127,33 +114,34 @@ public class RentalController {
 	}
 	
 //「出庫依頼」ボタン
-@PostMapping("/rental/shippingRequest")
-public String borrowMaterial(
-		@Valid ShippingRecord shippingRecord,
-		Errors errors,
-		Model model,
-		RedirectAttributes redirectAttributes) throws Exception {
-	System.out.println("出庫依頼ボタン：POST内");
-	if(errors.hasErrors()) {
-		System.out.println("エラー検知");
-		System.out.println(errors);
-//		model.addAttribute("shippingRecord",shippingRecord);
-		//redirectAttributes.addFlashAttribute("shippingRecord", shippingRecord);
-		//redirectAttributes.addFlashAttribute("errors", errors);
-		int page = (int) session.getAttribute("page");
-	  return "redirect:/rental?page=" + page;
-		// return "list-rental";
-	}
-	
-	LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
-	
-	// 問題がなければ、「出庫依頼」処理を実行
-//	rentalRecordService.borrowTool(loginStatus.getId(), toolId);
-	
+	@GetMapping("/rental/request/{id}")
+	public String borrowMaterial(
+			@PathVariable Integer id,
+			Model model,
+			RedirectAttributes redirectAttributes) throws Exception {
+		
+		LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
+		
+	// 現在、予約済工具のリスト
+		List<Tool> reservedToolList = toolService.getReservedToolList(loginStatus.getId());
+		
+		reservedToolList.forEach(tool -> {
+			//「出庫依頼」処理を実行
+			try {
+				rentalRecordService.borrowRequestTool( id,loginStatus.getId(), tool.getId());
+			} catch (Exception e) {
+				// エラー発生
+				System.out.println("出庫依頼処理でエラー");
+				e.printStackTrace();
+			}
+		});
+		
+		redirectAttributes.addFlashAttribute("message", "出庫依頼しました。");
+		
 		//出庫依頼後に戻るページ(元のページ)
 		int previousPage = (int) session.getAttribute("page");
 		return "redirect:/rental?page=" + previousPage;
-}
+	}
 	
 ////「出庫依頼」ボタン
 //	@GetMapping("/rental/borrow/{toolId}")
