@@ -28,6 +28,8 @@ public class Tool {
 	private String status;
 
 	private Integer reservedEmployeeId;
+	private Integer requestedEmployeeId;
+	private Integer shippingId;
 	private Integer rentalId;
 	
 }

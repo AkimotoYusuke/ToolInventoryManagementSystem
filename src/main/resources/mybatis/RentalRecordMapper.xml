@@ -15,9 +15,14 @@
 		LIMIT 0, #{num}
 	</select>
 
+	<insert id="addBorrowingRequestRecord" parameterType="RentalRecord" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO rental_records (employee_id, tool_id, shipping_id, borrowing_requested_at)
+		VALUES (#{employeeId}, #{toolId}, #{shippingId}, NOW())
+	</insert>
+	
 	<insert id="addBorrowedRecord" parameterType="RentalRecord" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO rental_records (employee_id, tool_id, borrowed_at)
-		VALUES (#{employeeId}, #{toolId}, NOW())
+		INSERT INTO rental_records (employee_id, tool_id, shipping_id, borrowing_requested_at)
+		VALUES (#{employeeId}, #{toolId}, #{shippingId}, NOW())
 	</insert>
 
 	<update id="addReturnedRecord" parameterType="int">

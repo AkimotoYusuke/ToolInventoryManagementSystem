@@ -12,7 +12,9 @@ public interface RentalRecordMapper {
 
 	// ある工具の最新の出庫履歴
 	List<RentalRecord> selectLatestByToolId(@Param("toolId") int toolId, @Param("num") int num) throws Exception;
-	// 「出庫」に対応する処理：依頼者ID, 工具ID, 出庫日を記録
+	// 「出庫依頼」に対応する処理：依頼者ID, 工具ID, 発送ID, 出庫依頼日を記録
+	void addBorrowingRequestRecord(RentalRecord rentalRecord) throws Exception;
+//「出庫」に対応する処理：依頼者ID, 工具ID, 出庫日を記録
 	void addBorrowedRecord(RentalRecord rentalRecord) throws Exception;
 	// 「入庫」に対応する処理：入庫日を記録
 	void addReturnedRecord(int toolId) throws Exception;

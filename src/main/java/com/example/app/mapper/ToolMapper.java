@@ -31,7 +31,10 @@ public interface ToolMapper {
     void editReserved(@Param("id") int toolId, @Param("employeeId") int employeeId) throws Exception;
     // 工具に「キャンセル」の為、「予約済」と「予約者」を削除
     void editCanceled(int toolId) throws Exception;
-    // 工具に「出庫中」を記録
+    // 工具に「出庫依頼」を記録
+    void addBorrowingRequestRecord(@Param("id") int toolId, @Param("employeeId") int employeeId,
+    											@Param("shippingId") int shippingId, @Param("rentalId") int rentalId) throws Exception;
+    // 工具に「出庫済」を記録
     void addBorrowedRecord(@Param("id") int toolId, @Param("rentalId") int rentalId) throws Exception;
     // 工具に「入庫済」を記録
     void addReturnedRecord(int toolId) throws Exception;

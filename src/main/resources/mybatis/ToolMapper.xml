@@ -108,9 +108,16 @@
 		WHERE id = #{id}
 	</update>
 
+	<update id="addBorrowingRequestRecord">
+		UPDATE tools
+		SET reserved_employee_id = null, requested_employee_id = #{employeeId},
+			shipping_id = #{shippingId}, rental_id = #{rentalId}
+		WHERE id = #{id}
+	</update>
+	
 	<update id="addBorrowedRecord">
 		UPDATE tools
-		SET rental_id = #{rentalId}
+		SET requested_employee_id = null
 		WHERE id = #{id}
 	</update>
 
