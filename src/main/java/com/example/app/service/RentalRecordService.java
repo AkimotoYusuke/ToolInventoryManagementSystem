@@ -13,9 +13,9 @@ public interface RentalRecordService {
 	//工具をキャンセルする
 	void cancelTool(int toolId) throws Exception;
 	//工具の出庫依頼をする
-	void borrowRequestTool(int shippingRecordsId, int employeeId, int toolId) throws Exception;
+	void borrowRequestTool(int shippingRecordId, int employeeId, int toolId) throws Exception;
 	// 工具を出庫する
-	void borrowTool(int employeeId, int toolId) throws Exception;
+	void borrowTool(int shippingRecordId) throws Exception;
 	// 工具を入庫する
 	void returnTool(int toolId) throws Exception;
 	// 依頼者が工具を借りられる状態か判別する

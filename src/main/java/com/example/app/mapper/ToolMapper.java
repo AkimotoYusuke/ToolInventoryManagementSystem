@@ -21,8 +21,8 @@ public interface ToolMapper {
     
     // ある依頼者の予約済のリストを取得
     List<Tool> selectReservedByEmployeeId(int employeeId) throws Exception;
-    // ある依頼者の出庫中のリストを取得
-    List<Tool> selectBorrowingByEmployeeId(int employeeId) throws Exception;
+    // ある依頼者の出庫依頼済・出庫済の工具リストを取得
+    List<Tool> selectBorrowingByShippingId(int shippingId) throws Exception;
     // 出庫可能な工具のリストを取得(LIMIT句あり)
     List<Tool> selectBorrowableWithOffset(@Param("offset") int offset, @Param("num") int num) throws Exception;
     // 出庫可能な工具の数を取得(ページ番号用)
@@ -34,8 +34,6 @@ public interface ToolMapper {
     // 工具に「出庫依頼」を記録
     void addBorrowingRequestRecord(@Param("id") int toolId, @Param("employeeId") int employeeId,
     											@Param("shippingId") int shippingId, @Param("rentalId") int rentalId) throws Exception;
-    // 工具に「出庫済」を記録
-    void addBorrowedRecord(@Param("id") int toolId, @Param("rentalId") int rentalId) throws Exception;
     // 工具に「入庫済」を記録
     void addReturnedRecord(int toolId) throws Exception;
 

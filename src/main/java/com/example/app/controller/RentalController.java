@@ -53,18 +53,30 @@ public class RentalController {
 		// 現在、予約済工具のリスト
 		List<Tool> reservedToolList = toolService.getReservedToolList(loginStatus.getId());
 		model.addAttribute("reservedList", reservedToolList);
-			
-		// 現在、借りている工具のリスト
-		model.addAttribute("borrowingList", toolService.getBorrowingToolList(loginStatus.getId()));
+		// 現在の発送リスト	
+		model.addAttribute("shippingList", shippingRecordService.getShippingRecordListByEmployeeId(loginStatus.getId()));
 		// 貸し出し可能な工具のリスト
 		model.addAttribute("toolList", toolService.getBorrowableToolListPerPage(page, NUM_PER_PAGE));
 		
 		return "list-rental";
 	}
+	
+	//出庫依頼済・出庫済工具リスト
+	@GetMapping("/rental/toolList/{shippingId}")
+	public String rentalToolList(
+			@PathVariable("shippingId") Integer shippingId,
+			Model model) throws Exception {
+
+		model.addAttribute("shippingId", shippingId);
+		// 現在、出庫依頼・出庫済工具のリスト
+		model.addAttribute("borrowingList", toolService.getBorrowingToolList(shippingId));
+		
+		return "show-tool-list";
+	}
 
 	// 「予約」ボタン
 	@GetMapping("/rental/reserve/{toolId}")
-	public String borrowMaterial(
+	public String reserveTool(
 			@PathVariable("toolId") Integer toolId,
 			RedirectAttributes redirectAttributes) throws Exception {
 		LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
@@ -93,9 +105,9 @@ public class RentalController {
 		return "redirect:/rental?page=" + page;
 	}
 	
-//「キャンセル」ボタン
+	//「キャンセル」ボタン
 	@GetMapping("/rental/cancel/{toolId}")
-	public String returnMaterial(
+	public String returnTool(
 			@PathVariable("toolId") Integer toolId,
 			RedirectAttributes redirectAttributes) throws Exception {
 		// 本人によるキャンセルか確認
@@ -115,7 +127,7 @@ public class RentalController {
 	
 //「出庫依頼」ボタン
 	@GetMapping("/rental/request/{id}")
-	public String borrowMaterial(
+	public String borrowTool(
 			@PathVariable Integer id,
 			Model model,
 			RedirectAttributes redirectAttributes) throws Exception {

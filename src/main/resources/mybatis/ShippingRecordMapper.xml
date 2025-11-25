@@ -19,10 +19,20 @@
 <!--		ON employees.authority_type_id = authority_types.id-->
 <!--	</sql>-->
 
-<!--	<select id="selectAll" resultMap="employee">-->
-<!--		<include refid="selectAndJoin" />-->
-<!--		WHERE employees.status = 'ACT'-->
-<!--	</select>-->
+	<select id="selectAllIsShippingRequest" resultType="ShippingRecord">
+		SELECT * FROM shipping_records
+		WHERE shipping_request_at IS NOT NULL
+		AND shipped_at IS NULL
+		AND returned_at IS NULL
+		ORDER BY shipping_request_at
+	</select>
+
+	<select id="selectAllByEmployeeId" parameterType="int" resultType="ShippingRecord">
+		SELECT * FROM shipping_records
+		WHERE employee_id = #{employeeId}
+		AND shipping_request_at IS NOT NULL
+		AND returned_at IS NULL
+	</select>
 
 	<select id="selectById" parameterType="int" resultType="ShippingRecord">
 		SELECT * FROM shipping_records
@@ -34,7 +44,8 @@
 		WHERE employee_id = #{employeeId}
 		AND shipping_delete_at IS NULL
 		AND shipping_request_at IS NULL
-		AND shipped_at IS NULL;
+		AND shipped_at IS NULL
+		AND returned_at IS NULL
 	</select>
 
 <!--	<select id="selectByLoginId" parameterType="string" resultMap="employee">-->
@@ -75,6 +86,12 @@
 	<update id="addShippingRequest" parameterType="int">
 		UPDATE shipping_records
 		SET shipping_request_at = NOW()
+		WHERE id = #{id}
+	</update>
+	
+	<update id="addShippedAt" parameterType="int">
+		UPDATE shipping_records
+		SET shipped_at = NOW()
 		WHERE id = #{id}
 	</update>
 

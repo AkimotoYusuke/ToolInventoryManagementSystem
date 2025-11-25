@@ -38,23 +38,20 @@ public class RentalRecordServiceImpl implements RentalRecordService {
 	}
 	
 	@Override
-	public void borrowRequestTool(int shippingRecordsId, int employeeId, int toolId) throws Exception {
-		shippingRecordMapper.addShippingRequest(shippingRecordsId);
+	public void borrowRequestTool(int shippingRecordId, int employeeId, int toolId) throws Exception {
+		shippingRecordMapper.addShippingRequest(shippingRecordId);
 		RentalRecord rentalRecord = new RentalRecord();
-		rentalRecord.setShippingId(shippingRecordsId);
+		rentalRecord.setShippingId(shippingRecordId);
 		rentalRecord.setEmployeeId(employeeId);
 		rentalRecord.setToolId(toolId);
 		rentalRecordMapper.addBorrowingRequestRecord(rentalRecord);
-		rentalMapper.addBorrowingRequestRecord(toolId, employeeId, shippingRecordsId, rentalRecord.getId());
+		rentalMapper.addBorrowingRequestRecord(toolId, employeeId, shippingRecordId, rentalRecord.getId());
 	}
 		
 	@Override
-	public void borrowTool(int employeeId, int toolId) throws Exception {
-//		RentalRecord rentalRecord = new RentalRecord();
-//		rentalRecord.setEmployeeId(employeeId);
-//		rentalRecord.setToolId(toolId);
-//		rentalRecordMapper.addBorrowedRecord(rentalRecord);
-//		rentalMapper.addBorrowedRecord(toolId, employeeId, rentalRecord.getId());
+	public void borrowTool(int shippingRecordId) throws Exception {
+		shippingRecordMapper.addShippedAt(shippingRecordId);
+		rentalRecordMapper.addBorrowedRecord(shippingRecordId);
 	}
 
 	@Override

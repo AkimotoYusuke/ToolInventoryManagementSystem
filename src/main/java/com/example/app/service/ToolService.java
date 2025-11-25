@@ -19,8 +19,8 @@ public interface ToolService {
     
     // ある依頼者が現在予約済工具の取得
     List<Tool> getReservedToolList(int employeeId) throws Exception;
-    // ある依頼者が現在出庫済工具の取得
-    List<Tool> getBorrowingToolList(int employeeId) throws Exception;
+    // ある依頼者が現在出庫依頼済・出庫済工具の取得
+    List<Tool> getBorrowingToolList(int shippingId) throws Exception;
     // 出庫可能な工具のリスト(ページごと)
     List<Tool> getBorrowableToolListPerPage(int page, int numPerPage) throws Exception;
     // 工具が出庫可能な工具のページ数

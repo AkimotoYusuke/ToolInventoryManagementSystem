@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th= "http://www.thymeleaf.org">
+<th:block th:if="${session.loginStatus.authority == 100}">
+	<head th:replace="~{admin/parts/common :: html_head()}"></head>
+</th:block>
+<th:block th:if="${session.loginStatus.authority == 200}">
+	<head th:replace="~{admin/parts/common :: employee_html_head()}"></head>	
+</th:block>
+<body>
+  <th:block th:if="${session.loginStatus.authority == 100}">
+  	<header th:replace="~{admin/parts/common :: header()}"></header>
+  </th:block>
+  <th:block th:if="${session.loginStatus.authority == 200}">
+	<header th:replace="~{admin/parts/common :: employee_header()}"></header>
+  </th:block>
+  
+  <div class="container">
+	  <h1 class="my-4 h3">発送番号：[[${shippingId}]]</h1>
+	  
+	  <div class="row">
+	    <div class="col-md-12">
+			<table class="table table-bordered">
+			  <thead>
+			    <tr>
+				  <th>管理番号</th>
+			      <th>品名</th>
+			      <th>詳細情報</th>
+			      <th>メーカー</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <tr th:each="tool : ${borrowingList}" th:object="${tool}">
+				  <td>[[*{mgmtId}]]</td>
+			      <td>[[*{name}]]</td>
+			      <td>[[*{detailInfo}]]</td>
+			      <td>[[*{makerType.name}]]</td>
+			    </tr>
+			  </tbody>
+			</table>
+			
+			<p>
+			  <a th:if="${session.loginStatus.authority == 100}" th:href="@{/admin/tool/list(page=${session.page})}" class="btn btn-primary">トップに戻る</a>
+			  <a th:if="${session.loginStatus.authority == 200}" th:href="@{/rental(page=${session.page})}" class="btn btn-primary">トップに戻る</a>
+	        </p>
+			
+		</div><!-- /.col- -->
+	  </div><!-- /.row -->
+  </div><!-- /.container -->
+	
+  <th:block th:replace="~{admin/parts/common :: javascripts()}"></th:block>
+</body>
+</html>

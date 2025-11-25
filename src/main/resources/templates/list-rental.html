@@ -9,28 +9,33 @@
       <div class="col-md-12">
         <div th:if="${message != null}" class="alert alert-success">[[${message}]]</div>
       
-		        <h2 class="h4">出庫中の工具</h2>
-		        <div th:if="${#lists.size(borrowingList) < 1}" class="alert alert-primary">出庫中の工具はありません</div>
-		        <table th:if="${#lists.size(borrowingList) >= 1}" class="table table-bordered">
-		          <thead>
-		            <tr>
-					  <th>管理番号</th>
-		              <th>品名</th>
-		              <th>詳細情報</th>
-		              <th>メーカー</th>
-		              <th>入庫依頼</th>
-		            </tr>
-		          </thead>
-		          <tbody>
-		            <tr th:each="tool : ${borrowingList}">
-					  <td>[[${tool.mgmtId}]]</td>
-		              <td>[[${tool.name}]]</td>
-		              <td>[[${tool.detailInfo}]]</td>
-		              <td>[[${tool.makerType.name}]]</td>
-		              <td><a th:href="@{/rental/return/{id}(id=${tool.id})}" class="btn btn-danger btn-sm">入庫依頼</a></td>
-		            </tr>
-		          </tbody>
-		        </table>
+        <h2 class="h4">出庫依頼済・出庫済の工具</h2>
+        <div th:if="${#lists.size(shippingList) < 1}" class="alert alert-primary">出庫依頼済・出庫済の工具はありません</div>
+        <table th:if="${#lists.size(shippingList) >= 1}" class="table table-bordered">
+          <thead>
+            <tr>
+			  <th>発送番号</th>
+              <th>受取人の氏名</th>
+              <th>受取人の住所</th>
+              <th>発送希望日</th>
+              <th>到着希望日</th>
+			  <th>出庫工具</th>
+			  <th>出庫依頼済・出庫済</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="shipping : ${shippingList}" th:object="${shipping}">
+			  <td><a th:href="@{/shipping/show/{id}(id=*{id})}">[[*{id}]]</a></td>
+              <td>[[*{recipientName}]]</td>
+              <td>[[*{recipientAddress}]]</td>
+              <td>[[*{shipDate}]]</td>
+			  <td>[[*{arrivalDate}]]</td>
+              <td><a th:href="@{/rental/toolList/{id}(id=*{id})}">出庫工具</a></td>
+			  <td th:if="*{shippedAt == null}">出庫依頼済</td>
+			  <td th:if="*{shippedAt != null}">出庫済</td>
+            </tr>
+          </tbody>
+        </table>
 		
 		<h2 class="h4">予約済の工具</h2>
 		<div th:if="${#lists.size(reservedList) < 1}" class="alert alert-primary">予約済の工具はありません</div>
@@ -102,7 +107,7 @@
               <th>品名</th>
               <th>詳細情報</th>
               <th>メーカー</th>
-              <th>出庫依頼</th>
+              <th>予約</th>
             </tr>
           </thead>
           <tbody>

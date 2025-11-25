@@ -1,5 +1,7 @@
 package com.example.app.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,13 +16,17 @@ import lombok.RequiredArgsConstructor;
 public class ShippingRecordServiceImpl implements ShippingRecordService {
 
 	private final ShippingRecordMapper shippingRecordMapper;
-//	private final AuthorityTypeMapper authorityTypeMapper;
 
-//	@Override
-//	public List<Employee> getEmployeeList() throws Exception {
-//		return employeeMapper.selectAll();
-//	}
-//
+	@Override
+	public List<ShippingRecord> getShippingRecordListIsShippingRequest() throws Exception {
+		return shippingRecordMapper.selectAllIsShippingRequest();
+	}
+	
+	@Override
+	public List<ShippingRecord> getShippingRecordListByEmployeeId(Integer employeeId) throws Exception {
+		return shippingRecordMapper.selectAllByEmployeeId(employeeId);
+	}
+
 	@Override
 	public ShippingRecord getShippingRecordById(Integer id) throws Exception {
 		return shippingRecordMapper.selectById(id);

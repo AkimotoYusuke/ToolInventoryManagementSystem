@@ -67,10 +67,10 @@ public class ShippingRecord {
 	private String note;
 	
 	private Integer employeeId;
-	private Integer rentalRecordId;
 	private LocalDateTime shippingAddAt;
 	private LocalDateTime shippingDeleteAt;
 	private LocalDateTime shippingRequestAt;
 	private LocalDateTime shippedAt;
-
+	private LocalDateTime returnedAt;
+	
 }

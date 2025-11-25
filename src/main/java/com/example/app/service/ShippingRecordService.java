@@ -1,10 +1,13 @@
 package com.example.app.service;
 
+import java.util.List;
+
 import com.example.app.domain.ShippingRecord;
 
 public interface ShippingRecordService {
 
-//	List<Employee> getEmployeeList() throws Exception;
+	List<ShippingRecord> getShippingRecordListIsShippingRequest() throws Exception;
+	List<ShippingRecord> getShippingRecordListByEmployeeId(Integer employeeId) throws Exception;
 	ShippingRecord getShippingRecordById(Integer id) throws Exception;
 	ShippingRecord getShippingRecordByEmployeeId(Integer employeeId) throws Exception;
 //	Employee getEmployeeByLoginId(String logingId) throws Exception;

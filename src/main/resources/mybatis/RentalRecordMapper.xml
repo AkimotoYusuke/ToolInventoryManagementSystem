@@ -20,10 +20,13 @@
 		VALUES (#{employeeId}, #{toolId}, #{shippingId}, NOW())
 	</insert>
 	
-	<insert id="addBorrowedRecord" parameterType="RentalRecord" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO rental_records (employee_id, tool_id, shipping_id, borrowing_requested_at)
-		VALUES (#{employeeId}, #{toolId}, #{shippingId}, NOW())
-	</insert>
+	<update id="addBorrowedRecord" parameterType="int">
+		UPDATE rental_records
+		SET borrowed_at = NOW()
+		WHERE shipping_id = #{shippingId}
+		AND borrowed_at IS NULL
+		AND returned_at IS NULL
+	</update>
 
 	<update id="addReturnedRecord" parameterType="int">
 		UPDATE rental_records

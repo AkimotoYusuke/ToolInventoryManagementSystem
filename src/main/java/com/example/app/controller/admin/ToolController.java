@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.app.domain.Tool;
 import com.example.app.service.RentalRecordService;
+import com.example.app.service.ShippingRecordService;
 import com.example.app.service.ToolService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class ToolController {
 
 	private final ToolService service;
 	private final RentalRecordService rentalRecordService;
+	private final ShippingRecordService shippingRecordService;
 	private final HttpSession session;
 
 	@GetMapping("/list")
@@ -38,9 +40,12 @@ public class ToolController {
 		// 詳細・追加・編集ページから戻る際に利用
 		session.setAttribute("page", page);
 		
-	    int totalPages = service.getTotalPages(NUM_PER_PAGE);
-	    model.addAttribute("totalPages", totalPages);
-	    model.addAttribute("currentPage", page);
+		// 現在の工具依頼リスト
+		model.addAttribute("shippingList", shippingRecordService.getShippingRecordListIsShippingRequest());
+		
+	  int totalPages = service.getTotalPages(NUM_PER_PAGE);
+	  model.addAttribute("totalPages", totalPages);
+	  model.addAttribute("currentPage", page);
 		model.addAttribute("toolList", service.getToolListPerPage(page, NUM_PER_PAGE));
 		return "admin/list-tool";
 	}
@@ -152,5 +157,62 @@ public class ToolController {
 		int page = previousPage <= totalPages ? previousPage : totalPages;
 		return "redirect:/admin/tool/list?page=" + page;
 	}
+	
+	@GetMapping("/showShipping/{id}")
+	public String showShipping(
+			@PathVariable Integer id,
+			Model model) throws Exception {
+		
+		// 依頼者の発送情報
+		model.addAttribute("shippingRecord", shippingRecordService.getShippingRecordById(id));
+			return "show-shipping";
+	}
+	
+	//出庫依頼済・出庫済工具リスト
+	@GetMapping("/toolList/{shippingId}")
+	public String rentalToolList(
+			@PathVariable("shippingId") Integer shippingId,
+			Model model) throws Exception {
+
+		model.addAttribute("shippingId", shippingId);
+		// 現在、出庫依頼・出庫済工具のリスト
+		model.addAttribute("borrowingList", service.getBorrowingToolList(shippingId));
+		
+		return "show-tool-list";
+	}
+	
+	
+//「出庫」ボタン
+@GetMapping("/borrow/{shippingId}")
+public String borrowMaterial(
+		@PathVariable("shippingId") Integer shippingId,
+		RedirectAttributes redirectAttributes) throws Exception {
+
+	//「出庫」処理を実行
+	rentalRecordService.borrowTool(shippingId);
+	redirectAttributes.addFlashAttribute("message", "出庫処理をしました。");
+	
+	//出庫後に戻るページ(⇒最終ページ)
+	int totalPages = service.getTotalPages(NUM_PER_PAGE);
+	return "redirect:/admin/tool/list?page=" + totalPages;
+}
+
+
+//// 「入庫依頼」ボタン
+//@GetMapping("/rental/return/{toolId}")
+//public String returnMaterial(
+//		@PathVariable("toolId") Integer toolId) throws Exception {
+//	// 本人による返却か確認
+//	LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
+//	if (!rentalRecordService.byAuthenticatedEmployee(loginStatus.getId(), toolId)) {
+//		System.out.println("他の従業員による返却");
+//	} else {
+//		rentalRecordService.returnTool(toolId);
+//	}
+//
+//	// 返却後に戻るページ(元のページ)
+//	int previousPage = (int) session.getAttribute("page");
+//	return "redirect:/rental?page=" + previousPage;
+//}
 
 }

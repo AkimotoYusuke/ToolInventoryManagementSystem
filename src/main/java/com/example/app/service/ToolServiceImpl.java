@@ -79,8 +79,8 @@ public class ToolServiceImpl implements ToolService {
 	}
 	
 	@Override
-	public List<Tool> getBorrowingToolList(int employeeId) throws Exception {
-		return toolMapper.selectBorrowingByEmployeeId(employeeId);
+	public List<Tool> getBorrowingToolList(int shippingId) throws Exception {
+		return toolMapper.selectBorrowingByShippingId(shippingId);
 	}
 
 	@Override
