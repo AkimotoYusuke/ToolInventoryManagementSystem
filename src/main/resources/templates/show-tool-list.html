@@ -26,14 +26,20 @@
 			      <th>品名</th>
 			      <th>詳細情報</th>
 			      <th>メーカー</th>
+				  <th:block th:if="${(session.loginStatus.authority == 100) && (shippingRecord.shippedAt != null)}">
+					<th>入庫</th>
+				  </th:block>
 			    </tr>
 			  </thead>
 			  <tbody>
-			    <tr th:each="tool : ${borrowingList}" th:object="${tool}">
-				  <td>[[*{mgmtId}]]</td>
-			      <td>[[*{name}]]</td>
-			      <td>[[*{detailInfo}]]</td>
-			      <td>[[*{makerType.name}]]</td>
+			    <tr th:each="tool : ${borrowingList}">
+				  <td>[[${tool.mgmtId}]]</td>
+			      <td>[[${tool.name}]]</td>
+			      <td>[[${tool.detailInfo}]]</td>
+			      <td>[[${tool.makerType.name}]]</td>
+				  <th:block th:if="${(session.loginStatus.authority == 100) && (shippingRecord.shippedAt != null)}">
+				  	<td><a th:href="@{/admin/tool/return/{id}(id=*{id})}" class="btn btn-danger btn-sm">入庫</a></td>
+				  </th:block>
 			    </tr>
 			  </tbody>
 			</table>

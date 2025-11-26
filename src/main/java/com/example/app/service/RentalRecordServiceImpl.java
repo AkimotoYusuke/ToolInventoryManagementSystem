@@ -38,26 +38,36 @@ public class RentalRecordServiceImpl implements RentalRecordService {
 	}
 	
 	@Override
-	public void borrowRequestTool(int shippingRecordId, int employeeId, int toolId) throws Exception {
+	public void borrowRequestTool(int shippingRecordId, int employeeId, List<Tool> reservedToolList) throws Exception {
 		shippingRecordMapper.addShippingRequest(shippingRecordId);
-		RentalRecord rentalRecord = new RentalRecord();
-		rentalRecord.setShippingId(shippingRecordId);
-		rentalRecord.setEmployeeId(employeeId);
-		rentalRecord.setToolId(toolId);
-		rentalRecordMapper.addBorrowingRequestRecord(rentalRecord);
-		rentalMapper.addBorrowingRequestRecord(toolId, employeeId, shippingRecordId, rentalRecord.getId());
+		reservedToolList.forEach(tool -> {
+			try {
+				RentalRecord rentalRecord = new RentalRecord();
+				rentalRecord.setShippingId(shippingRecordId);
+				rentalRecord.setEmployeeId(employeeId);
+				rentalRecord.setToolId(tool.getId());
+				rentalRecordMapper.addBorrowingRequestRecord(rentalRecord);
+				rentalMapper.addBorrowingRequestRecord(tool.getId(), employeeId, shippingRecordId, rentalRecord.getId());
+			} catch (Exception e) {
+				// エラー発生
+				System.out.println("出庫依頼処理でエラー");
+				e.printStackTrace();
+			}
+		});
 	}
 		
 	@Override
 	public void borrowTool(int shippingRecordId) throws Exception {
-		shippingRecordMapper.addShippedAt(shippingRecordId);
+		shippingRecordMapper.addShipped(shippingRecordId);
 		rentalRecordMapper.addBorrowedRecord(shippingRecordId);
+		rentalMapper.addBorrowedRecord(shippingRecordId);
 	}
 
 	@Override
-	public void returnTool(int toolId) throws Exception {
-		rentalRecordMapper.addReturnedRecord(toolId);
-		rentalMapper.addReturnedRecord(toolId);
+	public void returnTool(int shippingRecordId) throws Exception {
+		shippingRecordMapper.addReturned(shippingRecordId);
+		rentalRecordMapper.addReturnedRecord(shippingRecordId);
+		rentalMapper.addReturnedRecord(shippingRecordId);
 	}
 
 	@Override

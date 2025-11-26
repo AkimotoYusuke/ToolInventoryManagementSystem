@@ -126,27 +126,19 @@ public class RentalController {
 	}
 	
 //「出庫依頼」ボタン
-	@GetMapping("/rental/request/{id}")
+	@GetMapping("/rental/request/{shippingId}")
 	public String borrowTool(
-			@PathVariable Integer id,
+			@PathVariable Integer shippingId,
 			Model model,
 			RedirectAttributes redirectAttributes) throws Exception {
 		
 		LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
 		
-	// 現在、予約済工具のリスト
+		// 現在、予約済工具のリスト
 		List<Tool> reservedToolList = toolService.getReservedToolList(loginStatus.getId());
 		
-		reservedToolList.forEach(tool -> {
-			//「出庫依頼」処理を実行
-			try {
-				rentalRecordService.borrowRequestTool( id,loginStatus.getId(), tool.getId());
-			} catch (Exception e) {
-				// エラー発生
-				System.out.println("出庫依頼処理でエラー");
-				e.printStackTrace();
-			}
-		});
+		//「出庫依頼」処理を実行
+		rentalRecordService.borrowRequestTool(shippingId,loginStatus.getId(), reservedToolList);
 		
 		redirectAttributes.addFlashAttribute("message", "出庫依頼しました。");
 		

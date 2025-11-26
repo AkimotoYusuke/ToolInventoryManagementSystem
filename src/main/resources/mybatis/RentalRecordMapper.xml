@@ -24,6 +24,7 @@
 		UPDATE rental_records
 		SET borrowed_at = NOW()
 		WHERE shipping_id = #{shippingId}
+		AND borrowing_requested_at IS NOT NULL
 		AND borrowed_at IS NULL
 		AND returned_at IS NULL
 	</update>
@@ -31,7 +32,9 @@
 	<update id="addReturnedRecord" parameterType="int">
 		UPDATE rental_records
 		SET returned_at = NOW()
-		WHERE tool_id = #{toolId}
+		WHERE shipping_id = #{shippingId}
+		AND borrowing_requested_at IS NOT NULL
+		AND borrowed_at IS NOT NULL
 		AND returned_at IS NULL
 	</update>
 

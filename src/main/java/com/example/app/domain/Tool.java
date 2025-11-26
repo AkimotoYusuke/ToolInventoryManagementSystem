@@ -31,5 +31,6 @@ public class Tool {
 	private Integer requestedEmployeeId;
 	private Integer shippingId;
 	private Integer rentalId;
+	private LocalDateTime borrowedAt;
 	
 }

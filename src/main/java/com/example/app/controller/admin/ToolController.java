@@ -40,8 +40,11 @@ public class ToolController {
 		// 詳細・追加・編集ページから戻る際に利用
 		session.setAttribute("page", page);
 		
-		// 現在の工具依頼リスト
-		model.addAttribute("shippingList", shippingRecordService.getShippingRecordListIsShippingRequest());
+		// 工具依頼リスト
+		model.addAttribute("shippingRequestList", shippingRecordService.getShippingRecordListIsShippingRequest());
+		
+		// 出庫済の工具リスト
+		model.addAttribute("shippedAtList", shippingRecordService.getShippingRecordListIsShipped());
 		
 	  int totalPages = service.getTotalPages(NUM_PER_PAGE);
 	  model.addAttribute("totalPages", totalPages);
@@ -175,16 +178,17 @@ public class ToolController {
 			Model model) throws Exception {
 
 		model.addAttribute("shippingId", shippingId);
+	  // 依頼者の発送情報で発送日のデータを取得
+		model.addAttribute("shippingRecord", shippingRecordService.getShippingRecordById(shippingId));
 		// 現在、出庫依頼・出庫済工具のリスト
 		model.addAttribute("borrowingList", service.getBorrowingToolList(shippingId));
 		
 		return "show-tool-list";
 	}
 	
-	
 //「出庫」ボタン
 @GetMapping("/borrow/{shippingId}")
-public String borrowMaterial(
+public String borrowTool(
 		@PathVariable("shippingId") Integer shippingId,
 		RedirectAttributes redirectAttributes) throws Exception {
 
@@ -197,22 +201,19 @@ public String borrowMaterial(
 	return "redirect:/admin/tool/list?page=" + totalPages;
 }
 
-
-//// 「入庫依頼」ボタン
-//@GetMapping("/rental/return/{toolId}")
-//public String returnMaterial(
-//		@PathVariable("toolId") Integer toolId) throws Exception {
-//	// 本人による返却か確認
-//	LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
-//	if (!rentalRecordService.byAuthenticatedEmployee(loginStatus.getId(), toolId)) {
-//		System.out.println("他の従業員による返却");
-//	} else {
-//		rentalRecordService.returnTool(toolId);
-//	}
-//
-//	// 返却後に戻るページ(元のページ)
-//	int previousPage = (int) session.getAttribute("page");
-//	return "redirect:/rental?page=" + previousPage;
-//}
+	//「入庫」ボタン
+	@GetMapping("/return/{shippingId}")
+	public String returnTool(
+			@PathVariable("shippingId") Integer shippingId,
+			RedirectAttributes redirectAttributes) throws Exception {
+	
+		//「入庫」処理を実行
+		rentalRecordService.returnTool(shippingId);
+		redirectAttributes.addFlashAttribute("message", "入庫処理をしました。");
+		
+		// 返却後に戻るページ(元のページ)
+		int previousPage = (int) session.getAttribute("page");
+		return "redirect:/admin/tool/list?page=" + previousPage;
+	}
 
 }

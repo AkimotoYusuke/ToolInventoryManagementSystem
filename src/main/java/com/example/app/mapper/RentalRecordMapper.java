@@ -17,7 +17,7 @@ public interface RentalRecordMapper {
   //「出庫」に対応する処理：出庫日を記録
 	void addBorrowedRecord(int shippingId) throws Exception;
 	// 「入庫」に対応する処理：入庫日を記録
-	void addReturnedRecord(int toolId) throws Exception;
+	void addReturnedRecord(int shippingId) throws Exception;
 	// ある依頼者の未入庫の工具数
 	int countBorrowingByEmployeeId(int employeeId) throws Exception;
 	// 工具IDから現在の出庫状況(どの依頼者が出庫しているか)を取得

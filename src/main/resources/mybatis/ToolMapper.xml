@@ -15,8 +15,10 @@
 			tools.detail_info, tools.created, tools.status,
 			tools.maker_type_id, maker_types.name AS maker_type_name,
 			tools.reserved_employee_id,
+			tools.requested_employee_id,
+			tools.shipping_id,
 			tools.rental_id,
-			tools.shipping_id
+			tools.borrowed_at
 		FROM tools
 		JOIN maker_types
 		ON tools.maker_type_id = maker_types.id
@@ -77,7 +79,7 @@
     	<include refid="selectAndJoin" />
 		LEFT JOIN rental_records
 		ON tools.rental_id = rental_records.id
-		WHERE rental_records.shipping_id = #{shippingId}
+		WHERE tools.shipping_id = #{shippingId}
 		ORDER BY rental_records.borrowed_at
 	</select>
 
@@ -115,11 +117,17 @@
 			shipping_id = #{shippingId}, rental_id = #{rentalId}
 		WHERE id = #{id}
 	</update>
+	
+	<update id="addBorrowedRecord" parameterType="int">
+		UPDATE tools
+		SET borrowed_at = NOW()
+		WHERE shipping_id = #{shippingId}
+	</update>
 
 	<update id="addReturnedRecord" parameterType="int">
 		UPDATE tools
-		SET rental_id = NULL
-		WHERE id = #{id}
+		SET requested_employee_id = NULL, shipping_id = NULL, rental_id = NULL, borrowed_at = NULL
+		WHERE shipping_id = #{shippingId}
 	</update>
 	
 </mapper>

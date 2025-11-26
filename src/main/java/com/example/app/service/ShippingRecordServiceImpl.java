@@ -18,13 +18,18 @@ public class ShippingRecordServiceImpl implements ShippingRecordService {
 	private final ShippingRecordMapper shippingRecordMapper;
 
 	@Override
+	public List<ShippingRecord> getShippingRecordListByEmployeeId(Integer employeeId) throws Exception {
+		return shippingRecordMapper.selectAllByEmployeeId(employeeId);
+	}
+	
+	@Override
 	public List<ShippingRecord> getShippingRecordListIsShippingRequest() throws Exception {
 		return shippingRecordMapper.selectAllIsShippingRequest();
 	}
 	
 	@Override
-	public List<ShippingRecord> getShippingRecordListByEmployeeId(Integer employeeId) throws Exception {
-		return shippingRecordMapper.selectAllByEmployeeId(employeeId);
+	public List<ShippingRecord> getShippingRecordListIsShipped() throws Exception {
+		return shippingRecordMapper.selectAllIsShipped();
 	}
 
 	@Override

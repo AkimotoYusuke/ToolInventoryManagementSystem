@@ -19,19 +19,28 @@
 <!--		ON employees.authority_type_id = authority_types.id-->
 <!--	</sql>-->
 
-	<select id="selectAllIsShippingRequest" resultType="ShippingRecord">
-		SELECT * FROM shipping_records
-		WHERE shipping_request_at IS NOT NULL
-		AND shipped_at IS NULL
-		AND returned_at IS NULL
-		ORDER BY shipping_request_at
-	</select>
-
 	<select id="selectAllByEmployeeId" parameterType="int" resultType="ShippingRecord">
 		SELECT * FROM shipping_records
 		WHERE employee_id = #{employeeId}
 		AND shipping_request_at IS NOT NULL
 		AND returned_at IS NULL
+		ORDER BY shipping_request_at DESC
+	</select>
+
+	<select id="selectAllIsShippingRequest" resultType="ShippingRecord">
+		SELECT * FROM shipping_records
+		WHERE shipping_request_at IS NOT NULL
+		AND shipped_at IS NULL
+		AND returned_at IS NULL
+		ORDER BY shipping_request_at DESC
+	</select>
+	
+	<select id="selectAllIsShipped" resultType="ShippingRecord">
+		SELECT * FROM shipping_records
+		WHERE shipping_request_at IS NOT NULL
+		AND shipped_at IS NOT NULL
+		AND returned_at IS NULL
+		ORDER BY shipped_at DESC
 	</select>
 
 	<select id="selectById" parameterType="int" resultType="ShippingRecord">
@@ -81,18 +90,36 @@
 			sender_name = #{senderName}, sender_post_code = #{senderPostCode}, sender_address = #{senderAddress}, sender_phone = #{senderPhone},
 			shipping_method = #{shippingMethod}, ship_date = #{shipDate}, arrival_date = #{arrivalDate}, shipping_number = #{shippingNumber}, note = #{note}
 		WHERE id = #{id}
+		AND shipping_request_at IS NULL
+		AND shipped_at IS NULL
+		AND returned_at IS NULL
 	</update>
 	
 	<update id="addShippingRequest" parameterType="int">
 		UPDATE shipping_records
 		SET shipping_request_at = NOW()
 		WHERE id = #{id}
+		AND shipping_request_at IS NULL
+		AND shipped_at IS NULL
+		AND returned_at IS NULL
 	</update>
 	
-	<update id="addShippedAt" parameterType="int">
+	<update id="addShipped" parameterType="int">
 		UPDATE shipping_records
 		SET shipped_at = NOW()
 		WHERE id = #{id}
+		AND shipping_request_at IS NOT NULL
+		AND shipped_at IS NULL
+		AND returned_at IS NULL
+	</update>
+	
+	<update id="addReturned" parameterType="int">
+		UPDATE shipping_records
+		SET returned_at = NOW()
+		WHERE id = #{id}
+		AND shipping_request_at IS NOT NULL
+		AND shipped_at IS NOT NULL
+		AND returned_at IS NULL
 	</update>
 
 <!--	<select id="selectLimited" resultMap="employee">-->

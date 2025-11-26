@@ -6,8 +6,9 @@ import com.example.app.domain.ShippingRecord;
 
 public interface ShippingRecordService {
 
-	List<ShippingRecord> getShippingRecordListIsShippingRequest() throws Exception;
 	List<ShippingRecord> getShippingRecordListByEmployeeId(Integer employeeId) throws Exception;
+	List<ShippingRecord> getShippingRecordListIsShippingRequest() throws Exception;
+	List<ShippingRecord> getShippingRecordListIsShipped() throws Exception;
 	ShippingRecord getShippingRecordById(Integer id) throws Exception;
 	ShippingRecord getShippingRecordByEmployeeId(Integer employeeId) throws Exception;
 //	Employee getEmployeeByLoginId(String logingId) throws Exception;
