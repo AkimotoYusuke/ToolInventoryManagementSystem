@@ -60,7 +60,6 @@ public class RentalRecordServiceImpl implements RentalRecordService {
 	public void borrowTool(int shippingRecordId) throws Exception {
 		shippingRecordMapper.addShipped(shippingRecordId);
 		rentalRecordMapper.addBorrowedRecord(shippingRecordId);
-		rentalMapper.addBorrowedRecord(shippingRecordId);
 	}
 
 	@Override
@@ -68,6 +67,20 @@ public class RentalRecordServiceImpl implements RentalRecordService {
 		shippingRecordMapper.addReturned(shippingRecordId);
 		rentalRecordMapper.addReturnedRecord(shippingRecordId);
 		rentalMapper.addReturnedRecord(shippingRecordId);
+	}
+	
+	@Override
+	public boolean onlyOneReturnTool(int toolId, int shippingRecordId) throws Exception {
+		rentalRecordMapper.addOnlyOneReturnedRecord(toolId);
+		rentalMapper.addOnlyOneReturnedRecord(toolId);
+		
+		// ある発送番号の発送工具が全て入庫済の場合は、発送情報の入庫日を記載する
+		if(rentalRecordMapper.countBorrowingByShippingId(shippingRecordId) == 0) {
+			shippingRecordMapper.addReturned(shippingRecordId);
+			return true;
+		}
+		
+		return false;
 	}
 
 	@Override

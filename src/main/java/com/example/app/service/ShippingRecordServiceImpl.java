@@ -41,16 +41,6 @@ public class ShippingRecordServiceImpl implements ShippingRecordService {
 	public ShippingRecord getShippingRecordByEmployeeId(Integer employeeId) throws Exception {
 		return shippingRecordMapper.selectByEmployeeId(employeeId);
 	}
-//	
-//	@Override
-//	public Employee getEmployeeByLoginId(String logingId) throws Exception {
-//		return employeeMapper.selectByLoginId(logingId);
-//	}
-//	
-//	@Override
-//	public Employee getEmployeeByLoginIdAndStatusAct(String logingId) throws Exception {
-//		return employeeMapper.selectByLoginIdAndStatusAct(logingId);
-//	}
 
 	@Override
 	public void deleteShippingRecordById(Integer id) throws Exception {
@@ -66,32 +56,5 @@ public class ShippingRecordServiceImpl implements ShippingRecordService {
 	public void editShippingRecord(ShippingRecord shippingRecord) throws Exception {
 		shippingRecordMapper.update(shippingRecord);
 	}
-
-//	@Override
-//	public boolean isExsitingEmployee(String loginId) throws Exception {
-//		Employee employee = employeeMapper.selectByLoginId(loginId);
-//		if(employee != null) {
-//			return true;
-//		}
-//
-//		return false;
-//	}
-//
-//	@Override
-//	public List<Employee> getEmployeeListPerPage(int page, int numPerPage) throws Exception {
-//		int offset = numPerPage * (page - 1);
-//		return employeeMapper.selectLimited(offset, numPerPage);
-//	}
-//
-//	@Override
-//	public int getTotalPages(int numPerPage) throws Exception {
-//		long count = employeeMapper.countActive();
-//		return (int) Math.ceil((double) count / numPerPage);
-//	}
-//
-//	@Override
-//	public List<AuthorityType> getAuthorityTypeList() throws Exception {
-//		return authorityTypeMapper.selectAll();
-//	}
 
 }

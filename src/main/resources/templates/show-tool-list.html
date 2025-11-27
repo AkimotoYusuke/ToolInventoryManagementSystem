@@ -19,6 +19,9 @@
 	  
 	  <div class="row">
 	    <div class="col-md-12">
+			<div class="alert alert-success" th:if="${message}">
+				[[${message}]]
+			</div>
 			<table class="table table-bordered">
 			  <thead>
 			    <tr>
@@ -38,7 +41,7 @@
 			      <td>[[${tool.detailInfo}]]</td>
 			      <td>[[${tool.makerType.name}]]</td>
 				  <th:block th:if="${(session.loginStatus.authority == 100) && (shippingRecord.shippedAt != null)}">
-				  	<td><a th:href="@{/admin/tool/return/{id}(id=*{id})}" class="btn btn-danger btn-sm">入庫</a></td>
+				  	<td><a th:href="@{/admin/tool/onlyOneReturn/{id}/{shippingId}(id=${tool.id}, shippingId=${shippingId})}" class="btn btn-danger btn-sm">入庫</a></td>
 				  </th:block>
 			    </tr>
 			  </tbody>

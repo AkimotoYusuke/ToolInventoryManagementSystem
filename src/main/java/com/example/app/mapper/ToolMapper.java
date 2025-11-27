@@ -34,9 +34,9 @@ public interface ToolMapper {
     // 工具に「出庫依頼」を記録
     void addBorrowingRequestRecord(@Param("id") int toolId, @Param("employeeId") int employeeId,
     											@Param("shippingId") int shippingId, @Param("rentalId") int rentalId) throws Exception;
-    // 工具に「出庫済」を記録
-    void addBorrowedRecord(int shippingId) throws Exception;
     // 工具に「入庫済」を記録
     void addReturnedRecord(int shippingId) throws Exception;
+    // 対象１個のみの工具に「入庫済」を記録
+    void addOnlyOneReturnedRecord(int toolId) throws Exception;
 
 }

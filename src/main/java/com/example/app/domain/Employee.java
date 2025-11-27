@@ -21,9 +21,13 @@ public class Employee {
 	@NotBlank
 	@Size(max = 60)
 	private String loginPass;
+	
+	@NotBlank
+	@Size(max = 13)
+	private String phone;
 
 	private String status;
 	
 	private AuthorityType authorityType;
-
+	
 }

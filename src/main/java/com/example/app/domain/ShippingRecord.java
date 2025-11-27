@@ -29,7 +29,7 @@ public class ShippingRecord {
 	private String recipientAddress;
 	
 	@NotBlank
-	@Size(max = 20)
+	@Size(max = 13)
 	private String recipientPhone;
 	
 	@NotBlank
@@ -45,7 +45,7 @@ public class ShippingRecord {
 	private String senderAddress;
 	
 	@NotBlank
-	@Size(max = 20)
+	@Size(max = 13)
 	private String senderPhone;
 	
 	@NotBlank
@@ -69,7 +69,7 @@ public class ShippingRecord {
 	private Integer employeeId;
 	private LocalDateTime shippingAddAt;
 	private LocalDateTime shippingDeleteAt;
-	private LocalDateTime shippingRequestAt;
+	private LocalDateTime shippingRequestedAt;
 	private LocalDateTime shippedAt;
 	private LocalDateTime returnedAt;
 	

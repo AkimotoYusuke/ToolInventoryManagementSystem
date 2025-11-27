@@ -23,7 +23,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ShippingController {
 
-	private static final int NUM_PER_PAGE = 5;
+	private static final String SENDER_POST_CODE = "143-0006";
+	private static final String SENDER_ADDRESS = "東京都大田区平和島9876 株式会社 ABCD 工具管理センター";
 
 	private final ShippingRecordService service;
 	private final HttpSession session;
@@ -43,8 +44,9 @@ public class ShippingController {
 		ShippingRecord shippingRecord = new ShippingRecord();
 		LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
 		shippingRecord.setSenderName(loginStatus.getName());
-		shippingRecord.setSenderPostCode("143-0006");
-		shippingRecord.setSenderAddress("東京都大田区平和島9876 株式会社 ABCD 工具管理センター");
+		shippingRecord.setSenderPostCode(SENDER_POST_CODE);
+		shippingRecord.setSenderAddress(SENDER_ADDRESS);
+		shippingRecord.setSenderPhone(loginStatus.getPhone());
 		model.addAttribute("shippingRecord", shippingRecord);
 		model.addAttribute("heading", "発送情報の入力");
 		return "save-shipping";

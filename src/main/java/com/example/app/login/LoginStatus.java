@@ -11,5 +11,6 @@ public class LoginStatus {
 	private String name;
 	private String loginId;
 	private int authority;
+	private String phone;
 
 }

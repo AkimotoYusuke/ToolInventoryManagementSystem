@@ -18,7 +18,9 @@ public interface RentalRecordService {
 	// 工具を出庫する
 	void borrowTool(int shippingRecordId) throws Exception;
 	// 工具を入庫する
-	void returnTool(int toolId) throws Exception;
+	void returnTool(int shippingRecordId) throws Exception;
+	// 工具を1個ずつ入庫する
+	boolean onlyOneReturnTool(int toolId, int shippingRecordId) throws Exception;
 	// 依頼者が工具を借りられる状態か判別する
 	boolean isAbleToBorrow(int employeeId, int limitation) throws Exception;
 	//本人によるキャンセルか確認する

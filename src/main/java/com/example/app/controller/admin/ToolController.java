@@ -216,4 +216,24 @@ public String borrowTool(
 		return "redirect:/admin/tool/list?page=" + previousPage;
 	}
 
+	//対象１個のみの「入庫」ボタン
+	@GetMapping("/onlyOneReturn/{toolId}/{shippingId}")
+	public String onlyOneReturnTool(
+			@PathVariable("toolId") Integer toolId,
+			@PathVariable("shippingId") Integer shippingId,
+			RedirectAttributes redirectAttributes) throws Exception {
+		
+		//「入庫」処理を実行
+		// ある発送番号の発送工具が全て入庫済の場合は、トップ画面に戻る
+		if (rentalRecordService.onlyOneReturnTool(toolId, shippingId)) {
+			redirectAttributes.addFlashAttribute("message", "入庫処理をしました。");
+			// 返却後に戻るページ(元のページ)
+			int previousPage = (int) session.getAttribute("page");
+			return "redirect:/admin/tool/list?page=" + previousPage;
+		}
+		
+		redirectAttributes.addFlashAttribute("message", "入庫処理をしました。");
+		return "redirect:/admin/tool/toolList/" + shippingId;
+	}
+	
 }

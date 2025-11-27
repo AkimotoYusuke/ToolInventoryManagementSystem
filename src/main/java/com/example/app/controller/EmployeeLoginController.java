@@ -53,6 +53,7 @@ public class EmployeeLoginController {
 				.name(employee.getName())
 				.loginId(employee.getLoginId())
 				.authority(employee.getAuthorityType().getId())
+				.phone(employee.getPhone())
 				.build();
 		session.setAttribute("loginStatus", loginStatus);
 		return "redirect:/rental";

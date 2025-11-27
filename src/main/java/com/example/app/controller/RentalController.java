@@ -125,7 +125,7 @@ public class RentalController {
 		return "redirect:/rental?page=" + previousPage;
 	}
 	
-//「出庫依頼」ボタン
+	//「出庫依頼」ボタン
 	@GetMapping("/rental/request/{shippingId}")
 	public String borrowTool(
 			@PathVariable Integer shippingId,
@@ -134,10 +134,10 @@ public class RentalController {
 		
 		LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
 		
-		// 現在、予約済工具のリスト
+		// 現在、予約済工具のリストを取得
 		List<Tool> reservedToolList = toolService.getReservedToolList(loginStatus.getId());
 		
-		//「出庫依頼」処理を実行
+		//予約済工具のリストの分、「出庫依頼」処理を実行
 		rentalRecordService.borrowRequestTool(shippingId,loginStatus.getId(), reservedToolList);
 		
 		redirectAttributes.addFlashAttribute("message", "出庫依頼しました。");
@@ -146,53 +146,5 @@ public class RentalController {
 		int previousPage = (int) session.getAttribute("page");
 		return "redirect:/rental?page=" + previousPage;
 	}
-	
-////「出庫依頼」ボタン
-//	@GetMapping("/rental/borrow/{toolId}")
-//	public String borrowMaterial(
-//			@PathVariable("toolId") Integer toolId,
-//			RedirectAttributes redirectAttributes) throws Exception {
-//		LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
-//
-//		int previousPage = (int) session.getAttribute("page");
-//
-//		// 借りている工具数が最大値を超えていないか確認
-//		if (!rentalRecordService.isAbleToBorrow(loginStatus.getId(), BORROWABLE_LIMIT)) {
-//			redirectAttributes.addFlashAttribute("message", "貸し出し可能な工具数は" + BORROWABLE_LIMIT + "個までです");
-//			return "redirect:/rental?page=" + previousPage;
-//		}
-//
-//		// 借りようとしている工具が貸し出されていないか確認
-//		if (!toolService.isBorrowable(toolId)) {
-//			redirectAttributes.addFlashAttribute("message", "工具は貸し出し中、または削除済みです");
-//			return "redirect:/rental?page=" + previousPage;
-//		}
-//
-//		// 問題がなければ、「出庫依頼」処理を実行
-//		rentalRecordService.borrowTool(loginStatus.getId(), toolId);
-//		
-//		// 出庫依頼後に戻るページ(⇒ページ数が減って、元のページが無くなった場合は最終ページ)
-//		int totalPages = toolService.getTotalBorrowableToolPages(NUM_PER_PAGE);
-//		int page = previousPage <= totalPages ? previousPage : totalPages;
-//		return "redirect:/rental?page=" + page;
-//	}
-	
-
-//	// 「入庫依頼」ボタン
-//	@GetMapping("/rental/return/{toolId}")
-//	public String returnMaterial(
-//			@PathVariable("toolId") Integer toolId) throws Exception {
-//		// 本人による返却か確認
-//		LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
-//		if (!rentalRecordService.byAuthenticatedEmployee(loginStatus.getId(), toolId)) {
-//			System.out.println("他の従業員による返却");
-//		} else {
-//			rentalRecordService.returnTool(toolId);
-//		}
-//
-//		// 返却後に戻るページ(元のページ)
-//		int previousPage = (int) session.getAttribute("page");
-//		return "redirect:/rental?page=" + previousPage;
-//	}
 
 }

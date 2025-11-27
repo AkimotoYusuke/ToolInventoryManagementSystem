@@ -23,6 +23,10 @@
               <label>氏名：<input type="text" th:field="*{name}"></label>
               <div class="error-message mt-2" th:errors="*{name}"></div>
           </div>
+		  <div class="mb-3">
+              <label>電話番号：<input type="text" th:field="*{phone}"></label>
+              <div class="error-message mt-2" th:errors="*{phone}"></div>
+          </div>
 		  <p class="mb-4">権限：
 	          <select th:field="*{authorityType.id}">
 	              <option th:each="type : ${authorityTypeList}" th:value="${type.id}">[[${type.name}]]</option>
