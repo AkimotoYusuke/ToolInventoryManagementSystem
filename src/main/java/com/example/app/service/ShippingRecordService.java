@@ -14,5 +14,7 @@ public interface ShippingRecordService {
 	void deleteShippingRecordById(Integer id) throws Exception;
 	void addShippingRecord(ShippingRecord shippingRecord) throws Exception;
 	void editShippingRecord(ShippingRecord shippingRecord) throws Exception;
+	
+	int getTotalPages(int numPerPage) throws Exception;
 
 }

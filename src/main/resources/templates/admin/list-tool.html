@@ -12,8 +12,8 @@
 		 </div>
 		 
 		 <h2 class="h4">出庫済</h2>
-		 <div th:if="${#lists.size(shippedAtList) < 1}" class="alert alert-primary">出庫済の工具はありません</div>
-		 <table th:if="${#lists.size(shippedAtList) >= 1}" class="table table-bordered">
+		 <div th:if="${#lists.size(shippedList) < 1}" class="alert alert-primary">出庫済の工具はありません</div>
+		 <table th:if="${#lists.size(shippedList) >= 1}" class="table table-bordered">
 		   <thead>
 		     <tr>
 		 	  <th>発送番号</th>
@@ -27,7 +27,7 @@
 		     </tr>
 		   </thead>
 		   <tbody>
-		     <tr th:each="shippedAt : ${shippedAtList}" th:object="${shippedAt}">
+		     <tr th:each="shippedAt : ${shippedList}" th:object="${shippedAt}">
 		 	   <td><a th:href="@{/admin/tool/showShipping/{id}(id=*{id})}">[[*{id}]]</a></td>
 		    <td>[[*{senderName}]]</td>
 		       <td>[[*{recipientName}]]</td>

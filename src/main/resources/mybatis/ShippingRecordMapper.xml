@@ -93,5 +93,10 @@
 		AND shipped_at IS NOT NULL
 		AND returned_at IS NULL
 	</update>
+	
+	<select id="countActive" resultType="long">
+		SELECT COUNT(*) FROM shipping_records
+		WHERE returned_at IS NULL
+	</select>
 
 </mapper>

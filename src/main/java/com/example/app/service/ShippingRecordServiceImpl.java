@@ -56,5 +56,12 @@ public class ShippingRecordServiceImpl implements ShippingRecordService {
 	public void editShippingRecord(ShippingRecord shippingRecord) throws Exception {
 		shippingRecordMapper.update(shippingRecord);
 	}
+	
+	@Override
+	public int getTotalPages(int numPerPage) throws Exception {
+		long count = shippingRecordMapper.countActive();
+		int totalPages = (int) Math.ceil((double) count / numPerPage);
+		return totalPages > 0 ? totalPages : 1; // totalPagesが0ページ以下だったら、1ページにする
+	}
 
 }

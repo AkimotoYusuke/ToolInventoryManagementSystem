@@ -35,17 +35,26 @@ public class ToolController {
 
 	@GetMapping("/list")
 	public String list(
+//			@RequestParam(name="pageShippingRecord", defaultValue="1") Integer pageShippingRecord,
 			@RequestParam(name="page", defaultValue="1") Integer page,
 			Model model) throws Exception {
 		// 詳細・追加・編集ページから戻る際に利用
+//		session.setAttribute("pageShippingRecord", pageShippingRecord);
 		session.setAttribute("page", page);
 		
 		// 工具依頼リスト
 		model.addAttribute("shippingRequestList", shippingRecordService.getShippingRecordListIsShippingRequest());
 		
 		// 出庫済の工具リスト
-		model.addAttribute("shippedAtList", shippingRecordService.getShippingRecordListIsShipped());
+		model.addAttribute("shippedList", shippingRecordService.getShippingRecordListIsShipped());
 		
+		// 出庫済のページ
+//		int totalPagesShippingRecord = shippingRecordService.getTotalPages(NUM_PER_PAGE);
+//	  model.addAttribute("totalPagesShippingRecord", totalPagesShippingRecord);
+//	  model.addAttribute("currentPageShippingRecord", pageShippingRecord);
+//		model.addAttribute("shippedAtList", service.getToolListPerPage(pageShippingRecord, NUM_PER_PAGE));
+		
+		// 出庫可能な工具ページ
 	  int totalPages = service.getTotalPages(NUM_PER_PAGE);
 	  model.addAttribute("totalPages", totalPages);
 	  model.addAttribute("currentPage", page);
