@@ -35,30 +35,30 @@ public class ToolController {
 
 	@GetMapping("/list")
 	public String list(
-//			@RequestParam(name="pageShippingRecord", defaultValue="1") Integer pageShippingRecord,
-			@RequestParam(name="page", defaultValue="1") Integer page,
+			@RequestParam(name="pageTool", defaultValue="1") Integer pageTool,
+			@RequestParam(name="pageShipped", defaultValue="1") Integer pageShipped,
 			Model model) throws Exception {
 		// 詳細・追加・編集ページから戻る際に利用
-//		session.setAttribute("pageShippingRecord", pageShippingRecord);
-		session.setAttribute("page", page);
+		session.setAttribute("pageTool", pageTool);
+		session.setAttribute("pageShipped", pageShipped);
 		
 		// 工具依頼リスト
 		model.addAttribute("shippingRequestList", shippingRecordService.getShippingRecordListIsShippingRequest());
 		
 		// 出庫済の工具リスト
-		model.addAttribute("shippedList", shippingRecordService.getShippingRecordListIsShipped());
+//		model.addAttribute("shippedList", shippingRecordService.getShippingRecordListIsShipped());
 		
-		// 出庫済のページ
-//		int totalPagesShippingRecord = shippingRecordService.getTotalPages(NUM_PER_PAGE);
-//	  model.addAttribute("totalPagesShippingRecord", totalPagesShippingRecord);
-//	  model.addAttribute("currentPageShippingRecord", pageShippingRecord);
-//		model.addAttribute("shippedAtList", service.getToolListPerPage(pageShippingRecord, NUM_PER_PAGE));
+		// 出庫済の工具ページ
+		int totalPagesShipped = shippingRecordService.getTotalPages(NUM_PER_PAGE);
+	  model.addAttribute("totalPagesShipped", totalPagesShipped);
+	  model.addAttribute("currentPageShipped", pageShipped);
+		model.addAttribute("shippedList", shippingRecordService.getShippingRecordListIsShippedPerPage(pageShipped, NUM_PER_PAGE));
 		
 		// 出庫可能な工具ページ
-	  int totalPages = service.getTotalPages(NUM_PER_PAGE);
-	  model.addAttribute("totalPages", totalPages);
-	  model.addAttribute("currentPage", page);
-		model.addAttribute("toolList", service.getToolListPerPage(page, NUM_PER_PAGE));
+	  int totalPagesTool = service.getTotalPages(NUM_PER_PAGE);
+	  model.addAttribute("totalPagesTool", totalPagesTool);
+	  model.addAttribute("currentPageTool", pageTool);
+		model.addAttribute("toolList", service.getToolListPerPage(pageTool, NUM_PER_PAGE));
 		return "admin/list-tool";
 	}
 
@@ -104,11 +104,15 @@ public class ToolController {
 		}
 
 		service.addTool(tool);
+		int toolId = tool.getId();
+		
 		redirectAttributes.addFlashAttribute("message", "工具を追加しました。");
 		
-		// 追加後に戻るページ(⇒最終ページ)
-		int totalPages = service.getTotalPages(NUM_PER_PAGE);
-		return "redirect:/admin/tool/list?page=" + totalPages;
+		// 工具追加後に追加した対象ページに移動
+		int pageTool = service.getTargetIdPage(NUM_PER_PAGE, toolId);
+		// 出庫済ページは、同じページを維持
+		int pageShipped = (int)session.getAttribute("pageShipped");
+		return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
 	}
 
 	@GetMapping("/edit/{id}")
@@ -152,8 +156,9 @@ public class ToolController {
 		redirectAttributes.addFlashAttribute("message", "工具を編集しました。");
 		
 		// 編集後に戻るページ(元のページ)
-		int previousPage = (int) session.getAttribute("page");
-		return "redirect:/admin/tool/list?page=" + previousPage;
+		int pageTool = (int)session.getAttribute("pageTool");
+		int pageShipped = (int)session.getAttribute("pageShipped");
+		return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
 	}
 
 	@GetMapping("/delete/{id}")
@@ -164,10 +169,12 @@ public class ToolController {
 		redirectAttributes.addFlashAttribute("message", "工具を削除しました。");
 		
 		// 削除後に戻るページ(⇒ページ数が減って、元のページが無くなった場合は最終ページ)
-		int previousPage = (int) session.getAttribute("page");
+		int previousPage = (int) session.getAttribute("pageTool");
 		int totalPages = service.getTotalPages(NUM_PER_PAGE);
-		int page = previousPage <= totalPages ? previousPage : totalPages;
-		return "redirect:/admin/tool/list?page=" + page;
+		int pageTool = previousPage <= totalPages ? previousPage : totalPages;
+		// 出庫済ページは、同じページを維持
+		int pageShipped = (int)session.getAttribute("pageShipped");
+		return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
 	}
 	
 	@GetMapping("/showShipping/{id}")

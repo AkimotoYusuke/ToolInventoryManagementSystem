@@ -16,5 +16,6 @@ public interface ShippingRecordService {
 	void editShippingRecord(ShippingRecord shippingRecord) throws Exception;
 	
 	int getTotalPages(int numPerPage) throws Exception;
+	List<ShippingRecord> getShippingRecordListIsShippedPerPage(int page, int numPerPage) throws Exception;
 
 }

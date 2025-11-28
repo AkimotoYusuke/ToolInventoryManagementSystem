@@ -44,7 +44,7 @@
 		WHERE id = #{id}
 	</update>
 
-	<insert id="insert" parameterType="Tool" useGeneratedKeys="true">
+	<insert id="insert" parameterType="Tool" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO tools (mgmt_id, name, detail_info, maker_type_id, created)
 		VALUES (#{mgmtId}, #{name}, #{detailInfo}, #{makerType.id}, NOW())
 	</insert>
@@ -66,6 +66,18 @@
 	<select id="countActive" resultType="long">
 		SELECT COUNT(*) FROM tools
 		WHERE status = 'ACT'
+	</select>
+	
+	<select id="countActiveAddedId" parameterType="int" resultType="long">
+		SELECT pos
+		FROM (
+		    SELECT
+		        id,
+		        ROW_NUMBER() OVER (ORDER BY mgmt_id) AS pos
+		    FROM tools
+		    WHERE status = 'ACT'
+		) AS table_rebuild
+		WHERE id = #{id}
 	</select>
 	
 	<select id="selectReservedByEmployeeId" parameterType="int" resultMap="tool">

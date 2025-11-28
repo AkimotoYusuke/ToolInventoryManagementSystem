@@ -16,6 +16,7 @@ public interface ToolService {
 	boolean isExsitingTool(String mgmtId) throws Exception;
 	List<Tool> getToolListPerPage(int page, int numPerPage) throws Exception;
     int getTotalPages(int numPerPage) throws Exception;
+    int getTargetIdPage(int numPerPage, int toolId) throws Exception;
     
     // ある依頼者が現在予約済工具の取得
     List<Tool> getReservedToolList(int employeeId) throws Exception;

@@ -63,5 +63,11 @@ public class ShippingRecordServiceImpl implements ShippingRecordService {
 		int totalPages = (int) Math.ceil((double) count / numPerPage);
 		return totalPages > 0 ? totalPages : 1; // totalPagesが0ページ以下だったら、1ページにする
 	}
+	
+	@Override
+	public List<ShippingRecord> getShippingRecordListIsShippedPerPage(int page, int numPerPage) throws Exception {
+		int offset = numPerPage * (page - 1);
+		return shippingRecordMapper.selectLimitedIsShipped(offset, numPerPage);
+	}
 
 }

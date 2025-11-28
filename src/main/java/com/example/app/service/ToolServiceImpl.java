@@ -74,6 +74,13 @@ public class ToolServiceImpl implements ToolService {
 	}
 	
 	@Override
+	public int getTargetIdPage(int numPerPage, int toolId) throws Exception {
+		long count = toolMapper.countActiveAddedId(toolId);
+		int targetPage = (int) Math.ceil((double) count / numPerPage);
+		return targetPage > 0 ? targetPage : 1; // targetPageが0ページ以下だったら、1ページにする
+	}
+	
+	@Override
 	public List<Tool> getReservedToolList(int employeeId) throws Exception {
 		return toolMapper.selectReservedByEmployeeId(employeeId);
 	}

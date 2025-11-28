@@ -18,6 +18,8 @@
 		ORDER BY shipping_requested_at DESC
 	</select>
 	
+<!--	s-->
+	
 	<select id="selectAllIsShipped" resultType="ShippingRecord">
 		SELECT * FROM shipping_records
 		WHERE shipping_requested_at IS NOT NULL
@@ -38,6 +40,8 @@
 		AND shipping_requested_at IS NULL
 		AND shipped_at IS NULL
 		AND returned_at IS NULL
+		ORDER BY id DESC
+        LIMIT 0, 1
 	</select>
 
 	<update id="setDeleteById" parameterType="int">
@@ -97,6 +101,18 @@
 	<select id="countActive" resultType="long">
 		SELECT COUNT(*) FROM shipping_records
 		WHERE returned_at IS NULL
+		AND shipping_requested_at IS NOT NULL
+		AND shipped_at IS NOT NULL
+		AND returned_at IS NULL
+	</select>
+	
+	<select id="selectLimitedIsShipped" resultType="ShippingRecord">
+		SELECT * FROM shipping_records
+		WHERE shipping_requested_at IS NOT NULL
+		AND shipped_at IS NOT NULL
+		AND returned_at IS NULL
+		ORDER BY shipped_at DESC
+		LIMIT #{offset}, #{num}
 	</select>
 
 </mapper>

@@ -40,6 +40,8 @@
 		   </tbody>
 		 </table>
 		 
+		 <div th:replace="~{widget/paginationShipped :: paginationShipped(${totalPagesTool}, ${currentPageTool}, ${totalPagesShipped}, ${currentPageShipped}, 'admin/tool/list')}"></div>
+		 
 		 <h2 class="h4">出庫依頼</h2>
 		 <div th:if="${#lists.size(shippingRequestList) < 1}" class="alert alert-primary">出庫依頼の工具はありません</div>
 		 <table th:if="${#lists.size(shippingRequestList) >= 1}" class="table table-bordered">
@@ -98,7 +100,8 @@
           </tbody>
         </table>
 
-        <div th:replace="~{widget/pagination :: pagination(${totalPages}, ${currentPage}, 'admin/tool/list')}"></div>
+<!--        <div th:replace="~{widget/pagination :: pagination(${totalPages}, ${currentPage}, 'admin/tool/list')}"></div>-->
+		<div th:replace="~{widget/paginationTool :: paginationTool(${totalPagesTool}, ${currentPageTool}, ${totalPagesShipped}, ${currentPageShipped}, 'admin/tool/list')}"></div>
       </div><!-- /.col- -->
     </div><!-- /.row -->
   </div><!-- /.container -->

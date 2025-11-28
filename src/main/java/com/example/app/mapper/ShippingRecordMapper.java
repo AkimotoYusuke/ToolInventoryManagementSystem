@@ -3,6 +3,7 @@ package com.example.app.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.example.app.domain.ShippingRecord;
 
@@ -22,5 +23,6 @@ public interface ShippingRecordMapper {
 	void addReturned(Integer id) throws Exception;
 	
 	long countActive() throws Exception;
-
+	List<ShippingRecord> selectLimitedIsShipped(@Param("offset") int offset, @Param("num") int num) throws Exception;
+	
 }
