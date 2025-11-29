@@ -95,6 +95,12 @@ public class ToolServiceImpl implements ToolService {
 		int offset = numPerPage * (page - 1);
 		return toolMapper.selectBorrowableWithOffset(offset, numPerPage);
 	}
+	
+	@Override
+	public List<Tool> getKeywordBorrowableToolListPerPage(int page, int numPerPage, String keyword) throws Exception {
+		int offset = numPerPage * (page - 1);
+		return toolMapper.selectKeywordBorrowableWithOffset(offset, numPerPage, keyword);
+	}
 
 	@Override
 	public int getTotalBorrowableToolPages(int numPerPage) throws Exception {
@@ -102,15 +108,25 @@ public class ToolServiceImpl implements ToolService {
 		int totalPages = (int) Math.ceil((double) count / numPerPage);
 		return totalPages > 0 ? totalPages : 1; // totalPagesが0ページ以下だったら、1ページにする
 	}
+	
+	@Override
+	public int getKeywordTotalBorrowableToolPages(int numPerPage, String keyword) throws Exception {
+		long count = toolMapper.countKeywordBorrowable(keyword);
+		int totalPages = (int) Math.ceil((double) count / numPerPage);
+		return totalPages > 0 ? totalPages : 1; // totalPagesが0ページ以下だったら、1ページにする
+	}
 
 	@Override
-	public boolean isBorrowable(Integer toolId) throws Exception {
+	public boolean hasReservation(Integer toolId) throws Exception {
 		Tool tool = toolMapper.selectById(toolId);
 
-		if(tool == null) {
+		if(tool.getStatus().equals("DEL")) {
 			return false;
 		}
-		else if(tool.getRentalId() != null) {
+		else if(tool.getReservedEmployeeId() != null) {
+			return false;
+		}
+		else if(tool.getRequestedEmployeeId() != null) {
 			return false;
 		}
 

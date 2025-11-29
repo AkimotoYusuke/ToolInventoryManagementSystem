@@ -83,10 +83,10 @@ public class RentalRecordServiceImpl implements RentalRecordService {
 		return false;
 	}
 
-	@Override
-	public boolean isAbleToBorrow(int employeeId, int limitation) throws Exception {
-		return rentalRecordMapper.countBorrowingByEmployeeId(employeeId) < limitation;
-	}
+//	@Override
+//	public boolean isAbleToBorrow(int employeeId, int limitation) throws Exception {
+//		return rentalRecordMapper.countBorrowingByEmployeeId(employeeId) < limitation;
+//	}
 	
 	@Override
 	public boolean cancelByAuthenticatedEmployee(int employeeId, int toolId) throws Exception {

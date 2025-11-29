@@ -48,7 +48,7 @@
 			</table>
 			
 			<p>
-			  <a th:if="${session.loginStatus.authority == 100}" th:href="@{/admin/tool/list(page=${session.page})}" class="btn btn-primary">トップに戻る</a>
+			  <a th:if="${session.loginStatus.authority == 100}" th:href="@{/admin/tool/list(pageTool=${session.pageTool}, pageShipped=${session.pageShipped})}" class="btn btn-primary">トップに戻る</a>
 			  <a th:if="${session.loginStatus.authority == 200}" th:href="@{/rental(page=${session.page})}" class="btn btn-primary">トップに戻る</a>
 	        </p>
 			

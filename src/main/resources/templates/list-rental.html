@@ -99,7 +99,13 @@
 		</div>
   
         <h2 class="h4 mt-5">出庫可能な工具</h2>
-        <div th:if="${#lists.size(toolList) < 1}" class="alert alert-danger">出庫可能な工具はありません</div>
+		<form action="/rental/selectKeyword">
+			<p>
+				キーワード：<input type="text" name="keyword" th:value="${keyword}"/>
+				<input type="submit" value="検索"/>
+			</p>
+		</form>
+        <div th:if="${#lists.size(toolList) < 1}" class="alert alert-danger">対象の工具はありません</div>
         <table th:if="${#lists.size(toolList) >= 1}"  class="table table-bordered">
           <thead>
             <tr>

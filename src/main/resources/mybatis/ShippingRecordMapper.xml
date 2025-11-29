@@ -103,7 +103,6 @@
 		WHERE returned_at IS NULL
 		AND shipping_requested_at IS NOT NULL
 		AND shipped_at IS NOT NULL
-		AND returned_at IS NULL
 	</select>
 	
 	<select id="selectLimitedIsShipped" resultType="ShippingRecord">

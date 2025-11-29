@@ -26,8 +26,12 @@ public interface ToolMapper {
     List<Tool> selectBorrowingByShippingId(int shippingId) throws Exception;
     // 出庫可能な工具のリストを取得(LIMIT句あり)
     List<Tool> selectBorrowableWithOffset(@Param("offset") int offset, @Param("num") int num) throws Exception;
+    // キーワード検索(出庫可能な工具のリストを取得(LIMIT句あり))
+    List<Tool> selectKeywordBorrowableWithOffset(@Param("offset") int offset, @Param("num") int num, @Param("keyword") String keyword) throws Exception;
     // 出庫可能な工具の数を取得(ページ番号用)
     long countBorrowable() throws Exception;
+    // キーワード検索(出庫可能な工具の数を取得(ページ番号用))
+    long countKeywordBorrowable(String keyword) throws Exception;
     // 工具に「予約済」と「予約者」を記録
     void editReserved(@Param("id") int toolId, @Param("employeeId") int employeeId) throws Exception;
     // 工具に「キャンセル」の為、「予約済」と「予約者」を削除

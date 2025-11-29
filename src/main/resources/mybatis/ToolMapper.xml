@@ -102,6 +102,19 @@
 		ORDER BY tools.mgmt_id
 		LIMIT #{offset}, #{num}
 	</select>
+	
+	<select id="selectKeywordBorrowableWithOffset" resultMap="tool">
+		<include refid="selectAndJoin" />
+		WHERE (tools.mgmt_id like CONCAT('%', #{keyword}, '%')
+        OR tools.name like CONCAT('%', #{keyword}, '%')
+        OR tools.detail_info like CONCAT('%', #{keyword}, '%')
+        OR maker_types.name like CONCAT('%', #{keyword}, '%'))
+        AND tools.status = 'ACT'
+		AND tools.reserved_employee_id IS NULL
+		AND tools.rental_id IS NULL
+		ORDER BY tools.mgmt_id
+		LIMIT #{offset}, #{num}
+	</select>
 
 	<select id="countBorrowable" resultType="long">
 		SELECT COUNT(*) FROM tools
@@ -110,16 +123,33 @@
 		AND rental_id IS NULL
 	</select>
 	
+	<select id="countKeywordBorrowable" parameterType="string" resultType="long">
+		SELECT COUNT(*) FROM tools
+        JOIN maker_types
+		ON tools.maker_type_id = maker_types.id
+		WHERE (tools.mgmt_id like CONCAT('%', #{keyword}, '%')
+        OR tools.name like CONCAT('%', #{keyword}, '%')
+        OR tools.detail_info like CONCAT('%', #{keyword}, '%')
+        OR maker_types.name like CONCAT('%', #{keyword}, '%'))
+        AND tools.status = 'ACT'
+		AND tools.reserved_employee_id IS NULL
+		AND tools.rental_id IS NULL
+	</select>
+	
 	<update id="editReserved">
 		UPDATE tools
 		SET reserved_employee_id = #{employeeId}
 		WHERE id = #{id}
+		AND reserved_employee_id IS NULL
+		AND requested_employee_id IS NULL
 	</update>
 	
 	<update id="editCanceled">
 		UPDATE tools
 		SET reserved_employee_id = null
 		WHERE id = #{id}
+		AND reserved_employee_id IS NOT NULL
+		AND requested_employee_id IS NULL
 	</update>
 
 	<update id="addBorrowingRequestRecord">

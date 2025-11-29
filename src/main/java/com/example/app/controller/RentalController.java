@@ -34,15 +34,25 @@ public class RentalController {
 	@GetMapping({ "/", "/rental" })
 	public String rental(
 			@RequestParam(name = "page", defaultValue = "1") Integer page,
+//			@RequestParam(name = "keyword", defaultValue = "") String keyword,
 			Model model) throws Exception {
 		// セッション(依頼者IDを含んでいる)を取得
 		LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
 		
 		// ページ番号の保持
 		session.setAttribute("page", page);
-
+		
+		String keyword;
+		
+		if(session.getAttribute("keyword") == null) {
+			keyword = "";
+		} else {
+			keyword = (String) session.getAttribute("keyword");
+		}
+		
 		// 全体のページ数
-		int totalPages = toolService.getTotalBorrowableToolPages(NUM_PER_PAGE);
+//		int totalPages = toolService.getTotalBorrowableToolPages(NUM_PER_PAGE);
+		int totalPages = toolService.getKeywordTotalBorrowableToolPages(NUM_PER_PAGE, keyword);
 		model.addAttribute("totalPages", totalPages);
 		// 現在のページ番号
 		model.addAttribute("currentPage", page);
@@ -56,7 +66,11 @@ public class RentalController {
 		// 現在の発送リスト	
 		model.addAttribute("shippingList", shippingRecordService.getShippingRecordListByEmployeeId(loginStatus.getId()));
 		// 貸し出し可能な工具のリスト
-		model.addAttribute("toolList", toolService.getBorrowableToolListPerPage(page, NUM_PER_PAGE));
+//		model.addAttribute("toolList", toolService.getBorrowableToolListPerPage(page, NUM_PER_PAGE));
+		model.addAttribute("toolList", toolService.getKeywordBorrowableToolListPerPage(page, NUM_PER_PAGE, keyword));
+		
+		// 検索ワード
+		model.addAttribute("keyword", keyword);
 		
 		return "list-rental";
 	}
@@ -89,11 +103,11 @@ public class RentalController {
 //			return "redirect:/rental?page=" + previousPage;
 //		}
 
-//		// 借りようとしている工具が貸し出されていないか確認
-//		if (!toolService.isBorrowable(toolId)) {
-//			redirectAttributes.addFlashAttribute("message", "工具は貸し出し中、または削除済みです");
-//			return "redirect:/rental?page=" + previousPage;
-//		}
+		// 予約しようとしている工具が予約・出庫されていないか確認
+		if (!toolService.hasReservation(toolId)) {
+			redirectAttributes.addFlashAttribute("message", "工具は予約済か出庫済、または削除済みです");
+			return "redirect:/rental?page=" + previousPage;
+		}
 
 		// 問題がなければ、「予約」処理を実行
 		rentalRecordService.reserveTool(loginStatus.getId(), toolId);
@@ -144,6 +158,20 @@ public class RentalController {
 		
 		//出庫依頼後に戻るページ(元のページ)
 		int previousPage = (int) session.getAttribute("page");
+		return "redirect:/rental?page=" + previousPage;
+	}
+	
+	//キーワード検索
+	@GetMapping("/rental/selectKeyword")
+	public String selectKeyword(
+			@RequestParam String keyword,
+			RedirectAttributes attrs) throws Exception {
+		
+		// キーワードの保持
+		session.setAttribute("keyword", keyword);
+
+		// 1ページ目を表示
+		Integer previousPage = 1;
 		return "redirect:/rental?page=" + previousPage;
 	}
 

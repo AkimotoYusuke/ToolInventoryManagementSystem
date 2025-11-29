@@ -212,9 +212,11 @@ public String borrowTool(
 	rentalRecordService.borrowTool(shippingId);
 	redirectAttributes.addFlashAttribute("message", "出庫処理をしました。");
 	
-	//出庫後に戻るページ(⇒最終ページ)
-	int totalPages = service.getTotalPages(NUM_PER_PAGE);
-	return "redirect:/admin/tool/list?page=" + totalPages;
+	// 出庫後に戻るページ(元のページ)
+	int pageTool = (int)session.getAttribute("pageTool");
+	// 出庫済ページは、出庫ボタンを押した対象が1ページ目に移動する為、1ページ目を表示
+	int pageShipped = 1;
+	return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
 }
 
 	//「入庫」ボタン
@@ -227,9 +229,13 @@ public String borrowTool(
 		rentalRecordService.returnTool(shippingId);
 		redirectAttributes.addFlashAttribute("message", "入庫処理をしました。");
 		
-		// 返却後に戻るページ(元のページ)
-		int previousPage = (int) session.getAttribute("page");
-		return "redirect:/admin/tool/list?page=" + previousPage;
+		// 入庫後に戻る工具ページ(元のページ)
+		int pageTool = (int) session.getAttribute("pageTool");
+		// 入庫後に戻る入庫済ページ(⇒ページ数が減って、元のページが無くなった場合は最終ページ)
+		int previousPage = (int)session.getAttribute("pageShipped");
+		int totalPages = shippingRecordService.getTotalPages(NUM_PER_PAGE);
+		int pageShipped = previousPage <= totalPages ? previousPage : totalPages;
+		return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
 	}
 
 	//対象１個のみの「入庫」ボタン
@@ -243,9 +249,13 @@ public String borrowTool(
 		// ある発送番号の発送工具が全て入庫済の場合は、トップ画面に戻る
 		if (rentalRecordService.onlyOneReturnTool(toolId, shippingId)) {
 			redirectAttributes.addFlashAttribute("message", "入庫処理をしました。");
-			// 返却後に戻るページ(元のページ)
-			int previousPage = (int) session.getAttribute("page");
-			return "redirect:/admin/tool/list?page=" + previousPage;
+			// 入庫後に戻る工具ページ(元のページ)
+			int pageTool = (int) session.getAttribute("pageTool");
+			// 入庫後に戻る入庫済ページ(⇒ページ数が減って、元のページが無くなった場合は最終ページ)
+			int previousPage = (int)session.getAttribute("pageShipped");
+			int totalPages = shippingRecordService.getTotalPages(NUM_PER_PAGE);
+			int pageShipped = previousPage <= totalPages ? previousPage : totalPages;
+			return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
 		}
 		
 		redirectAttributes.addFlashAttribute("message", "入庫処理をしました。");

@@ -24,10 +24,14 @@ public interface ToolService {
     List<Tool> getBorrowingToolList(int shippingId) throws Exception;
     // 出庫可能な工具のリスト(ページごと)
     List<Tool> getBorrowableToolListPerPage(int page, int numPerPage) throws Exception;
+    // キーワード検索した際の出庫可能な工具のリスト(ページごと)
+    List<Tool> getKeywordBorrowableToolListPerPage(int page, int numPerPage, String keyword) throws Exception;
     // 工具が出庫可能な工具のページ数
     int getTotalBorrowableToolPages(int numPerPage) throws Exception;
-    // 工具が出庫可能か否か判別
-    boolean isBorrowable(Integer toolId) throws Exception;
+    // キーワード検索した際の工具が出庫可能な工具のページ数
+    int getKeywordTotalBorrowableToolPages(int numPerPage, String keyword) throws Exception;
+    // 工具が予約可能か否か判別
+    boolean hasReservation(Integer toolId) throws Exception;
 
 	List<MakerType> getMakerTypeList() throws Exception;
 
