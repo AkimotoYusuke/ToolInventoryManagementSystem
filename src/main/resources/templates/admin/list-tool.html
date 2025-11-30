@@ -17,11 +17,11 @@
 		   <thead>
 		     <tr>
 		 	  <th>発送番号</th>
-		    <th>差出人の氏名</th>
-		       <th>受取人の氏名</th>
-		       <th>受取人の住所</th>
-		       <th>発送希望日</th>
-		       <th>到着希望日</th>
+		      <th>差出人の氏名</th>
+		      <th>受取人の氏名</th>
+		      <th>受取人の住所</th>
+		      <th>発送希望日</th>
+		      <th>到着希望日</th>
 		 	  <th>出庫工具</th>
 		 	  <th>出庫依頼</th>
 		     </tr>
@@ -29,12 +29,12 @@
 		   <tbody>
 		     <tr th:each="shippedAt : ${shippedList}" th:object="${shippedAt}">
 		 	   <td><a th:href="@{/admin/tool/showShipping/{id}(id=*{id})}">[[*{id}]]</a></td>
-		    <td>[[*{senderName}]]</td>
+		       <td>[[*{senderName}]]</td>
 		       <td>[[*{recipientName}]]</td>
 		       <td>[[*{recipientAddress}]]</td>
 		       <td>[[*{shipDate}]]</td>
 		 	   <td>[[*{arrivalDate}]]</td>
-		       <td><a th:href="@{/admin/tool/toolList/{id}(id=*{id})}">出庫工具</a></td>
+		       <td><a th:href="@{/admin/tool/toolList/{id}(id=*{id})}">[[*{unstockedTools}]]/[[*{numberOfTools}]]件</a></td>
 		 	   <td><a th:href="@{/admin/tool/return/{id}(id=*{id})}" class="btn btn-danger btn-sm">入庫</a></td>
 		     </tr>
 		   </tbody>
@@ -65,17 +65,21 @@
 		       <td>[[*{recipientAddress}]]</td>
 		       <td>[[*{shipDate}]]</td>
 		 	   <td>[[*{arrivalDate}]]</td>
-		       <td><a th:href="@{/admin/tool/toolList/{id}(id=*{id})}">出庫工具</a></td>
+		       <td><a th:href="@{/admin/tool/toolList/{id}(id=*{id})}">[[*{unstockedTools}]]/[[*{numberOfTools}]]件</a></td>
 		 	   <td><a th:href="@{/admin/tool/borrow/{id}(id=*{id})}" class="btn btn-success btn-sm">出庫</a></td>
 		     </tr>
 		   </tbody>
 		 </table>
-				
-         <p>
-           <a th:href="@{/admin/tool/add}" class="btn btn-primary">工具の追加</a>
-           <a th:href="@{/admin/employee/list}" class="btn btn-light">従業員リスト</a>
-         </p>
+		 
 		<h2 class="h4">工具リスト</h2>
+		<form action="/admin/tool/selectKeyword">
+			<p>
+				キーワード：<input type="text" name="keyword" th:value="${keyword}"/>
+				<input type="submit" value="検索"/>　　
+				<a th:href="@{/admin/tool/add}" class="btn btn-primary">工具の追加</a>
+				<a th:href="@{/admin/employee/list}" class="btn btn-light">従業員リスト</a>
+			</p>
+		</form>
 		<div th:if="${#lists.size(toolList) < 1}" class="alert alert-danger">登録されている工具はありません</div>
         <table  th:if="${#lists.size(toolList) >= 1}" class="table table-bordered">
           <thead>

@@ -30,12 +30,14 @@
               <td>[[*{recipientAddress}]]</td>
               <td>[[*{shipDate}]]</td>
 			  <td>[[*{arrivalDate}]]</td>
-              <td><a th:href="@{/rental/toolList/{id}(id=*{id})}">出庫工具</a></td>
+              <td><a th:href="@{/rental/toolList/{id}(id=*{id})}">[[*{unstockedTools}]]/[[*{numberOfTools}]]件</a></td>
 			  <td th:if="*{shippedAt == null}">出庫依頼済</td>
 			  <td th:if="*{shippedAt != null}">出庫済</td>
             </tr>
           </tbody>
         </table>
+		
+		<div th:replace="~{widget/paginationShipped :: paginationShipped(${totalPagesTool}, ${currentPageTool}, ${totalPagesShipped}, ${currentPageShipped}, 'rental')}"></div>
 		
 		<h2 class="h4">予約済の工具</h2>
 		<div th:if="${#lists.size(reservedList) < 1}" class="alert alert-primary">予約済の工具はありません</div>
@@ -98,7 +100,7 @@
 			</table>
 		</div>
   
-        <h2 class="h4 mt-5">出庫可能な工具</h2>
+        <h2 class="h4">出庫可能な工具</h2>
 		<form action="/rental/selectKeyword">
 			<p>
 				キーワード：<input type="text" name="keyword" th:value="${keyword}"/>
@@ -127,7 +129,8 @@
           </tbody>
         </table>
   
-        <div th:replace="~{widget/pagination :: pagination(${totalPages}, ${currentPage}, 'rental')}"></div>
+<!--        <div th:replace="~{widget/pagination :: pagination(${totalPages}, ${currentPage}, 'rental')}"></div-->
+		<div th:replace="~{widget/paginationTool :: paginationTool(${totalPagesTool}, ${currentPageTool}, ${totalPagesShipped}, ${currentPageShipped}, 'rental')}"></div>
       </div><!-- /.col- -->
     </div><!-- /.row -->
   </div><!-- /.container -->

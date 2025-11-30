@@ -11,6 +11,8 @@ import com.example.app.domain.ShippingRecord;
 public interface ShippingRecordMapper {
 
 	List<ShippingRecord> selectAllByEmployeeId(Integer employeeId) throws Exception;
+	List<ShippingRecord> selectLimitedByEmployeeId(@Param("offset") int offset, @Param("num") int num, Integer employeeId) throws Exception;
+	long countShippingActive(Integer employeeId) throws Exception;
 	List<ShippingRecord> selectAllIsShippingRequest() throws Exception;
 	List<ShippingRecord> selectAllIsShipped() throws Exception;
 	ShippingRecord selectById(Integer id) throws Exception;
@@ -21,7 +23,6 @@ public interface ShippingRecordMapper {
 	void addShippingRequest(Integer id) throws Exception;
 	void addShipped(Integer id) throws Exception;
 	void addReturned(Integer id) throws Exception;
-	
 	long countActive() throws Exception;
 	List<ShippingRecord> selectLimitedIsShipped(@Param("offset") int offset, @Param("num") int num) throws Exception;
 	

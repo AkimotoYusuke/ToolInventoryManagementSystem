@@ -23,6 +23,19 @@ public class ShippingRecordServiceImpl implements ShippingRecordService {
 	}
 	
 	@Override
+	public List<ShippingRecord> getLimitedShippingRecordListByEmployeeId(int page, int numPerPage, Integer employeeId) throws Exception {
+		int offset = numPerPage * (page - 1);
+		return shippingRecordMapper.selectLimitedByEmployeeId(offset, numPerPage, employeeId);
+	}
+	
+	@Override
+	public int getShippingTotalPages(int numPerPage,  Integer employeeId) throws Exception {
+		long count = shippingRecordMapper.countShippingActive(employeeId);
+		int totalPages = (int) Math.ceil((double) count / numPerPage);
+		return totalPages > 0 ? totalPages : 1; // totalPagesが0ページ以下だったら、1ページにする
+	}
+	
+	@Override
 	public List<ShippingRecord> getShippingRecordListIsShippingRequest() throws Exception {
 		return shippingRecordMapper.selectAllIsShippingRequest();
 	}

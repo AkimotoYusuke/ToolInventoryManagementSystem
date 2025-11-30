@@ -46,6 +46,9 @@ public class AdminLoginController {
 			errors.rejectValue("loginId", "error.incorrect_id_or_password");
 			return "admin/login-admin";
 		}
+		
+		// セッション初期化
+		session.invalidate();
 
 		// セッションに認証情報を格納
 		LoginStatus loginStatus = LoginStatus.builder()

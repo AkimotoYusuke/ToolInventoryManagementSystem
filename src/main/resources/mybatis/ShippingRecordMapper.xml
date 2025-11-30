@@ -2,24 +2,60 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.app.mapper.ShippingRecordMapper">
 
-	<select id="selectAllByEmployeeId" parameterType="int" resultType="ShippingRecord">
-		SELECT * FROM shipping_records
-		WHERE employee_id = #{employeeId}
+	<resultMap id="shipping" type="ShippingRecord" autoMapping="true">
+		<id property="id" column="id" />
+		<result property="unstockedTools" column="unstocked_tools" />
+		<result property="numberOfTools" column="number_of_tools" />
+	</resultMap>
+	
+	<sql id="selectAndJoin">
+		SELECT
+			shipping_records.id, shipping_records.recipient_name, shipping_records.recipient_post_code, shipping_records.recipient_address, shipping_records.recipient_phone,
+			shipping_records.sender_name, shipping_records.sender_post_code, shipping_records.sender_address, shipping_records.sender_phone, shipping_records.shipping_method,
+			shipping_records.ship_date, shipping_records.arrival_date, shipping_records.shipping_number, shipping_records.note, shipping_records.employee_id,
+			shipping_records.shipping_add_at, shipping_records.shipping_delete_at, shipping_records.shipping_requested_at, shipping_records.shipped_at, shipping_records.returned_at,
+			(SELECT COUNT(*) FROM rental_records WHERE rental_records.shipping_id = shipping_records.id AND rental_records.returned_at IS NULL) AS unstocked_tools,
+		    (SELECT COUNT(*) FROM rental_records WHERE rental_records.shipping_id = shipping_records.id) AS number_of_tools
+		 FROM shipping_records
+		 JOIN rental_records
+		 ON shipping_records.id = rental_records.shipping_id
+	</sql>
+	
+	<select id="selectAllByEmployeeId" parameterType="int" resultMap="shipping">
+		<include refid="selectAndJoin" />
+		WHERE shipping_records.employee_id = #{employeeId}
+		AND shipping_records.shipping_requested_at IS NOT NULL
+		AND shipping_records.returned_at IS NULL
+		GROUP BY  shipping_records.id
+		ORDER BY shipping_records.shipping_requested_at DESC
+	</select>
+	
+	<select id="selectLimitedByEmployeeId" resultMap="shipping">
+		<include refid="selectAndJoin" />
+		WHERE shipping_records.employee_id = #{employeeId}
+		AND shipping_records.shipping_requested_at IS NOT NULL
+		AND shipping_records.returned_at IS NULL
+		GROUP BY  shipping_records.id
+		ORDER BY shipping_records.shipping_requested_at DESC
+		LIMIT #{offset}, #{num}
+	</select>
+	
+	<select id="countShippingActive" parameterType="int" resultType="long">
+		SELECT COUNT(*) FROM shipping_records
+        WHERE employee_id = #{employeeId}
 		AND shipping_requested_at IS NOT NULL
 		AND returned_at IS NULL
-		ORDER BY shipping_requested_at DESC
 	</select>
-
-	<select id="selectAllIsShippingRequest" resultType="ShippingRecord">
-		SELECT * FROM shipping_records
-		WHERE shipping_requested_at IS NOT NULL
-		AND shipped_at IS NULL
-		AND returned_at IS NULL
-		ORDER BY shipping_requested_at DESC
+ 	
+	<select id="selectAllIsShippingRequest" resultMap="shipping">
+		<include refid="selectAndJoin" />
+		WHERE shipping_records.shipping_requested_at IS NOT NULL
+		AND shipping_records.shipped_at IS NULL
+		AND shipping_records.returned_at IS NULL
+        GROUP BY  shipping_records.id
+		ORDER BY shipping_records.shipping_requested_at DESC
 	</select>
-	
-<!--	s-->
-	
+		
 	<select id="selectAllIsShipped" resultType="ShippingRecord">
 		SELECT * FROM shipping_records
 		WHERE shipping_requested_at IS NOT NULL
@@ -103,14 +139,15 @@
 		WHERE returned_at IS NULL
 		AND shipping_requested_at IS NOT NULL
 		AND shipped_at IS NOT NULL
-	</select>
+	</select>	
 	
-	<select id="selectLimitedIsShipped" resultType="ShippingRecord">
-		SELECT * FROM shipping_records
-		WHERE shipping_requested_at IS NOT NULL
-		AND shipped_at IS NOT NULL
-		AND returned_at IS NULL
-		ORDER BY shipped_at DESC
+	<select id="selectLimitedIsShipped" resultMap="shipping">
+		<include refid="selectAndJoin" />
+		WHERE shipping_records.shipping_requested_at IS NOT NULL
+		AND shipping_records.shipped_at IS NOT NULL
+		AND shipping_records.returned_at IS NULL
+		GROUP BY  shipping_records.id
+		ORDER BY shipping_records.shipped_at DESC
 		LIMIT #{offset}, #{num}
 	</select>
 

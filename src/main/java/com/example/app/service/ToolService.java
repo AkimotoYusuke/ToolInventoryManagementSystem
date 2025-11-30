@@ -15,7 +15,9 @@ public interface ToolService {
 	void editTool(Tool tool) throws Exception;
 	boolean isExsitingTool(String mgmtId) throws Exception;
 	List<Tool> getToolListPerPage(int page, int numPerPage) throws Exception;
+	List<Tool> getKeywordToolListPerPage(int page, int numPerPage, String keyword) throws Exception;
     int getTotalPages(int numPerPage) throws Exception;
+    int getKeywordTotalPages(int numPerPage, String keyword) throws Exception;
     int getTargetIdPage(int numPerPage, int toolId) throws Exception;
     
     // ある依頼者が現在予約済工具の取得

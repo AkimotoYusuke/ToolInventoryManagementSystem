@@ -71,8 +71,9 @@ public class ShippingController {
 		redirectAttributes.addFlashAttribute("message", "発送情報を登録しました。");
 		
 		// 登録後に戻るページ(元のページ)
-		int previousPage = (int) session.getAttribute("page");
-		return "redirect:/rental?page=" + previousPage;
+		int pageTool = (int) session.getAttribute("pageTool");
+		int pageShipped = (int)session.getAttribute("pageShipped");
+		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
 	}
 
 	@GetMapping("/edit/{id}")
@@ -102,8 +103,9 @@ public class ShippingController {
 		redirectAttributes.addFlashAttribute("message", "発送情報を編集しました。");
 		
 		// 編集後に戻るページ(元のページ)
-		int previousPage = (int) session.getAttribute("page");
-		return "redirect:/rental?page=" + previousPage;
+		int pageTool = (int) session.getAttribute("pageTool");
+		int pageShipped = (int)session.getAttribute("pageShipped");
+		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
 	}
 	
 	@GetMapping("/delete/{id}")
@@ -114,8 +116,9 @@ public class ShippingController {
 		redirectAttributes.addFlashAttribute("message", "発送情報を削除しました。");
 		
 		// 削除後に戻るページ(元のページ)
-		int previousPage = (int) session.getAttribute("page");
-		return "redirect:/rental?page=" + previousPage;
+		int pageTool = (int) session.getAttribute("pageTool");
+		int pageShipped = (int)session.getAttribute("pageShipped");
+		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
 	}
 
 }

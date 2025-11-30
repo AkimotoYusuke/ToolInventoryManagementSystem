@@ -62,10 +62,32 @@
 		ORDER BY tools.mgmt_id
 		LIMIT #{offset}, #{num}
 	</select>
+	
+	<select id="selectKeywordLimited" resultMap="tool">
+		<include refid="selectAndJoin" />
+		WHERE (tools.mgmt_id like CONCAT('%', #{keyword}, '%')
+        OR tools.name like CONCAT('%', #{keyword}, '%')
+        OR tools.detail_info like CONCAT('%', #{keyword}, '%')
+        OR maker_types.name like CONCAT('%', #{keyword}, '%'))
+		AND tools.status = 'ACT'
+		ORDER BY tools.mgmt_id
+		LIMIT #{offset}, #{num}
+	</select>
 
 	<select id="countActive" resultType="long">
 		SELECT COUNT(*) FROM tools
 		WHERE status = 'ACT'
+	</select>
+	
+	<select id="countKeywordActive" parameterType="string" resultType="long">
+		SELECT COUNT(*) FROM tools
+        JOIN maker_types
+		ON tools.maker_type_id = maker_types.id
+        WHERE (tools.mgmt_id like CONCAT('%', #{keyword}, '%')
+        OR tools.name like CONCAT('%', #{keyword}, '%')
+        OR tools.detail_info like CONCAT('%', #{keyword}, '%')
+        OR maker_types.name like CONCAT('%', #{keyword}, '%'))
+        AND tools.status = 'ACT'
 	</select>
 	
 	<select id="countActiveAddedId" parameterType="int" resultType="long">

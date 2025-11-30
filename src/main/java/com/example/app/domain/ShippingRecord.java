@@ -72,5 +72,7 @@ public class ShippingRecord {
 	private LocalDateTime shippingRequestedAt;
 	private LocalDateTime shippedAt;
 	private LocalDateTime returnedAt;
+	private Integer unstockedTools;
+	private Integer numberOfTools;
 	
 }

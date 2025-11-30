@@ -42,6 +42,13 @@ public class ToolController {
 		session.setAttribute("pageTool", pageTool);
 		session.setAttribute("pageShipped", pageShipped);
 		
+		String keyword;
+		if(session.getAttribute("keyword") == null) {
+			keyword = "";
+		} else {
+			keyword = (String) session.getAttribute("keyword");
+		}
+		
 		// 工具依頼リスト
 		model.addAttribute("shippingRequestList", shippingRecordService.getShippingRecordListIsShippingRequest());
 		
@@ -54,11 +61,17 @@ public class ToolController {
 	  model.addAttribute("currentPageShipped", pageShipped);
 		model.addAttribute("shippedList", shippingRecordService.getShippingRecordListIsShippedPerPage(pageShipped, NUM_PER_PAGE));
 		
-		// 出庫可能な工具ページ
-	  int totalPagesTool = service.getTotalPages(NUM_PER_PAGE);
+		// 工具リストページ
+//	  int totalPagesTool = service.getTotalPages(NUM_PER_PAGE);
+	  int totalPagesTool = service.getKeywordTotalPages(NUM_PER_PAGE, keyword);
 	  model.addAttribute("totalPagesTool", totalPagesTool);
 	  model.addAttribute("currentPageTool", pageTool);
-		model.addAttribute("toolList", service.getToolListPerPage(pageTool, NUM_PER_PAGE));
+//		model.addAttribute("toolList", service.getToolListPerPage(pageTool, NUM_PER_PAGE));
+		model.addAttribute("toolList", service.getKeywordToolListPerPage(pageTool, NUM_PER_PAGE, keyword));
+		
+		// 検索ワード
+		model.addAttribute("keyword", keyword);
+			
 		return "admin/list-tool";
 	}
 
@@ -260,6 +273,22 @@ public String borrowTool(
 		
 		redirectAttributes.addFlashAttribute("message", "入庫処理をしました。");
 		return "redirect:/admin/tool/toolList/" + shippingId;
+	}
+	
+	//キーワード検索
+	@GetMapping("/selectKeyword")
+	public String selectKeyword(
+			@RequestParam String keyword,
+			RedirectAttributes attrs) throws Exception {
+		
+		// キーワードの保持
+		session.setAttribute("keyword", keyword);
+
+		// 工具は1ページ目を表示
+		Integer pageTool = 1;
+		// 出庫済ページは元のページ
+		int pageShipped = (int)session.getAttribute("pageShipped");
+		return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
 	}
 	
 }

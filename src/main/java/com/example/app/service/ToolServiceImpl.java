@@ -65,10 +65,23 @@ public class ToolServiceImpl implements ToolService {
 		int offset = numPerPage * (page - 1);
 		return toolMapper.selectLimited(offset, numPerPage);
 	}
+	
+	@Override
+	public List<Tool> getKeywordToolListPerPage(int page, int numPerPage, String keyword) throws Exception {
+		int offset = numPerPage * (page - 1);
+		return toolMapper.selectKeywordLimited(offset, numPerPage, keyword);
+	}
 
 	@Override
 	public int getTotalPages(int numPerPage) throws Exception {
 		long count = toolMapper.countActive();
+		int totalPages = (int) Math.ceil((double) count / numPerPage);
+		return totalPages > 0 ? totalPages : 1; // totalPagesが0ページ以下だったら、1ページにする
+	}
+	
+	@Override
+	public int getKeywordTotalPages(int numPerPage, String keyword) throws Exception {
+		long count = toolMapper.countKeywordActive(keyword);
 		int totalPages = (int) Math.ceil((double) count / numPerPage);
 		return totalPages > 0 ? totalPages : 1; // totalPagesが0ページ以下だったら、1ページにする
 	}

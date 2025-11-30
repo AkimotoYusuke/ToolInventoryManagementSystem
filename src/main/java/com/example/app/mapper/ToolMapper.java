@@ -17,7 +17,9 @@ public interface ToolMapper {
 	void insert(Tool tool) throws Exception;
 	void update(Tool tool) throws Exception;
 	List<Tool> selectLimited(@Param("offset") int offset, @Param("num") int num) throws Exception;
+	List<Tool> selectKeywordLimited(@Param("offset") int offset, @Param("num") int num, @Param("keyword") String keyword) throws Exception;
     long countActive() throws Exception;
+    long countKeywordActive(String keyword) throws Exception;
     long countActiveAddedId(int id) throws Exception;
     
     // ある依頼者の予約済のリストを取得
