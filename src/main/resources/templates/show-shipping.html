@@ -78,8 +78,8 @@
 	      </table>
 	
 	      <p>
-	        <a th:if="${session.loginStatus.authority == 100}" th:href="@{/admin/tool/list(pageTool=${session.pageTool}, pageShipped=${session.pageShipped})}" class="btn btn-primary">トップに戻る</a>
-	        <a th:if="${session.loginStatus.authority == 200}" th:href="@{/rental(pageTool=${session.pageTool}, pageShipped=${session.pageShipped})}" class="btn btn-primary">トップに戻る</a>
+	        <a th:if="${session.loginStatus.authority == 100}" th:href="@{/admin/tool/list(pageTool=${session.pageTool}, pageShipped=${session.pageShipped}, pageRequested=${session.pageRequested})}" class="btn btn-primary">トップに戻る</a>
+	        <a th:if="${session.loginStatus.authority == 200}" th:href="@{/rental(pageTool=${session.pageTool}, pageShipped=${session.pageShipped}, pageReserved=${session.pageReserved})}" class="btn btn-primary">トップに戻る</a>
 	      </p>
 	      
 	    </div><!-- /.col- -->

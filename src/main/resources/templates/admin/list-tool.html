@@ -40,7 +40,7 @@
 		   </tbody>
 		 </table>
 		 
-		 <div th:replace="~{widget/paginationShipped :: paginationShipped(${totalPagesTool}, ${currentPageTool}, ${totalPagesShipped}, ${currentPageShipped}, 'admin/tool/list')}"></div>
+		 <div th:replace="~{widget/paginationAdminShipped :: paginationAdminShipped(${totalPagesTool}, ${currentPageTool}, ${totalPagesShipped}, ${currentPageShipped}, ${totalPagesRequested}, ${currentPageRequested}, 'admin/tool/list')}"></div>
 		 
 		 <h2 class="h4">出庫依頼</h2>
 		 <div th:if="${#lists.size(shippingRequestList) < 1}" class="alert alert-primary">出庫依頼の工具はありません</div>
@@ -70,6 +70,8 @@
 		     </tr>
 		   </tbody>
 		 </table>
+		 
+		 <div th:replace="~{widget/paginationAdminRequested :: paginationAdminRequested(${totalPagesTool}, ${currentPageTool}, ${totalPagesShipped}, ${currentPageShipped}, ${totalPagesRequested}, ${currentPageRequested}, 'admin/tool/list')}"></div>
 		 
 		<h2 class="h4">工具リスト</h2>
 		<form action="/admin/tool/selectKeyword">
@@ -105,7 +107,7 @@
         </table>
 
 <!--        <div th:replace="~{widget/pagination :: pagination(${totalPages}, ${currentPage}, 'admin/tool/list')}"></div>-->
-		<div th:replace="~{widget/paginationTool :: paginationTool(${totalPagesTool}, ${currentPageTool}, ${totalPagesShipped}, ${currentPageShipped}, 'admin/tool/list')}"></div>
+		<div th:replace="~{widget/paginationAdminTool :: paginationAdminTool(${totalPagesTool}, ${currentPageTool}, ${totalPagesShipped}, ${currentPageShipped}, ${totalPagesRequested}, ${currentPageRequested}, 'admin/tool/list')}"></div>
       </div><!-- /.col- -->
     </div><!-- /.row -->
   </div><!-- /.container -->

@@ -41,13 +41,13 @@ public class ToolServiceImpl implements ToolService {
 	}
 
 	@Override
-	public void addTool(Tool material) throws Exception {
-		toolMapper.insert(material);
+	public void addTool(Tool tool) throws Exception {
+		toolMapper.insert(tool);
 	}
 
 	@Override
-	public void editTool(Tool material) throws Exception {
-		toolMapper.update(material);
+	public void editTool(Tool tool) throws Exception {
+		toolMapper.update(tool);
 	}
 	
 	@Override
@@ -96,6 +96,19 @@ public class ToolServiceImpl implements ToolService {
 	@Override
 	public List<Tool> getReservedToolList(int employeeId) throws Exception {
 		return toolMapper.selectReservedByEmployeeId(employeeId);
+	}
+	
+	@Override
+	public List<Tool> getLimitedReservedToolList(int page, int numPerPage, int employeeId) throws Exception {
+		int offset = numPerPage * (page - 1);
+		return toolMapper.selectLimitedReservedByEmployeeId(offset, numPerPage, employeeId);
+	}
+	
+	@Override
+	public int getTotalReservedToolPages(int numPerPage, int employeeId) throws Exception {
+		long count = toolMapper.countReserved(employeeId);
+		int totalPages = (int) Math.ceil((double) count / numPerPage);
+		return totalPages > 0 ? totalPages : 1; // totalPagesが0ページ以下だったら、1ページにする
 	}
 	
 	@Override

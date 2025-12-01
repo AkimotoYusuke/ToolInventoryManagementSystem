@@ -108,6 +108,19 @@
 		ORDER BY tools.id ASC
 	</select>
 	
+	<select id="selectLimitedReservedByEmployeeId" resultMap="tool">
+    	<include refid="selectAndJoin" />
+		WHERE tools.reserved_employee_id = #{employeeId}
+		ORDER BY tools.id ASC
+		LIMIT #{offset}, #{num}
+	</select>
+		
+	<select id="countReserved" parameterType="int" resultType="long">
+    	SELECT COUNT(*) FROM tools
+		WHERE tools.reserved_employee_id = #{employeeId}
+		ORDER BY tools.id ASC
+	</select>
+	
 	<select id="selectBorrowingByShippingId" parameterType="int" resultMap="tool">
     	<include refid="selectAndJoin" />
 		LEFT JOIN rental_records

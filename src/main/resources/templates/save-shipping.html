@@ -70,7 +70,7 @@
   		       <div class="error-message mt-2" th:errors="*{note}"></div>
   		  </div>
           <input class="btn btn-primary" type="submit" value="保存する">
-          <a th:href="@{/rental(pageTool=${session.pageTool}, pageShipped=${session.pageShipped})}" class="btn btn-secondary">キャンセル</a>
+          <a th:href="@{/rental(pageTool=${session.pageTool}, pageShipped=${session.pageShipped}, pageReserved=${session.pageReserved})}" class="btn btn-secondary">キャンセル</a>
         </form>
 		
 		<script>

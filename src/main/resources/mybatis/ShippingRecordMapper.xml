@@ -55,6 +55,23 @@
         GROUP BY  shipping_records.id
 		ORDER BY shipping_records.shipping_requested_at DESC
 	</select>
+	
+	<select id="selectLimitedIsShippingRequest" resultMap="shipping">
+		<include refid="selectAndJoin" />
+		WHERE shipping_records.shipping_requested_at IS NOT NULL
+		AND shipping_records.shipped_at IS NULL
+		AND shipping_records.returned_at IS NULL
+        GROUP BY  shipping_records.id
+		ORDER BY shipping_records.shipping_requested_at DESC
+		LIMIT #{offset}, #{num}
+	</select>
+	
+	<select id="countShippingRequestActive" resultType="long">
+		SELECT COUNT(*) FROM shipping_records
+		WHERE shipping_requested_at IS NOT NULL
+		AND shipped_at IS NULL
+		AND returned_at IS NULL
+	</select>
 		
 	<select id="selectAllIsShipped" resultType="ShippingRecord">
 		SELECT * FROM shipping_records

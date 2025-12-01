@@ -14,6 +14,8 @@ public interface ShippingRecordMapper {
 	List<ShippingRecord> selectLimitedByEmployeeId(@Param("offset") int offset, @Param("num") int num, Integer employeeId) throws Exception;
 	long countShippingActive(Integer employeeId) throws Exception;
 	List<ShippingRecord> selectAllIsShippingRequest() throws Exception;
+	List<ShippingRecord> selectLimitedIsShippingRequest(@Param("offset") int offset, @Param("num") int num) throws Exception;
+	long countShippingRequestActive() throws Exception;
 	List<ShippingRecord> selectAllIsShipped() throws Exception;
 	ShippingRecord selectById(Integer id) throws Exception;
 	ShippingRecord selectByEmployeeId(Integer employeeId) throws Exception;

@@ -24,6 +24,9 @@ public interface ToolMapper {
     
     // ある依頼者の予約済のリストを取得
     List<Tool> selectReservedByEmployeeId(int employeeId) throws Exception;
+    List<Tool> selectLimitedReservedByEmployeeId(@Param("offset") int offset, @Param("num") int num, int employeeId) throws Exception;
+    // 予約済工具の数を取得(ページ番号用)
+    long countReserved(int employeeId) throws Exception;
     // ある依頼者の出庫依頼済・出庫済の工具リストを取得
     List<Tool> selectBorrowingByShippingId(int shippingId) throws Exception;
     // 出庫可能な工具のリストを取得(LIMIT句あり)

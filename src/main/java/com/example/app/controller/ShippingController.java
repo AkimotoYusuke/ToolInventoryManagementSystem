@@ -81,7 +81,8 @@ public class ShippingController {
 		// 登録後に戻るページ(元のページ)
 		int pageTool = (int) session.getAttribute("pageTool");
 		int pageShipped = (int)session.getAttribute("pageShipped");
-		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
+		int pageReserved = (int)session.getAttribute("pageReserved");
+		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageReserved=" + pageReserved;
 	}
 
 	@GetMapping("/edit/{id}")
@@ -120,7 +121,8 @@ public class ShippingController {
 		// 編集後に戻るページ(元のページ)
 		int pageTool = (int) session.getAttribute("pageTool");
 		int pageShipped = (int)session.getAttribute("pageShipped");
-		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
+		int pageReserved = (int)session.getAttribute("pageReserved");
+		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageReserved=" + pageReserved;
 	}
 	
 	@GetMapping("/delete/{id}")
@@ -133,7 +135,8 @@ public class ShippingController {
 		// 削除後に戻るページ(元のページ)
 		int pageTool = (int) session.getAttribute("pageTool");
 		int pageShipped = (int)session.getAttribute("pageShipped");
-		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
+		int pageReserved = (int)session.getAttribute("pageReserved");
+		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageReserved=" + pageReserved;
 	}
 
 }

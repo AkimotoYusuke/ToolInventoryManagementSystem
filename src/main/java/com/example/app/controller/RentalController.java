@@ -34,7 +34,7 @@ public class RentalController {
 	public String rental(
 			@RequestParam(name = "pageTool", defaultValue = "1") Integer pageTool,
 			@RequestParam(name = "pageShipped", defaultValue = "1") Integer pageShipped,
-//			@RequestParam(name = "keyword", defaultValue = "") String keyword,
+			@RequestParam(name = "pageReserved", defaultValue = "1") Integer pageReserved,
 			Model model) throws Exception {
 		// セッション(依頼者IDを含んでいる)を取得
 		LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
@@ -42,6 +42,7 @@ public class RentalController {
 		// ページ番号の保持
 		session.setAttribute("pageTool", pageTool);
 		session.setAttribute("pageShipped", pageShipped);
+		session.setAttribute("pageReserved", pageReserved);
 		
 		String keyword;
 		if(session.getAttribute("keyword") == null) {
@@ -51,28 +52,32 @@ public class RentalController {
 		}
 		
 		// 貸し出し可能な工具全体のページ数
-//		int totalPages = toolService.getTotalBorrowableToolPages(NUM_PER_PAGE);
 		int totalPagesTool = toolService.getKeywordTotalBorrowableToolPages(NUM_PER_PAGE, keyword);
 		model.addAttribute("totalPagesTool", totalPagesTool);
 		// 発送依頼済・発送済全体のページ数
 		int totalPagesShipping = shippingRecordService.getShippingTotalPages(NUM_PER_PAGE, loginStatus.getId());
 		model.addAttribute("totalPagesShipped", totalPagesShipping);
+		// 予約済全体のページ数
+		int totalPagesReserved = toolService.getTotalReservedToolPages(NUM_PER_PAGE, loginStatus.getId());
+		model.addAttribute("totalPagesReserved", totalPagesReserved);
 		// 現在の貸し出し可能な工具ページ番号
 		model.addAttribute("currentPageTool", pageTool);
 		// 現在の発送依頼済・発送済ページ番号
 		model.addAttribute("currentPageShipped", pageShipped);
+		// 現在の予約済ページ番号
+		model.addAttribute("currentPageReserved", pageReserved);
 		
 		// 依頼者の発送情報
 		model.addAttribute("shippingRecord", shippingRecordService.getShippingRecordByEmployeeId(loginStatus.getId()));
 		
-		// 現在、予約済工具のリスト
-		List<Tool> reservedToolList = toolService.getReservedToolList(loginStatus.getId());
+		// 現在の予約済工具のリスト
+//		List<Tool> reservedToolList = toolService.getReservedToolList(loginStatus.getId());
+		List<Tool> reservedToolList = toolService.getLimitedReservedToolList(pageReserved, NUM_PER_PAGE, loginStatus.getId());
+		
 		model.addAttribute("reservedList", reservedToolList);
 		// 現在の発送リスト
-//		model.addAttribute("shippingList", shippingRecordService.getShippingRecordListByEmployeeId(loginStatus.getId()));
 		model.addAttribute("shippingList", shippingRecordService.getLimitedShippingRecordListByEmployeeId(pageShipped, NUM_PER_PAGE, loginStatus.getId()));
 		// 貸し出し可能な工具のリスト
-//		model.addAttribute("toolList", toolService.getBorrowableToolListPerPage(page, NUM_PER_PAGE));
 		model.addAttribute("toolList", toolService.getKeywordBorrowableToolListPerPage(pageTool, NUM_PER_PAGE, keyword));
 		
 		// 検索ワード
@@ -106,7 +111,12 @@ public class RentalController {
 		// 予約しようとしている工具が予約・出庫されていないか確認
 		if (!toolService.hasReservation(toolId)) {
 			redirectAttributes.addFlashAttribute("message", "工具は予約済か出庫済、または削除済みです");
-			return "redirect:/rental?page=" + previousPage;
+			
+			// 戻るページ(元のページ)
+			int pageTool = (int)session.getAttribute("pageTool");
+			int pageShipped = (int)session.getAttribute("pageShipped");
+			int pageReserved = (int)session.getAttribute("pageReserved");
+			return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageReserved=" + pageReserved;
 		}
 
 		// 問題がなければ、「予約」処理を実行
@@ -118,7 +128,9 @@ public class RentalController {
 		int pageTool = previousPage <= totalPages ? previousPage : totalPages;
 		// 出庫依頼済・出庫済ページは元のページ
 		int pageShipped = (int)session.getAttribute("pageShipped");
-		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
+		// 予約済ページは元のページ
+		int pageReserved = (int)session.getAttribute("pageReserved");
+		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageReserved=" + pageReserved;
 	}
 	
 	//「キャンセル」ボタン
@@ -138,9 +150,12 @@ public class RentalController {
 
 		// キャンセル後に戻るページ(元のページ)
 		int pageTool = (int)session.getAttribute("pageTool");
-		// 出庫依頼済・出庫済ページは元のページ
 		int pageShipped = (int)session.getAttribute("pageShipped");
-		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
+		// キャンセル後に戻るページ(⇒ページ数が減って、元のページが無くなった場合は最終ページ)
+		int totalPages = toolService.getTotalReservedToolPages(NUM_PER_PAGE, loginStatus.getId());
+		int previousPage = (int) session.getAttribute("pageReserved");
+		int pageReserved = previousPage <= totalPages ? previousPage : totalPages;
+		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageReserved=" + pageReserved;
 	}
 	
 	//「出庫依頼」ボタン
@@ -164,7 +179,9 @@ public class RentalController {
 		int pageTool = (int) session.getAttribute("pageTool");
 		//出庫依頼後、出庫依頼済・出庫済ページは1ページ目を表示
 		Integer pageShipped = 1;
-		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
+		//予約済ページは1ページ目に戻す
+		Integer pageReserved = 1;
+		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageReserved=" + pageReserved;
 	}
 	
 	//キーワード検索
@@ -176,11 +193,12 @@ public class RentalController {
 		// キーワードの保持
 		session.setAttribute("keyword", keyword);
 
-		// 1ページ目を表示
+		// 検索後に1ページ目を表示
 		Integer pageTool = 1;
-		// 出庫依頼済・出庫済ページは元のページ
+		// 検索後に戻るページ(元のページ)
 		int pageShipped = (int)session.getAttribute("pageShipped");
-		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
+		int pageReserved = (int)session.getAttribute("pageReserved");
+		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageReserved=" + pageReserved;
 	}
 
 }

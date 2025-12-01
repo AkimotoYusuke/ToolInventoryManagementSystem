@@ -37,10 +37,12 @@ public class ToolController {
 	public String list(
 			@RequestParam(name="pageTool", defaultValue="1") Integer pageTool,
 			@RequestParam(name="pageShipped", defaultValue="1") Integer pageShipped,
+			@RequestParam(name="pageRequested", defaultValue="1") Integer pageRequested,
 			Model model) throws Exception {
 		// 詳細・追加・編集ページから戻る際に利用
 		session.setAttribute("pageTool", pageTool);
 		session.setAttribute("pageShipped", pageShipped);
+		session.setAttribute("pageRequested", pageRequested);
 		
 		String keyword;
 		if(session.getAttribute("keyword") == null) {
@@ -49,24 +51,23 @@ public class ToolController {
 			keyword = (String) session.getAttribute("keyword");
 		}
 		
-		// 工具依頼リスト
-		model.addAttribute("shippingRequestList", shippingRecordService.getShippingRecordListIsShippingRequest());
+		// 依頼済のリストページ
+//		model.addAttribute("shippingRequestList", shippingRecordService.getShippingRecordListIsShippingRequest());
+		int totalPagesRequested = shippingRecordService.getShippingRequestTotalPages(NUM_PER_PAGE);
+		model.addAttribute("totalPagesRequested", totalPagesRequested);
+	  model.addAttribute("currentPageRequested", pageRequested);
+		model.addAttribute("shippingRequestList", shippingRecordService.getLimitedShippingRecordListIsShippingRequest(pageRequested, NUM_PER_PAGE));
 		
-		// 出庫済の工具リスト
-//		model.addAttribute("shippedList", shippingRecordService.getShippingRecordListIsShipped());
-		
-		// 出庫済の工具ページ
+		// 出庫済のリストページ
 		int totalPagesShipped = shippingRecordService.getTotalPages(NUM_PER_PAGE);
 	  model.addAttribute("totalPagesShipped", totalPagesShipped);
 	  model.addAttribute("currentPageShipped", pageShipped);
 		model.addAttribute("shippedList", shippingRecordService.getShippingRecordListIsShippedPerPage(pageShipped, NUM_PER_PAGE));
 		
 		// 工具リストページ
-//	  int totalPagesTool = service.getTotalPages(NUM_PER_PAGE);
 	  int totalPagesTool = service.getKeywordTotalPages(NUM_PER_PAGE, keyword);
 	  model.addAttribute("totalPagesTool", totalPagesTool);
 	  model.addAttribute("currentPageTool", pageTool);
-//		model.addAttribute("toolList", service.getToolListPerPage(pageTool, NUM_PER_PAGE));
 		model.addAttribute("toolList", service.getKeywordToolListPerPage(pageTool, NUM_PER_PAGE, keyword));
 		
 		// 検索ワード
@@ -286,9 +287,10 @@ public String borrowTool(
 
 		// 工具は1ページ目を表示
 		Integer pageTool = 1;
-		// 出庫済ページは元のページ
+		// 検索後に戻るページ(元のページ)
 		int pageShipped = (int)session.getAttribute("pageShipped");
-		return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
+		int pageRequested = (int)session.getAttribute("pageRequested");
+		return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageRequested=" + pageRequested;
 	}
 	
 }

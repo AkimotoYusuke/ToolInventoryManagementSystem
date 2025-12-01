@@ -4,7 +4,7 @@
 </head>
 <body>
 
-<th:block th:fragment="paginationShipped(totalPagesTool, pageTool, totalPagesShipped, pageShipped, totalPagesReserved, pageReserved, baseUrl)" th:if="${totalPagesShipped >= 2}">
+<th:block th:fragment="paginationAdminShipped(totalPagesTool, pageTool, totalPagesShipped, pageShipped, totalPagesRequested, pageRequested, baseUrl)" th:if="${totalPagesShipped >= 2}">
 	<ul class="pagination">
 		<!-- 前のページへ -->
 		<th:block th:switch="${pageShipped}">
@@ -12,7 +12,7 @@
 				<a class="page-link" href="">&laquo;</a>
 			</li>
 			<li th:case="*" class="page-item">
-				<a class="page-link" th:href="@{/{baseUrl}(baseUrl=${baseUrl}, pageTool=${pageTool}, pageShipped=${pageShipped - 1}, pageReserved=${pageReserved})}">&laquo;</a>
+				<a class="page-link" th:href="@{/{baseUrl}(baseUrl=${baseUrl}, pageTool=${pageTool}, pageShipped=${pageShipped - 1}, pageRequested=${pageRequested})}">&laquo;</a>
 			</li>
 		</th:block>
 
@@ -23,7 +23,7 @@
 					<a class="page-link" href="">[[${index}]]</a>
 				</li>
 				<li th:case="*" class="page-item">
-					<a class="page-link" th:href="@{/{baseUrl}(baseUrl=${baseUrl}, pageTool=${pageTool}, pageShipped=${index}, pageReserved=${pageReserved})}">[[${index}]]</a>
+					<a class="page-link" th:href="@{/{baseUrl}(baseUrl=${baseUrl}, pageTool=${pageTool}, pageShipped=${index}, pageRequested=${pageRequested})}">[[${index}]]</a>
 				</li>
 			</th:block>
 		</th:block>
@@ -34,7 +34,7 @@
 				<a class="page-link" href="">&raquo;</a>
 			</li>
 			<li th:case="*" class="page-item">
-				<a class="page-link" th:href="@{/{baseUrl}(baseUrl=${baseUrl}, pageTool=${pageTool}, pageShipped=${pageShipped + 1}, pageReserved=${pageReserved})}">&raquo;</a>
+				<a class="page-link" th:href="@{/{baseUrl}(baseUrl=${baseUrl}, pageTool=${pageTool}, pageShipped=${pageShipped + 1}, pageRequested=${pageRequested})}">&raquo;</a>
 			</li>
 		</th:block>
 	</ul>

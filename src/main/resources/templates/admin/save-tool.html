@@ -33,7 +33,7 @@
 			</label>
 		  </p>
           <input class="btn btn-primary" type="submit" value="保存する">
-          <a th:href="@{/admin/tool/list(pageTool=${session.pageTool}, pageShipped=${session.pageShipped})}" class="btn btn-secondary">キャンセル</a>
+          <a th:href="@{/admin/tool/list(pageTool=${session.pageTool}, pageShipped=${session.pageShipped}, pageRequested=${session.pageRequested})}" class="btn btn-secondary">キャンセル</a>
         </form>
       </div><!-- /.col- -->
     </div><!-- /.row -->
