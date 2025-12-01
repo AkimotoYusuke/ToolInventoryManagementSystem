@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,12 +55,19 @@ public class ShippingController {
 
 	@PostMapping("/add")
 	public String add(
-			@Valid ShippingRecord shippingRecord,
+			@Valid @ModelAttribute("shippingRecord") ShippingRecord shippingRecord,
 			Errors errors,
 			Model model,
 			RedirectAttributes redirectAttributes) throws Exception {
-
+		
 		if(errors.hasErrors()) {
+			model.addAttribute("heading", "発送情報の入力");
+			return "save-shipping";
+		}
+		
+		// 到着希望日 < 発送希望日 ならエラー
+		if(shippingRecord.getArrivalDate().isBefore(shippingRecord.getShipDate())) {
+			errors.rejectValue("arrivalDate", "error.arrivalDate_isBefore_shipDate");
 			model.addAttribute("heading", "発送情報の入力");
 			return "save-shipping";
 		}
@@ -89,13 +97,20 @@ public class ShippingController {
 	@PostMapping("/edit/{id}")
 	public String edit(
 			@PathVariable Integer id,
-			@Valid ShippingRecord shippingRecord,
+			@Valid @ModelAttribute("shippingRecord") ShippingRecord shippingRecord,
 			Errors errors,
 			Model model,
 			RedirectAttributes redirectAttributes) throws Exception {
 
 		if(errors.hasErrors()) {
 			model.addAttribute("heading", "発送情報の編集");
+			return "save-shipping";
+		}
+		
+		// 到着希望日 < 発送希望日 ならエラー
+		if(shippingRecord.getArrivalDate().isBefore(shippingRecord.getShipDate())) {
+			errors.rejectValue("arrivalDate", "error.arrivalDate_isBefore_shipDate");
+			model.addAttribute("heading", "発送情報の入力");
 			return "save-shipping";
 		}
 

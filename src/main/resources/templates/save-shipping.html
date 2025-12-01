@@ -9,6 +9,8 @@
 
     <div class="row">
       <div class="col-md-12">
+		
+		<script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
 
         <form class="form" action="" method="post" th:object="${shippingRecord}">
           <div class="mb-3">
@@ -16,7 +18,9 @@
               <div class="error-message mt-2" th:errors="*{recipientName}"></div>
           </div>
 		  <div class="mb-3">
-              <label>受取人の郵便番号：<input type="text" th:field="*{recipientPostCode}"></label>
+              <label>受取人の郵便番号：<input type="text" th:field="*{recipientPostCode}"
+					onKeyUp="AjaxZip3.zip2addr(this,'','recipientAddress','recipientAddress');">
+			  </label>
               <div class="error-message mt-2" th:errors="*{recipientPostCode}"></div>
           </div>
           <div class="mb-3">
@@ -32,7 +36,9 @@
 		       <div class="error-message mt-2" th:errors="*{senderName}"></div>
       	  </div>
 		  <div class="mb-3">
-               <label>差出人の郵便番号：<input type="text" th:field="*{senderPostCode}"></label>
+               <label>差出人の郵便番号：<input type="text" th:field="*{senderPostCode}"
+					onKeyUp="AjaxZip3.zip2addr(this,'','senderAddress','senderAddress');">
+			   </label>
                <div class="error-message mt-2" th:errors="*{senderPostCode}"></div>
           </div>
 		  <div class="mb-3">
@@ -66,6 +72,36 @@
           <input class="btn btn-primary" type="submit" value="保存する">
           <a th:href="@{/rental(pageTool=${session.pageTool}, pageShipped=${session.pageShipped})}" class="btn btn-secondary">キャンセル</a>
         </form>
+		
+		<script>
+		  window.addEventListener('DOMContentLoaded', () => {
+		    const today = new Date().toISOString().split('T')[0];
+
+		    const shipDate     = document.querySelector('input[name="shipDate"]');
+		    const arrivalDate  = document.querySelector('input[name="arrivalDate"]');
+
+		    // 今日以前の日付を選べないように
+		    shipDate.setAttribute('min', today);
+		    arrivalDate.setAttribute('min', today);
+
+		    // 発送希望日を変更 → 到着希望日の min に反映
+		    shipDate.addEventListener('change', () => {
+		      let ship = shipDate.value;
+		      if (ship) {
+		        // 到着希望日は発送希望日以降
+		        arrivalDate.setAttribute('min', ship);
+
+		        // すでに arrivalDate が発送希望日より前ならクリア
+		        if (arrivalDate.value < ship) {
+		          arrivalDate.value = ship;
+		        }
+		      } else {
+		        arrivalDate.setAttribute('min', today);
+		      }
+		    });
+		  });
+		</script>
+		
       </div><!-- /.col- -->
     </div><!-- /.row -->
   </div><!-- /.container -->

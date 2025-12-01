@@ -56,6 +56,7 @@ public class ShippingRecord {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate shipDate;
 	
+	@NotNull
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate arrivalDate;
 	
