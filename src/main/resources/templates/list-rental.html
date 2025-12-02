@@ -8,6 +8,7 @@
     <div class="row mt-4">
       <div class="col-md-12">
         <div th:if="${message != null}" class="alert alert-success">[[${message}]]</div>
+		<div th:if="${errorMessage != null}" class="alert alert-danger">[[${errorMessage}]]</div>
       
         <h2 class="h4">出庫依頼済・出庫済の工具</h2>
         <div th:if="${#lists.size(shippingList) < 1}" class="alert alert-primary">出庫依頼済・出庫済の工具はありません</div>

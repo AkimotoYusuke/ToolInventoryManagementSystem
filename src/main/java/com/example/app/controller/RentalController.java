@@ -1,5 +1,6 @@
 package com.example.app.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.app.domain.ShippingRecord;
 import com.example.app.domain.Tool;
 import com.example.app.login.LoginStatus;
 import com.example.app.service.RentalRecordService;
@@ -166,6 +168,22 @@ public class RentalController {
 			RedirectAttributes redirectAttributes) throws Exception {
 		
 		LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
+		
+		ShippingRecord shippingRecord = shippingRecordService.getShippingRecordByEmployeeId(loginStatus.getId());
+		LocalDate shipDate = shippingRecord.getShipDate();  // 発送希望日
+		LocalDate arrivalDate = shippingRecord.getArrivalDate();  // 到着希望日
+		LocalDate today = LocalDate.now(); // 本日
+		
+		// 日付チェック
+    if (shipDate.isBefore(today) || arrivalDate.isBefore(today)) {
+        redirectAttributes.addFlashAttribute("errorMessage",
+            "発送希望日または到着希望日が前の日付です。修正してください。");
+      // 日付チェック後に戻るページ(元のページ)
+	    int pageTool = (int) session.getAttribute("pageTool");
+			int pageShipped = (int)session.getAttribute("pageShipped");
+			int pageReserved = (int)session.getAttribute("pageReserved");
+	    return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageReserved=" + pageReserved;
+    }
 		
 		// 現在、予約済工具のリストを取得
 		List<Tool> reservedToolList = toolService.getReservedToolList(loginStatus.getId());

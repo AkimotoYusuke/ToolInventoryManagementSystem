@@ -124,9 +124,10 @@ public class ToolController {
 		
 		// 工具追加後に追加した対象ページに移動
 		int pageTool = service.getTargetIdPage(NUM_PER_PAGE, toolId);
-		// 出庫済ページは、同じページを維持
+		// 追加後に戻るページ(元のページ)
 		int pageShipped = (int)session.getAttribute("pageShipped");
-		return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
+		int pageRequested = (int)session.getAttribute("pageRequested");
+		return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageRequested=" + pageRequested;
 	}
 
 	@GetMapping("/edit/{id}")
@@ -172,7 +173,8 @@ public class ToolController {
 		// 編集後に戻るページ(元のページ)
 		int pageTool = (int)session.getAttribute("pageTool");
 		int pageShipped = (int)session.getAttribute("pageShipped");
-		return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
+		int pageRequested = (int)session.getAttribute("pageRequested");
+		return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageRequested=" + pageRequested;
 	}
 
 	@GetMapping("/delete/{id}")
@@ -186,9 +188,10 @@ public class ToolController {
 		int previousPage = (int) session.getAttribute("pageTool");
 		int totalPages = service.getTotalPages(NUM_PER_PAGE);
 		int pageTool = previousPage <= totalPages ? previousPage : totalPages;
-		// 出庫済ページは、同じページを維持
+		// 削除後に戻るページ(元のページ)
 		int pageShipped = (int)session.getAttribute("pageShipped");
-		return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
+		int pageRequested = (int)session.getAttribute("pageRequested");
+		return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageRequested=" + pageRequested;
 	}
 	
 	@GetMapping("/showShipping/{id}")
@@ -230,7 +233,11 @@ public String borrowTool(
 	int pageTool = (int)session.getAttribute("pageTool");
 	// 出庫済ページは、出庫ボタンを押した対象が1ページ目に移動する為、1ページ目を表示
 	int pageShipped = 1;
-	return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
+	// 出庫後に戻るページ(⇒ページ数が減って、元のページが無くなった場合は最終ページ)
+	int previousPage = (int) session.getAttribute("pageRequested");
+	int totalPages = shippingRecordService.getShippingRequestTotalPages(NUM_PER_PAGE);
+	int pageRequested = previousPage <= totalPages ? previousPage : totalPages;
+	return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageRequested=" + pageRequested;
 }
 
 	//「入庫」ボタン
@@ -249,7 +256,9 @@ public String borrowTool(
 		int previousPage = (int)session.getAttribute("pageShipped");
 		int totalPages = shippingRecordService.getTotalPages(NUM_PER_PAGE);
 		int pageShipped = previousPage <= totalPages ? previousPage : totalPages;
-		return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
+		// 入庫後に戻る工具ページ(元のページ)
+		int pageRequested = (int)session.getAttribute("pageRequested");
+		return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageRequested=" + pageRequested;
 	}
 
 	//対象１個のみの「入庫」ボタン
@@ -269,7 +278,9 @@ public String borrowTool(
 			int previousPage = (int)session.getAttribute("pageShipped");
 			int totalPages = shippingRecordService.getTotalPages(NUM_PER_PAGE);
 			int pageShipped = previousPage <= totalPages ? previousPage : totalPages;
-			return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped;
+			// 入庫後に戻る工具ページ(元のページ)
+			int pageRequested = (int)session.getAttribute("pageRequested");
+			return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageRequested=" + pageRequested;
 		}
 		
 		redirectAttributes.addFlashAttribute("message", "入庫処理をしました。");
