@@ -41,13 +41,13 @@ public class ToolServiceImpl implements ToolService {
 	}
 
 	@Override
-	public void addTool(Tool material) throws Exception {
-		toolMapper.insert(material);
+	public void addTool(Tool tool) throws Exception {
+		toolMapper.insert(tool);
 	}
 
 	@Override
-	public void editTool(Tool material) throws Exception {
-		toolMapper.update(material);
+	public void editTool(Tool tool) throws Exception {
+		toolMapper.update(tool);
 	}
 	
 	@Override
@@ -65,6 +65,12 @@ public class ToolServiceImpl implements ToolService {
 		int offset = numPerPage * (page - 1);
 		return toolMapper.selectLimited(offset, numPerPage);
 	}
+	
+	@Override
+	public List<Tool> getKeywordToolListPerPage(int page, int numPerPage, String keyword) throws Exception {
+		int offset = numPerPage * (page - 1);
+		return toolMapper.selectKeywordLimited(offset, numPerPage, keyword);
+	}
 
 	@Override
 	public int getTotalPages(int numPerPage) throws Exception {
@@ -74,14 +80,52 @@ public class ToolServiceImpl implements ToolService {
 	}
 	
 	@Override
-	public List<Tool> getBorrowingToolList(int employeeId) throws Exception {
-		return toolMapper.selectBorrowingByEmployeeId(employeeId);
+	public int getKeywordTotalPages(int numPerPage, String keyword) throws Exception {
+		long count = toolMapper.countKeywordActive(keyword);
+		int totalPages = (int) Math.ceil((double) count / numPerPage);
+		return totalPages > 0 ? totalPages : 1; // totalPagesが0ページ以下だったら、1ページにする
+	}
+	
+	@Override
+	public int getTargetIdPage(int numPerPage, int toolId) throws Exception {
+		long count = toolMapper.countActiveAddedId(toolId);
+		int targetPage = (int) Math.ceil((double) count / numPerPage);
+		return targetPage > 0 ? targetPage : 1; // targetPageが0ページ以下だったら、1ページにする
+	}
+	
+	@Override
+	public List<Tool> getReservedToolList(int employeeId) throws Exception {
+		return toolMapper.selectReservedByEmployeeId(employeeId);
+	}
+	
+	@Override
+	public List<Tool> getLimitedReservedToolList(int page, int numPerPage, int employeeId) throws Exception {
+		int offset = numPerPage * (page - 1);
+		return toolMapper.selectLimitedReservedByEmployeeId(offset, numPerPage, employeeId);
+	}
+	
+	@Override
+	public int getTotalReservedToolPages(int numPerPage, int employeeId) throws Exception {
+		long count = toolMapper.countReserved(employeeId);
+		int totalPages = (int) Math.ceil((double) count / numPerPage);
+		return totalPages > 0 ? totalPages : 1; // totalPagesが0ページ以下だったら、1ページにする
+	}
+	
+	@Override
+	public List<Tool> getBorrowingToolList(int shippingId) throws Exception {
+		return toolMapper.selectBorrowingByShippingId(shippingId);
 	}
 
 	@Override
 	public List<Tool> getBorrowableToolListPerPage(int page, int numPerPage) throws Exception {
 		int offset = numPerPage * (page - 1);
 		return toolMapper.selectBorrowableWithOffset(offset, numPerPage);
+	}
+	
+	@Override
+	public List<Tool> getKeywordBorrowableToolListPerPage(int page, int numPerPage, String keyword) throws Exception {
+		int offset = numPerPage * (page - 1);
+		return toolMapper.selectKeywordBorrowableWithOffset(offset, numPerPage, keyword);
 	}
 
 	@Override
@@ -90,15 +134,25 @@ public class ToolServiceImpl implements ToolService {
 		int totalPages = (int) Math.ceil((double) count / numPerPage);
 		return totalPages > 0 ? totalPages : 1; // totalPagesが0ページ以下だったら、1ページにする
 	}
+	
+	@Override
+	public int getKeywordTotalBorrowableToolPages(int numPerPage, String keyword) throws Exception {
+		long count = toolMapper.countKeywordBorrowable(keyword);
+		int totalPages = (int) Math.ceil((double) count / numPerPage);
+		return totalPages > 0 ? totalPages : 1; // totalPagesが0ページ以下だったら、1ページにする
+	}
 
 	@Override
-	public boolean isBorrowable(Integer toolId) throws Exception {
+	public boolean hasReservation(Integer toolId) throws Exception {
 		Tool tool = toolMapper.selectById(toolId);
 
-		if(tool == null) {
+		if(tool.getStatus().equals("DEL")) {
 			return false;
 		}
-		else if(tool.getRentalId() != null) {
+		else if(tool.getReservedEmployeeId() != null) {
+			return false;
+		}
+		else if(tool.getRequestedEmployeeId() != null) {
 			return false;
 		}
 

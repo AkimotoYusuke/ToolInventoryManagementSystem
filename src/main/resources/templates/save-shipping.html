@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th= "http://www.thymeleaf.org">
+<head th:replace="~{admin/parts/common :: employee_html_head()}"></head>
+<body>
+  <header th:replace="~{admin/parts/common :: employee_header()}"></header>
+  
+  <div class="container">
+    <h1 class="my-4 h3">[[${heading}]]</h1>
+
+    <div class="row">
+      <div class="col-md-12">
+		
+		<script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
+
+        <form class="form" action="" method="post" th:object="${shippingRecord}">
+          <div class="mb-3">
+              <label>受取人の氏名：<input type="text" th:field="*{recipientName}"></label>
+              <div class="error-message mt-2" th:errors="*{recipientName}"></div>
+          </div>
+		  <div class="mb-3">
+              <label>受取人の郵便番号：<input type="text" th:field="*{recipientPostCode}"
+					onKeyUp="AjaxZip3.zip2addr(this,'','recipientAddress','recipientAddress');">
+			  </label>
+              <div class="error-message mt-2" th:errors="*{recipientPostCode}"></div>
+          </div>
+          <div class="mb-3">
+              <label>受取人の住所：<input type="text" th:field="*{recipientAddress}"></label>
+              <div class="error-message mt-2" th:errors="*{recipientAddress}"></div>
+          </div>
+          <div class="mb-3">
+              <label>受取人の電話番号：<input type="text" th:field="*{recipientPhone}"></label>
+              <div class="error-message mt-2" th:errors="*{recipientPhone}"></div>
+          </div>
+		  <div class="mb-3">
+	           <label>差出人の氏名：<input type="text" th:field="*{senderName}"></label>
+		       <div class="error-message mt-2" th:errors="*{senderName}"></div>
+      	  </div>
+		  <div class="mb-3">
+               <label>差出人の郵便番号：<input type="text" th:field="*{senderPostCode}"
+					onKeyUp="AjaxZip3.zip2addr(this,'','senderAddress','senderAddress');">
+			   </label>
+               <div class="error-message mt-2" th:errors="*{senderPostCode}"></div>
+          </div>
+		  <div class="mb-3">
+		       <label>差出人の住所：<input type="text" th:field="*{senderAddress}"></label>
+		       <div class="error-message mt-2" th:errors="*{senderAddress}"></div>
+		  </div>
+		  <div class="mb-3">
+		       <label>差出人の電話番号：<input type="text" th:field="*{senderPhone}"></label>
+		       <div class="error-message mt-2" th:errors="*{senderPhone}"></div>
+		  </div>
+		  <div class="mb-3">
+  	           <label>発送方法/希望サービス：<input type="text" th:field="*{shippingMethod}"></label>
+  		       <div class="error-message mt-2" th:errors="*{shippingMethod}"></div>
+          </div>
+  		  <div class="mb-3">
+  		       <label>発送希望日：<input type="date" th:field="*{shipDate}"></label>
+  		       <div class="error-message mt-2" th:errors="*{shipDate}"></div>
+  		  </div>
+  		  <div class="mb-3">
+  		       <label>到着希望日：<input type="date" th:field="*{arrivalDate}"></label>
+  		       <div class="error-message mt-2" th:errors="*{arrivalDate}"></div>
+  		  </div>
+  		  <div class="mb-3">
+    	       <label>送料の作番：<input type="text" th:field="*{shippingNumber}"></label>
+    		   <div class="error-message mt-2" th:errors="*{shippingNumber}"></div>
+          </div>
+		  <div class="mb-3">
+  		       <label>備考：<input type="text" th:field="*{note}"></label>
+  		       <div class="error-message mt-2" th:errors="*{note}"></div>
+  		  </div>
+          <input class="btn btn-primary" type="submit" value="保存する">
+          <a th:href="@{/rental(pageTool=${session.pageTool}, pageShipped=${session.pageShipped}, pageReserved=${session.pageReserved})}" class="btn btn-secondary">キャンセル</a>
+        </form>
+		
+		<script>
+		  window.addEventListener('DOMContentLoaded', () => {
+		    const today = new Date().toISOString().split('T')[0];
+
+		    const shipDate     = document.querySelector('input[name="shipDate"]');
+		    const arrivalDate  = document.querySelector('input[name="arrivalDate"]');
+
+		    // 今日以前の日付を選べないように
+		    shipDate.setAttribute('min', today);
+		    arrivalDate.setAttribute('min', today);
+
+		    // 発送希望日を変更 → 到着希望日の min に反映
+		    shipDate.addEventListener('change', () => {
+		      let ship = shipDate.value;
+		      if (ship) {
+		        // 到着希望日は発送希望日以降
+		        arrivalDate.setAttribute('min', ship);
+
+		        // すでに arrivalDate が発送希望日より前ならクリア
+		        if (arrivalDate.value < ship) {
+		          arrivalDate.value = ship;
+		        }
+		      } else {
+		        arrivalDate.setAttribute('min', today);
+		      }
+		    });
+		  });
+		</script>
+		
+      </div><!-- /.col- -->
+    </div><!-- /.row -->
+  </div><!-- /.container -->
+  
+  <th:block th:replace="~{admin/parts/common :: javascripts()}"></th:block>
+</body>
+</html>

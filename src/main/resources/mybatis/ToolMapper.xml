@@ -14,6 +14,9 @@
 			tools.id, tools.mgmt_id, tools.name,
 			tools.detail_info, tools.created, tools.status,
 			tools.maker_type_id, maker_types.name AS maker_type_name,
+			tools.reserved_employee_id,
+			tools.requested_employee_id,
+			tools.shipping_id,
 			tools.rental_id
 		FROM tools
 		JOIN maker_types
@@ -41,7 +44,7 @@
 		WHERE id = #{id}
 	</update>
 
-	<insert id="insert" parameterType="Tool" useGeneratedKeys="true">
+	<insert id="insert" parameterType="Tool" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO tools (mgmt_id, name, detail_info, maker_type_id, created)
 		VALUES (#{mgmtId}, #{name}, #{detailInfo}, #{makerType.id}, NOW())
 	</insert>
@@ -59,24 +62,91 @@
 		ORDER BY tools.mgmt_id
 		LIMIT #{offset}, #{num}
 	</select>
+	
+	<select id="selectKeywordLimited" resultMap="tool">
+		<include refid="selectAndJoin" />
+		WHERE (tools.mgmt_id like CONCAT('%', #{keyword}, '%')
+        OR tools.name like CONCAT('%', #{keyword}, '%')
+        OR tools.detail_info like CONCAT('%', #{keyword}, '%')
+        OR maker_types.name like CONCAT('%', #{keyword}, '%'))
+		AND tools.status = 'ACT'
+		ORDER BY tools.mgmt_id
+		LIMIT #{offset}, #{num}
+	</select>
 
 	<select id="countActive" resultType="long">
 		SELECT COUNT(*) FROM tools
 		WHERE status = 'ACT'
 	</select>
 	
-	<select id="selectBorrowingByEmployeeId" parameterType="int" resultMap="tool">
+	<select id="countKeywordActive" parameterType="string" resultType="long">
+		SELECT COUNT(*) FROM tools
+        JOIN maker_types
+		ON tools.maker_type_id = maker_types.id
+        WHERE (tools.mgmt_id like CONCAT('%', #{keyword}, '%')
+        OR tools.name like CONCAT('%', #{keyword}, '%')
+        OR tools.detail_info like CONCAT('%', #{keyword}, '%')
+        OR maker_types.name like CONCAT('%', #{keyword}, '%'))
+        AND tools.status = 'ACT'
+	</select>
+	
+	<select id="countActiveAddedId" parameterType="int" resultType="long">
+		SELECT pos
+		FROM (
+		    SELECT
+		        id,
+		        ROW_NUMBER() OVER (ORDER BY mgmt_id) AS pos
+		    FROM tools
+		    WHERE status = 'ACT'
+		) AS table_rebuild
+		WHERE id = #{id}
+	</select>
+	
+	<select id="selectReservedByEmployeeId" parameterType="int" resultMap="tool">
+    	<include refid="selectAndJoin" />
+		WHERE tools.reserved_employee_id = #{employeeId}
+		ORDER BY tools.id ASC
+	</select>
+	
+	<select id="selectLimitedReservedByEmployeeId" resultMap="tool">
+    	<include refid="selectAndJoin" />
+		WHERE tools.reserved_employee_id = #{employeeId}
+		ORDER BY tools.id ASC
+		LIMIT #{offset}, #{num}
+	</select>
+		
+	<select id="countReserved" parameterType="int" resultType="long">
+    	SELECT COUNT(*) FROM tools
+		WHERE tools.reserved_employee_id = #{employeeId}
+		ORDER BY tools.id ASC
+	</select>
+	
+	<select id="selectBorrowingByShippingId" parameterType="int" resultMap="tool">
     	<include refid="selectAndJoin" />
 		LEFT JOIN rental_records
 		ON tools.rental_id = rental_records.id
-		WHERE rental_records.employee_id = #{employeeId}
+		WHERE tools.shipping_id = #{shippingId}
 		ORDER BY rental_records.borrowed_at
 	</select>
 
 	<select id="selectBorrowableWithOffset" resultMap="tool">
 		<include refid="selectAndJoin" />
 		WHERE tools.status = 'ACT'
-		AND rental_id IS NULL
+		AND tools.reserved_employee_id IS NULL
+		AND tools.rental_id IS NULL
+		ORDER BY tools.mgmt_id
+		LIMIT #{offset}, #{num}
+	</select>
+	
+	<select id="selectKeywordBorrowableWithOffset" resultMap="tool">
+		<include refid="selectAndJoin" />
+		WHERE (tools.mgmt_id like CONCAT('%', #{keyword}, '%')
+        OR tools.name like CONCAT('%', #{keyword}, '%')
+        OR tools.detail_info like CONCAT('%', #{keyword}, '%')
+        OR maker_types.name like CONCAT('%', #{keyword}, '%'))
+        AND tools.status = 'ACT'
+		AND tools.reserved_employee_id IS NULL
+		AND tools.rental_id IS NULL
 		ORDER BY tools.mgmt_id
 		LIMIT #{offset}, #{num}
 	</select>
@@ -84,19 +154,56 @@
 	<select id="countBorrowable" resultType="long">
 		SELECT COUNT(*) FROM tools
 		WHERE status = 'ACT'
+		AND reserved_employee_id IS NULL
 		AND rental_id IS NULL
 	</select>
-
-	<update id="addBorrowedRecord">
+	
+	<select id="countKeywordBorrowable" parameterType="string" resultType="long">
+		SELECT COUNT(*) FROM tools
+        JOIN maker_types
+		ON tools.maker_type_id = maker_types.id
+		WHERE (tools.mgmt_id like CONCAT('%', #{keyword}, '%')
+        OR tools.name like CONCAT('%', #{keyword}, '%')
+        OR tools.detail_info like CONCAT('%', #{keyword}, '%')
+        OR maker_types.name like CONCAT('%', #{keyword}, '%'))
+        AND tools.status = 'ACT'
+		AND tools.reserved_employee_id IS NULL
+		AND tools.rental_id IS NULL
+	</select>
+	
+	<update id="editReserved">
 		UPDATE tools
-		SET rental_id = #{rentalId}
+		SET reserved_employee_id = #{employeeId}
+		WHERE id = #{id}
+		AND reserved_employee_id IS NULL
+		AND requested_employee_id IS NULL
+	</update>
+	
+	<update id="editCanceled">
+		UPDATE tools
+		SET reserved_employee_id = null
+		WHERE id = #{id}
+		AND reserved_employee_id IS NOT NULL
+		AND requested_employee_id IS NULL
+	</update>
+
+	<update id="addBorrowingRequestRecord">
+		UPDATE tools
+		SET reserved_employee_id = null, requested_employee_id = #{employeeId},
+			shipping_id = #{shippingId}, rental_id = #{rentalId}
 		WHERE id = #{id}
 	</update>
 
 	<update id="addReturnedRecord" parameterType="int">
 		UPDATE tools
-		SET rental_id = NULL
-		WHERE id = #{id}
+		SET requested_employee_id = NULL, shipping_id = NULL, rental_id = NULL
+		WHERE shipping_id = #{shippingId}
 	</update>
-
+	
+	<update id="addOnlyOneReturnedRecord" parameterType="int">
+		UPDATE tools
+		SET requested_employee_id = NULL, shipping_id = NULL, rental_id = NULL
+		WHERE id = #{toolId}
+	</update>
+	
 </mapper>

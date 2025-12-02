@@ -15,16 +15,28 @@ public interface ToolService {
 	void editTool(Tool tool) throws Exception;
 	boolean isExsitingTool(String mgmtId) throws Exception;
 	List<Tool> getToolListPerPage(int page, int numPerPage) throws Exception;
+	List<Tool> getKeywordToolListPerPage(int page, int numPerPage, String keyword) throws Exception;
     int getTotalPages(int numPerPage) throws Exception;
+    int getKeywordTotalPages(int numPerPage, String keyword) throws Exception;
+    int getTargetIdPage(int numPerPage, int toolId) throws Exception;
     
-    // ある生徒が現在借りている教材の取得
-    List<Tool> getBorrowingToolList(int employeeId) throws Exception;
-    // 貸し出し可能な教材のリスト(ページごと)
+    // ある依頼者が現在予約済工具の取得
+    List<Tool> getReservedToolList(int employeeId) throws Exception;
+    List<Tool> getLimitedReservedToolList(int page, int numPerPage, int employeeId) throws Exception;
+    // 予約済工具のページ数
+    int getTotalReservedToolPages(int numPerPage, int employeeId) throws Exception;
+    // ある依頼者が現在出庫依頼済・出庫済工具の取得
+    List<Tool> getBorrowingToolList(int shippingId) throws Exception;
+    // 出庫可能な工具のリスト(ページごと)
     List<Tool> getBorrowableToolListPerPage(int page, int numPerPage) throws Exception;
-    // 教材が貸し出し可能な教材のページ数
+    // キーワード検索した際の出庫可能な工具のリスト(ページごと)
+    List<Tool> getKeywordBorrowableToolListPerPage(int page, int numPerPage, String keyword) throws Exception;
+    // 出庫可能な工具のページ数
     int getTotalBorrowableToolPages(int numPerPage) throws Exception;
-    // 教材が貸し出し可能か否か判別
-    boolean isBorrowable(Integer toolId) throws Exception;
+    // キーワード検索した際の工具が出庫可能な工具のページ数
+    int getKeywordTotalBorrowableToolPages(int numPerPage, String keyword) throws Exception;
+    // 工具が予約可能か否か判別
+    boolean hasReservation(Integer toolId) throws Exception;
 
 	List<MakerType> getMakerTypeList() throws Exception;
 

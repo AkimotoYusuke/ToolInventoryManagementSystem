@@ -27,6 +27,10 @@ public class Tool {
 	private LocalDateTime created;
 	private String status;
 
+	private Integer reservedEmployeeId;
+	private Integer requestedEmployeeId;
+	private Integer shippingId;
 	private Integer rentalId;
-
+	private LocalDateTime borrowedAt;
+	
 }

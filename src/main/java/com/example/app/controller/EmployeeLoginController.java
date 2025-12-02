@@ -46,6 +46,9 @@ public class EmployeeLoginController {
 			errors.rejectValue("loginId", "error.incorrect_id_or_password");
 			return "login-employee";
 		}
+		
+		// セッション初期化
+		session.invalidate();
 
 		// セッションに認証情報を格納
 		LoginStatus loginStatus = LoginStatus.builder()
@@ -53,6 +56,7 @@ public class EmployeeLoginController {
 				.name(employee.getName())
 				.loginId(employee.getLoginId())
 				.authority(employee.getAuthorityType().getId())
+				.phone(employee.getPhone())
 				.build();
 		session.setAttribute("loginStatus", loginStatus);
 		return "redirect:/rental";
@@ -61,7 +65,8 @@ public class EmployeeLoginController {
 	@GetMapping("/logout")
 	public String logout(
 			RedirectAttributes redirectAttributes) {
-		session.removeAttribute("loginStatus");
+//		session.removeAttribute("loginStatus");
+		session.invalidate();
 		redirectAttributes.addFlashAttribute("message", "ログアウトしました。");
 		return "redirect:/login";
 	}

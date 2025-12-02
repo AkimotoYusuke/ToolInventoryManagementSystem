@@ -5,6 +5,7 @@
 	<select id="selectLatestByToolId" resultType="RentalRecord">
 		SELECT
 			rental_records.id, rental_records.employee_id, rental_records.tool_id,
+			rental_records.shipping_id, rental_records.borrowing_requested_at,
 			rental_records.borrowed_at, rental_records.returned_at,
 			employees.name AS employee_name
 		FROM rental_records
@@ -15,21 +16,47 @@
 		LIMIT 0, #{num}
 	</select>
 
-	<insert id="addBorrowedRecord" parameterType="RentalRecord" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO rental_records (employee_id, tool_id, borrowed_at)
-		VALUES (#{employeeId}, #{toolId}, NOW())
+	<insert id="addBorrowingRequestRecord" parameterType="RentalRecord" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO rental_records (employee_id, tool_id, shipping_id, borrowing_requested_at)
+		VALUES (#{employeeId}, #{toolId}, #{shippingId}, NOW())
 	</insert>
+	
+	<update id="addBorrowedRecord" parameterType="int">
+		UPDATE rental_records
+		SET borrowed_at = NOW()
+		WHERE shipping_id = #{shippingId}
+		AND borrowing_requested_at IS NOT NULL
+		AND borrowed_at IS NULL
+		AND returned_at IS NULL
+	</update>
 
 	<update id="addReturnedRecord" parameterType="int">
 		UPDATE rental_records
 		SET returned_at = NOW()
+		WHERE shipping_id = #{shippingId}
+		AND borrowing_requested_at IS NOT NULL
+		AND borrowed_at IS NOT NULL
+		AND returned_at IS NULL
+	</update>
+	
+	<update id="addOnlyOneReturnedRecord" parameterType="int">
+		UPDATE rental_records
+		SET returned_at = NOW()
 		WHERE tool_id = #{toolId}
+		AND borrowing_requested_at IS NOT NULL
+		AND borrowed_at IS NOT NULL
 		AND returned_at IS NULL
 	</update>
 
 	<select id="countBorrowingByEmployeeId" resultType="int" parameterType="int">
 		SELECT COUNT(*) FROM rental_records
 		WHERE employee_id = #{employeeId}
+		AND returned_at IS NULL
+	</select>
+	
+	<select id="countBorrowingByShippingId" resultType="long" parameterType="int">
+		SELECT COUNT(*) FROM rental_records
+		WHERE shipping_id = #{shippingId}
 		AND returned_at IS NULL
 	</select>
 

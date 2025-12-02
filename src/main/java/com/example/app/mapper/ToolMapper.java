@@ -17,17 +17,36 @@ public interface ToolMapper {
 	void insert(Tool tool) throws Exception;
 	void update(Tool tool) throws Exception;
 	List<Tool> selectLimited(@Param("offset") int offset, @Param("num") int num) throws Exception;
+	List<Tool> selectKeywordLimited(@Param("offset") int offset, @Param("num") int num, @Param("keyword") String keyword) throws Exception;
     long countActive() throws Exception;
+    long countKeywordActive(String keyword) throws Exception;
+    long countActiveAddedId(int id) throws Exception;
     
-    // ある依頼者の出庫中のリストを取得
-    List<Tool> selectBorrowingByEmployeeId(int employeeId) throws Exception;
+    // ある依頼者の予約済のリストを取得
+    List<Tool> selectReservedByEmployeeId(int employeeId) throws Exception;
+    List<Tool> selectLimitedReservedByEmployeeId(@Param("offset") int offset, @Param("num") int num, int employeeId) throws Exception;
+    // 予約済工具の数を取得(ページ番号用)
+    long countReserved(int employeeId) throws Exception;
+    // ある依頼者の出庫依頼済・出庫済の工具リストを取得
+    List<Tool> selectBorrowingByShippingId(int shippingId) throws Exception;
     // 出庫可能な工具のリストを取得(LIMIT句あり)
     List<Tool> selectBorrowableWithOffset(@Param("offset") int offset, @Param("num") int num) throws Exception;
+    // キーワード検索(出庫可能な工具のリストを取得(LIMIT句あり))
+    List<Tool> selectKeywordBorrowableWithOffset(@Param("offset") int offset, @Param("num") int num, @Param("keyword") String keyword) throws Exception;
     // 出庫可能な工具の数を取得(ページ番号用)
     long countBorrowable() throws Exception;
-    // 工具に「出庫中」を記録
-    void addBorrowedRecord(@Param("id") int toolId, @Param("rentalId") int rentalId) throws Exception;
+    // キーワード検索(出庫可能な工具の数を取得(ページ番号用))
+    long countKeywordBorrowable(String keyword) throws Exception;
+    // 工具に「予約済」と「予約者」を記録
+    void editReserved(@Param("id") int toolId, @Param("employeeId") int employeeId) throws Exception;
+    // 工具に「キャンセル」の為、「予約済」と「予約者」を削除
+    void editCanceled(int toolId) throws Exception;
+    // 工具に「出庫依頼」を記録
+    void addBorrowingRequestRecord(@Param("id") int toolId, @Param("employeeId") int employeeId,
+    											@Param("shippingId") int shippingId, @Param("rentalId") int rentalId) throws Exception;
     // 工具に「入庫済」を記録
-    void addReturnedRecord(int toolId) throws Exception;
+    void addReturnedRecord(int shippingId) throws Exception;
+    // 対象１個のみの工具に「入庫済」を記録
+    void addOnlyOneReturnedRecord(int toolId) throws Exception;
 
 }

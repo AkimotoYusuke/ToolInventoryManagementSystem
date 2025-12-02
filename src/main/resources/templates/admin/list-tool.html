@@ -5,19 +5,83 @@
   <header th:replace="~{admin/parts/common :: header()}"></header>
 
   <div class="container">
-    <h1 class="my-4 h3">工具リスト</h1>
-
     <div class="row">
       <div class="col-md-12">
-         <p>
-           <a th:href="@{/admin/tool/add}" class="btn btn-primary">工具の追加</a>
-           <a th:href="@{/admin/employee/list}" class="btn btn-light">従業員リスト</a>
-         </p>
-        
-        <div class="alert alert-success" th:if="${message}">
-         [[${message}]]
-        </div>
-        
+		 <div class="alert alert-success" th:if="${message}">
+		 	[[${message}]]
+		 </div>
+		 
+		 <h2 class="h4">出庫済</h2>
+		 <div th:if="${#lists.size(shippedList) < 1}" class="alert alert-primary">出庫済の工具はありません</div>
+		 <table th:if="${#lists.size(shippedList) >= 1}" class="table table-bordered">
+		   <thead>
+		     <tr>
+		 	  <th>発送番号</th>
+		      <th>差出人の氏名</th>
+		      <th>受取人の氏名</th>
+		      <th>受取人の住所</th>
+		      <th>発送希望日</th>
+		      <th>到着希望日</th>
+		 	  <th>出庫工具</th>
+		 	  <th>出庫依頼</th>
+		     </tr>
+		   </thead>
+		   <tbody>
+		     <tr th:each="shippedAt : ${shippedList}" th:object="${shippedAt}">
+		 	   <td><a th:href="@{/admin/tool/showShipping/{id}(id=*{id})}">[[*{id}]]</a></td>
+		       <td>[[*{senderName}]]</td>
+		       <td>[[*{recipientName}]]</td>
+		       <td>[[*{recipientAddress}]]</td>
+		       <td>[[*{shipDate}]]</td>
+		 	   <td>[[*{arrivalDate}]]</td>
+		       <td><a th:href="@{/admin/tool/toolList/{id}(id=*{id})}">[[*{unstockedTools}]]/[[*{numberOfTools}]]件</a></td>
+		 	   <td><a th:href="@{/admin/tool/return/{id}(id=*{id})}" class="btn btn-danger btn-sm">入庫</a></td>
+		     </tr>
+		   </tbody>
+		 </table>
+		 
+		 <div th:replace="~{widget/paginationAdminShipped :: paginationAdminShipped(${totalPagesTool}, ${currentPageTool}, ${totalPagesShipped}, ${currentPageShipped}, ${totalPagesRequested}, ${currentPageRequested}, 'admin/tool/list')}"></div>
+		 
+		 <h2 class="h4">出庫依頼</h2>
+		 <div th:if="${#lists.size(shippingRequestList) < 1}" class="alert alert-primary">出庫依頼の工具はありません</div>
+		 <table th:if="${#lists.size(shippingRequestList) >= 1}" class="table table-bordered">
+		   <thead>
+		     <tr>
+		 	  <th>発送番号</th>
+			   <th>差出人の氏名</th>
+		       <th>受取人の氏名</th>
+		       <th>受取人の住所</th>
+		       <th>発送希望日</th>
+		       <th>到着希望日</th>
+		 	  <th>出庫工具</th>
+		 	  <th>出庫依頼</th>
+		     </tr>
+		   </thead>
+		   <tbody>
+		     <tr th:each="shippingRequest : ${shippingRequestList}" th:object="${shippingRequest}">
+		 	   <td><a th:href="@{/admin/tool/showShipping/{id}(id=*{id})}">[[*{id}]]</a></td>
+			   <td>[[*{senderName}]]</td>
+		       <td>[[*{recipientName}]]</td>
+		       <td>[[*{recipientAddress}]]</td>
+		       <td>[[*{shipDate}]]</td>
+		 	   <td>[[*{arrivalDate}]]</td>
+		       <td><a th:href="@{/admin/tool/toolList/{id}(id=*{id})}">[[*{unstockedTools}]]/[[*{numberOfTools}]]件</a></td>
+		 	   <td><a th:href="@{/admin/tool/borrow/{id}(id=*{id})}" class="btn btn-success btn-sm">出庫</a></td>
+		     </tr>
+		   </tbody>
+		 </table>
+		 
+		 <div th:replace="~{widget/paginationAdminRequested :: paginationAdminRequested(${totalPagesTool}, ${currentPageTool}, ${totalPagesShipped}, ${currentPageShipped}, ${totalPagesRequested}, ${currentPageRequested}, 'admin/tool/list')}"></div>
+		 
+		<h2 class="h4">工具リスト</h2>
+		<form action="/admin/tool/selectKeyword">
+			<p>
+				キーワード：<input type="text" name="keyword" th:value="${keyword}"/>
+				<input type="submit" value="検索"/>　　
+				<a th:href="@{/admin/tool/add}" class="btn btn-primary">工具の追加</a>
+				<a th:href="@{/admin/employee/list}" class="btn btn-light">従業員リスト</a>
+			</p>
+		</form>
 		<div th:if="${#lists.size(toolList) < 1}" class="alert alert-danger">登録されている工具はありません</div>
         <table  th:if="${#lists.size(toolList) >= 1}" class="table table-bordered">
           <thead>
@@ -31,18 +95,19 @@
             </tr>
           </thead>
           <tbody>
-            <tr th:each="tool : ${toolList}">
-	          <td><a th:href="@{/admin/tool/show/{id}(id=${tool.id})}">[[${tool.mgmtId}]]</a></td>
-			  <td>[[${tool.name}]]</td>
-	          <td>[[${tool.detailInfo}]]</td>
-	          <td>[[${tool.makerType.name}]]</td>
-	          <td><a th:href="@{/admin/tool/edit/{id}(id=${tool.id})}" class="btn btn-warning btn-sm">編集</a></td>
-	          <td><a th:href="@{/admin/tool/delete/{id}(id=${tool.id})}" class="btn btn-danger btn-sm delete">削除</a></td>
+            <tr th:each="tool : ${toolList}" th:object="${tool}">
+	          <td><a th:href="@{/admin/tool/show/{id}(id=*{id})}">[[*{mgmtId}]]</a></td>
+			  <td>[[*{name}]]</td>
+	          <td>[[*{detailInfo}]]</td>
+	          <td>[[*{makerType.name}]]</td>
+	          <td><a th:href="@{/admin/tool/edit/{id}(id=*{id})}" class="btn btn-warning btn-sm">編集</a></td>
+	          <td><a th:href="@{/admin/tool/delete/{id}(id=*{id})}" class="btn btn-danger btn-sm delete">削除</a></td>
 	        </tr>
           </tbody>
         </table>
 
-        <div th:replace="~{widget/pagination :: pagination(${totalPages}, ${currentPage}, 'admin/tool/list')}"></div>
+<!--        <div th:replace="~{widget/pagination :: pagination(${totalPages}, ${currentPage}, 'admin/tool/list')}"></div>-->
+		<div th:replace="~{widget/paginationAdminTool :: paginationAdminTool(${totalPagesTool}, ${currentPageTool}, ${totalPagesShipped}, ${currentPageShipped}, ${totalPagesRequested}, ${currentPageRequested}, 'admin/tool/list')}"></div>
       </div><!-- /.col- -->
     </div><!-- /.row -->
   </div><!-- /.container -->

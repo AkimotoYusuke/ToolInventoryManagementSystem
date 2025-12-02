@@ -12,7 +12,7 @@
 	<sql id="selectAndJoin">
 		SELECT
 			employees.id, employees.name,
-			employees.login_id, employees.login_pass, employees.status,
+			employees.login_id, employees.login_pass, employees.phone, employees.status,
 			employees.authority_type_id, authority_types.name AS authority_type_name
 		FROM employees
 		JOIN authority_types
@@ -46,14 +46,14 @@
 	</update>
 
 	<insert id="insert" parameterType="Employee" useGeneratedKeys="true">
-		INSERT INTO employees (name, login_id, login_pass, authority_type_id)
-		VALUES (#{name}, #{loginId}, #{loginPass}, #{authorityType.id})
+		INSERT INTO employees (name, login_id, login_pass, phone, authority_type_id)
+		VALUES (#{name}, #{loginId}, #{loginPass}, #{phone}, #{authorityType.id})
 	</insert>
 
 	<update id="update" parameterType="Employee">
 		UPDATE employees
 		SET name = #{name},
-			login_id = #{loginId}, login_pass = #{loginPass},
+			login_id = #{loginId}, login_pass = #{loginPass}, phone = #{phone},
 			authority_type_id = #{authorityType.id}
 		WHERE id = #{id}
 	</update>

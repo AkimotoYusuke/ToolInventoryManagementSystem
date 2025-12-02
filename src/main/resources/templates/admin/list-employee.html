@@ -23,6 +23,7 @@
             <tr>
               <th>ログインID</th>
               <th>氏名</th>
+			  <th>電話番号</th>
               <th>権限</th>
               <th>編集</th>
               <th>削除</th>
@@ -32,6 +33,7 @@
             <tr th:each="employee : ${employeeList}">
               <td>[[${employee.loginId}]]</td>
               <td>[[${employee.name}]]</td>
+			  <td>[[${employee.phone}]]</td>
               <td>[[${employee.authorityType.name}]]</td>
               <td><a th:href="@{/admin/employee/edit/{id}(id=${employee.id})}" class="btn btn-warning btn-sm">編集</a></td>
               <td>
