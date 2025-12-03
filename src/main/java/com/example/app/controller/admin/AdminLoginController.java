@@ -65,7 +65,6 @@ public class AdminLoginController {
 	@GetMapping("/logout")
 	public String logout(
 			RedirectAttributes redirectAttributes) {
-//		session.removeAttribute("loginStatus");
 		session.invalidate();
 		redirectAttributes.addFlashAttribute("message", "ログアウトしました。");
 		return "redirect:/admin/login";
