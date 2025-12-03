@@ -40,7 +40,7 @@ public class ApplicationConfig implements WebMvcConfigurer {
  	}
 
     @Bean
-    FilterRegistrationBean<EmployeeAuthFilter> studentAuthFilter() {
+    FilterRegistrationBean<EmployeeAuthFilter> employeeAuthFilter() {
  		var bean = new FilterRegistrationBean<EmployeeAuthFilter>(new EmployeeAuthFilter());
  		bean.addUrlPatterns("/");
  		bean.addUrlPatterns("/rental/*");
