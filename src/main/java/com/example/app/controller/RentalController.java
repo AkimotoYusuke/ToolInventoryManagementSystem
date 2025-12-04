@@ -109,9 +109,9 @@ public class RentalController {
 
 		int previousPage = (int) session.getAttribute("pageTool");
 
-		// 予約しようとしている工具が予約・出庫されていないか確認
+		// 予約しようとしている工具が予約・出庫・削除されていないか確認
 		if (!toolService.hasReservation(toolId)) {
-			redirectAttributes.addFlashAttribute("message", "工具は予約済か出庫済、または削除済みです");
+			redirectAttributes.addFlashAttribute("errorMessage", "工具は予約済か出庫済、または削除済みです");
 			
 			// 戻るページ(元のページ)
 			int pageTool = (int)session.getAttribute("pageTool");
