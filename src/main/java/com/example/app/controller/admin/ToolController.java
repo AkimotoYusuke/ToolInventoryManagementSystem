@@ -52,7 +52,6 @@ public class ToolController {
 		}
 		
 		// 依頼済のリストページ
-//		model.addAttribute("shippingRequestList", shippingRecordService.getShippingRecordListIsShippingRequest());
 		int totalPagesRequested = shippingRecordService.getShippingRequestTotalPages(NUM_PER_PAGE);
 		model.addAttribute("totalPagesRequested", totalPagesRequested);
 	  model.addAttribute("currentPageRequested", pageRequested);
@@ -219,26 +218,26 @@ public class ToolController {
 		return "show-tool-list";
 	}
 	
-//「出庫」ボタン
-@GetMapping("/borrow/{shippingId}")
-public String borrowTool(
-		@PathVariable("shippingId") Integer shippingId,
-		RedirectAttributes redirectAttributes) throws Exception {
-
-	//「出庫」処理を実行
-	rentalRecordService.borrowTool(shippingId);
-	redirectAttributes.addFlashAttribute("message", "出庫処理をしました。");
+	//「出庫」ボタン
+	@GetMapping("/borrow/{shippingId}")
+	public String borrowTool(
+			@PathVariable("shippingId") Integer shippingId,
+			RedirectAttributes redirectAttributes) throws Exception {
 	
-	// 出庫後に戻るページ(元のページ)
-	int pageTool = (int)session.getAttribute("pageTool");
-	// 出庫済ページは、出庫ボタンを押した対象が1ページ目に移動する為、1ページ目を表示
-	int pageShipped = 1;
-	// 出庫後に戻るページ(⇒ページ数が減って、元のページが無くなった場合は最終ページ)
-	int previousPage = (int) session.getAttribute("pageRequested");
-	int totalPages = shippingRecordService.getShippingRequestTotalPages(NUM_PER_PAGE);
-	int pageRequested = previousPage <= totalPages ? previousPage : totalPages;
-	return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageRequested=" + pageRequested;
-}
+		//「出庫」処理を実行
+		rentalRecordService.borrowTool(shippingId);
+		redirectAttributes.addFlashAttribute("message", "出庫処理をしました。");
+		
+		// 出庫後に戻るページ(元のページ)
+		int pageTool = (int)session.getAttribute("pageTool");
+		// 出庫済ページは、出庫ボタンを押した対象が1ページ目に移動する為、1ページ目を表示
+		int pageShipped = 1;
+		// 出庫後に戻るページ(⇒ページ数が減って、元のページが無くなった場合は最終ページ)
+		int previousPage = (int) session.getAttribute("pageRequested");
+		int totalPages = shippingRecordService.getShippingRequestTotalPages(NUM_PER_PAGE);
+		int pageRequested = previousPage <= totalPages ? previousPage : totalPages;
+		return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageRequested=" + pageRequested;
+	}
 
 	//「入庫」ボタン
 	@GetMapping("/return/{shippingId}")

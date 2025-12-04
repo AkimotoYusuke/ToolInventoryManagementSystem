@@ -15,7 +15,7 @@ public class RentalRecord {
 	private LocalDateTime borrowedAt;
 	private LocalDateTime returnedAt;
 
-	// 入出庫記録表示用
+	// 入出庫履歴表示用の従業員名
 	private String employeeName;
 
 }
