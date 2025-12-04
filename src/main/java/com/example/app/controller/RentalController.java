@@ -73,7 +73,6 @@ public class RentalController {
 		model.addAttribute("shippingRecord", shippingRecordService.getShippingRecordByEmployeeId(loginStatus.getId()));
 		
 		// 現在の予約済工具のリスト
-//		List<Tool> reservedToolList = toolService.getReservedToolList(loginStatus.getId());
 		List<Tool> reservedToolList = toolService.getLimitedReservedToolList(pageReserved, NUM_PER_PAGE, loginStatus.getId());
 		
 		model.addAttribute("reservedList", reservedToolList);

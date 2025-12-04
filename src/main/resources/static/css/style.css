@@ -5,7 +5,7 @@
   font-size: 0.9rem;
 }
 
-
+/* ログインフォーム */
 .form-signin {
   width: 100%;
   max-width: 330px;
@@ -33,12 +33,12 @@
   border-top-right-radius: 0;
 }
 
-
+/* 工具の追加・編集 */
 label.detailInfo {
     display: block;
 }
 
-
+/* 工具入出庫依頼 */
 .shippingInfo {
 	border: 1px solid rgb(192, 192, 192);
 	padding: 5px;
