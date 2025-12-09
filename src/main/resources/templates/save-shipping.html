@@ -75,7 +75,7 @@
 		
 		<script>
 		  window.addEventListener('DOMContentLoaded', () => {
-		    const today = new Date().toISOString().split('T')[0];
+		    const today = new Date().toLocaleDateString('en-CA');
 
 		    const shipDate     = document.querySelector('input[name="shipDate"]');
 		    const arrivalDate  = document.querySelector('input[name="arrivalDate"]');
