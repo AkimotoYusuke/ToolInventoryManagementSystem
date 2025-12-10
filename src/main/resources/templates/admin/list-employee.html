@@ -37,7 +37,7 @@
               <td>[[${employee.authorityType.name}]]</td>
               <td><a th:href="@{/admin/employee/edit/{id}(id=${employee.id})}" class="btn btn-warning btn-sm">編集</a></td>
               <td>
-				  <a th:if="${(employee.id == session.loginStatus.id)}">ログイン中の管理者は削除不可</a>
+				  <a th:if="${(employee.id == session.loginStatus.id)}">ログイン中の管理者自身は削除不可</a>
 				  <a th:if="${(employee.id != session.loginStatus.id)}" th:href="@{/admin/employee/delete/{id}(id=${employee.id})}" class="btn btn-danger btn-sm delete">削除</a>
 			  </td>
             </tr>

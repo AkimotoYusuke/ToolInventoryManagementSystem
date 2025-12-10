@@ -149,6 +149,8 @@ public class EmployeeController {
 		service.deleteEmployeeById(id);
 		
 		// 自身を削除した場合は、ログアウト
+		// ※Javascriptでログイン中の管理者自身は削除できないようにボタンを非表示にしているが、
+		// 年の為、安全対策上、下記処理を実装する
 		LoginStatus status = (LoginStatus) session.getAttribute("loginStatus");
 		Employee originalEmployee = service.getEmployeeById(id);
 		if(status.getId() == originalEmployee.getId()) {
