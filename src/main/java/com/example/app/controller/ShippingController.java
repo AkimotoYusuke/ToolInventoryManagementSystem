@@ -74,7 +74,6 @@ public class ShippingController {
 
 		LoginStatus loginStatus = (LoginStatus) session.getAttribute("loginStatus");
 		shippingRecord.setEmployeeId(loginStatus.getId());
-//		System.out.println(shippingRecord);
 		service.addShippingRecord(shippingRecord);
 		redirectAttributes.addFlashAttribute("message", "発送情報を登録しました。");
 		
