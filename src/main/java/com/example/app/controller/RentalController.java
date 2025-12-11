@@ -184,7 +184,7 @@ public class RentalController {
 	    return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageReserved=" + pageReserved;
     }
 		
-		// 現在、予約済工具のリストを取得
+		//予約済工具のリストを取得
 		List<Tool> reservedToolList = toolService.getReservedToolList(loginStatus.getId());
 		
 		//予約済工具のリストの分、「出庫依頼」処理を実行
