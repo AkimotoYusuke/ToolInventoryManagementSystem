@@ -184,11 +184,8 @@ public class RentalController {
 	    return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageReserved=" + pageReserved;
     }
 		
-		//予約済工具のリストを取得
-		List<Tool> reservedToolList = toolService.getReservedToolList(loginStatus.getId());
-		
-		//予約済工具のリストの分、「出庫依頼」処理を実行
-		rentalRecordService.borrowRequestTool(shippingId,loginStatus.getId(), reservedToolList);
+		//予約済工具リストの「出庫依頼」処理を実行
+		rentalRecordService.borrowRequestTool(shippingId,loginStatus.getId());
 		
 		redirectAttributes.addFlashAttribute("message", "出庫依頼しました。");
 		
