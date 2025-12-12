@@ -31,7 +31,7 @@
               <td>[[*{recipientAddress}]]</td>
               <td>[[*{shipDate}]]</td>
 			  <td>[[*{arrivalDate}]]</td>
-              <td><a th:href="@{/rental/toolList/{id}(id=*{id})}">[[*{unstockedTools}]]/[[*{numberOfTools}]]件</a></td>
+              <td><a th:href="@{/rental/toolList/{id}(id=*{id})}">[[*{unstockedTools}]]/[[*{numberOfTools}]]個</a></td>
 			  <td th:if="*{shippedAt == null}">出庫依頼済</td>
 			  <td th:if="*{shippedAt != null}">出庫済</td>
             </tr>
