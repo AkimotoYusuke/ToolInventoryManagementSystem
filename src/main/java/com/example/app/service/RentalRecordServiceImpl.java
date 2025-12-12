@@ -38,8 +38,12 @@ public class RentalRecordServiceImpl implements RentalRecordService {
 	}
 	
 	@Override
-	public void borrowRequestTool(int shippingRecordId, int employeeId, List<Tool> reservedToolList) throws Exception {
+	public void borrowRequestTool(int shippingRecordId, int employeeId) throws Exception {
+		// 発送履歴テーブル更新
 		shippingRecordMapper.addShippingRequest(shippingRecordId);
+		//予約済工具リストを取得
+		List<Tool> reservedToolList = rentalMapper.selectReservedByEmployeeId(employeeId);
+		// 予約済工具リスト分、入出庫履歴テーブルの新規追加と工具テーブルへの更新
 		reservedToolList.forEach(tool -> {
 			try {
 				RentalRecord rentalRecord = new RentalRecord();

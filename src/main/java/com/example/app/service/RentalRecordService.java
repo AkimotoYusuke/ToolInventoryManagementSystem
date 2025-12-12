@@ -3,7 +3,6 @@ package com.example.app.service;
 import java.util.List;
 
 import com.example.app.domain.RentalRecord;
-import com.example.app.domain.Tool;
 
 public interface RentalRecordService {
 
@@ -14,7 +13,7 @@ public interface RentalRecordService {
 	//工具をキャンセルする
 	void cancelTool(int toolId) throws Exception;
 	//工具の出庫依頼をする
-	void borrowRequestTool(int shippingRecordId, int employeeId, List<Tool> reservedToolList) throws Exception;
+	void borrowRequestTool(int shippingRecordId, int employeeId) throws Exception;
 	// 工具を出庫する
 	void borrowTool(int shippingRecordId) throws Exception;
 	// 工具を入庫する
