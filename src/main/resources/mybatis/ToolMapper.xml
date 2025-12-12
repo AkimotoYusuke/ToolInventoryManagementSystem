@@ -123,10 +123,8 @@
 	
 	<select id="selectBorrowingByShippingId" parameterType="int" resultMap="tool">
     	<include refid="selectAndJoin" />
-		LEFT JOIN rental_records
-		ON tools.rental_id = rental_records.id
 		WHERE tools.shipping_id = #{shippingId}
-		ORDER BY rental_records.borrowed_at
+		ORDER BY tools.mgmt_id
 	</select>
 
 	<select id="selectBorrowableWithOffset" resultMap="tool">
