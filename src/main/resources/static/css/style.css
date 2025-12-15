@@ -33,6 +33,11 @@
   border-top-right-radius: 0;
 }
 
+.titleLogo {
+	text-align: center;
+	margin-bottom: 10px;
+}
+
 /* 工具の追加・編集 */
 label.detailInfo {
     display: block;

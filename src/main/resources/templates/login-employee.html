@@ -1,18 +1,12 @@
 <!DOCTYPE html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-<link th:href="@{/css/style.css}" rel="stylesheet">
-<title>工具入出庫依頼</title>
-</head>
+<head th:replace="~{admin/parts/common :: html_head()}"></head>
 <body>
   <div class="container">
     <div class="row">
       <div class="col-md-6 offset-md-3 mt-4">
         <div class="text-center">
-		  <h1 class="h2 mb-4">工具入出庫管理システム</h1>
+		  <div class="titleLogo"><img th:src="@{/images/tool_inventory_management_system.png}" width="336" height="130" alt="工具入出庫管理システム"></div>
           <h1 class="h3">ログイン(工具入出庫依頼者用)</h1>
           <div class="form-signin">
             <div class="alert alert-success" th:if="${message}">[[${message}]]</div>
@@ -38,6 +32,6 @@
     </div><!-- ./row -->
   </div><!-- ./container -->
   
-  <script th:src="@{/js/bootstrap.min.js}"></script>
+  <th:block th:replace="~{admin/parts/common :: javascripts()}"></th:block>
 </body>
 </html>
