@@ -12,7 +12,7 @@
       
         <h2 class="h4">出庫依頼済・出庫済の工具</h2>
         <div th:if="${#lists.size(shippingList) < 1}" class="alert alert-primary">出庫依頼済・出庫済の工具はありません</div>
-        <table th:if="${#lists.size(shippingList) >= 1}" class="table table-bordered">
+        <table th:if="${#lists.size(shippingList) >= 1}" class="table table-bordered text-center">
           <thead>
             <tr>
 			  <th>発送番号</th>
@@ -53,7 +53,7 @@
 					<p class="rentalRequest">確定の場合、「出庫依頼」ボタンを押して工具管理センターへ連絡してください(TEL：012-345-678)　
 						<a th:href="@{/rental/request/{id}(id=*{id})}" class="btn btn-primary">出庫依頼</a>
 					</p>
-					<table class="table table-bordered shippingInfoTable">
+					<table class="table table-bordered shippingInfoTable text-center">
 					  <thead>
 					    <tr>
 						  <th>発送番号</th>
@@ -79,7 +79,7 @@
 					</table>
 				</div>
 			</div>
-			<table class="table table-bordered shippingInfoTable  mb-3">
+			<table class="table table-bordered shippingInfoTable  mb-3 text-center">
 			  <thead>
 			    <tr>
 				  <th>管理番号</th>
@@ -112,7 +112,7 @@
 			</p>
 		</form>
         <div th:if="${#lists.size(toolList) < 1}" class="alert alert-danger">対象の工具はありません</div>
-        <table th:if="${#lists.size(toolList) >= 1}"  class="table table-bordered">
+        <table th:if="${#lists.size(toolList) >= 1}"  class="table table-bordered text-center">
           <thead>
             <tr>
               <th>管理番号</th>

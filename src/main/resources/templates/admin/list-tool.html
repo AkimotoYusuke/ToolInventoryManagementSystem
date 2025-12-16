@@ -13,7 +13,7 @@
 		 
 		 <h2 class="h4">出庫済</h2>
 		 <div th:if="${#lists.size(shippedList) < 1}" class="alert alert-primary">出庫済の工具はありません</div>
-		 <table th:if="${#lists.size(shippedList) >= 1}" class="table table-bordered">
+		 <table th:if="${#lists.size(shippedList) >= 1}" class="table table-bordered text-center">
 		   <thead>
 		     <tr>
 		 	  <th>発送番号</th>
@@ -44,7 +44,7 @@
 		 
 		 <h2 class="h4">出庫依頼</h2>
 		 <div th:if="${#lists.size(shippingRequestList) < 1}" class="alert alert-primary">出庫依頼の工具はありません</div>
-		 <table th:if="${#lists.size(shippingRequestList) >= 1}" class="table table-bordered">
+		 <table th:if="${#lists.size(shippingRequestList) >= 1}" class="table table-bordered text-center">
 		   <thead>
 		     <tr>
 		 	  <th>発送番号</th>
@@ -83,7 +83,7 @@
 			</p>
 		</form>
 		<div th:if="${#lists.size(toolList) < 1}" class="alert alert-danger">登録されている工具はありません</div>
-        <table  th:if="${#lists.size(toolList) >= 1}" class="table table-bordered">
+        <table  th:if="${#lists.size(toolList) >= 1}" class="table table-bordered text-center">
           <thead>
             <tr>
 			  <th>管理番号</th>
