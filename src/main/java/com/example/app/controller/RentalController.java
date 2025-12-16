@@ -78,10 +78,10 @@ public class RentalController {
 		model.addAttribute("reservedList", reservedToolList);
 		// 現在の発送リスト
 		model.addAttribute("shippingList", shippingRecordService.getLimitedShippingRecordListByEmployeeId(pageShipped, NUM_PER_PAGE, loginStatus.getId()));
-		// 貸し出し可能な工具のリスト
+		// 検索キーワード込みの貸し出し可能な工具のリスト
 		model.addAttribute("toolList", toolService.getKeywordBorrowableToolListPerPage(pageTool, NUM_PER_PAGE, keyword));
 		
-		// 検索ワード
+		// 検索キーワード
 		model.addAttribute("keyword", keyword);
 		
 		return "list-rental";
@@ -125,7 +125,9 @@ public class RentalController {
 		redirectAttributes.addFlashAttribute("message", "予約しました。");
 		
 		// 予約後に戻るページ(⇒ページ数が減って、元のページが無くなった場合は最終ページ)
-		int totalPages = toolService.getTotalBorrowableToolPages(NUM_PER_PAGE);
+		String keyword;
+		keyword = (String) session.getAttribute("keyword");
+		int totalPages = toolService.getKeywordTotalBorrowableToolPages(NUM_PER_PAGE, keyword);
 		int pageTool = previousPage <= totalPages ? previousPage : totalPages;
 		// 出庫依頼済・出庫済ページは元のページ
 		int pageShipped = (int)session.getAttribute("pageShipped");

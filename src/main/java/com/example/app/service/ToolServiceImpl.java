@@ -21,11 +21,6 @@ public class ToolServiceImpl implements ToolService {
 	private final MakerTypeMapper makerTypeMapper;
 
 	@Override
-	public List<Tool> getToolList() throws Exception {
-		return toolMapper.selectAll();
-	}
-
-	@Override
 	public Tool getToolById(Integer id) throws Exception {
 		return toolMapper.selectById(id);
 	}
@@ -51,32 +46,9 @@ public class ToolServiceImpl implements ToolService {
 	}
 	
 	@Override
-	public boolean isExsitingTool(String mgmtId) throws Exception {
-		Tool tool = toolMapper.selectByMgmtId(mgmtId);
-		if(tool != null) {
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
-	public List<Tool> getToolListPerPage(int page, int numPerPage) throws Exception {
-		int offset = numPerPage * (page - 1);
-		return toolMapper.selectLimited(offset, numPerPage);
-	}
-	
-	@Override
 	public List<Tool> getKeywordToolListPerPage(int page, int numPerPage, String keyword) throws Exception {
 		int offset = numPerPage * (page - 1);
 		return toolMapper.selectKeywordLimited(offset, numPerPage, keyword);
-	}
-
-	@Override
-	public int getTotalPages(int numPerPage) throws Exception {
-		long count = toolMapper.countActive();
-		int totalPages = (int) Math.ceil((double) count / numPerPage);
-		return totalPages > 0 ? totalPages : 1; // totalPagesが0ページ以下だったら、1ページにする
 	}
 	
 	@Override
@@ -87,15 +59,10 @@ public class ToolServiceImpl implements ToolService {
 	}
 	
 	@Override
-	public int getTargetIdPage(int numPerPage, int toolId) throws Exception {
-		long count = toolMapper.countActiveAddedId(toolId);
+	public int getKeywordTargetIdPage(int numPerPage, int toolId, String keyword) throws Exception {
+		long count = toolMapper.countKeywordActiveAddedId(toolId, keyword);
 		int targetPage = (int) Math.ceil((double) count / numPerPage);
 		return targetPage > 0 ? targetPage : 1; // targetPageが0ページ以下だったら、1ページにする
-	}
-	
-	@Override
-	public List<Tool> getReservedToolList(int employeeId) throws Exception {
-		return toolMapper.selectReservedByEmployeeId(employeeId);
 	}
 	
 	@Override
@@ -115,24 +82,11 @@ public class ToolServiceImpl implements ToolService {
 	public List<Tool> getBorrowingToolList(int shippingId) throws Exception {
 		return toolMapper.selectBorrowingByShippingId(shippingId);
 	}
-
-	@Override
-	public List<Tool> getBorrowableToolListPerPage(int page, int numPerPage) throws Exception {
-		int offset = numPerPage * (page - 1);
-		return toolMapper.selectBorrowableWithOffset(offset, numPerPage);
-	}
 	
 	@Override
 	public List<Tool> getKeywordBorrowableToolListPerPage(int page, int numPerPage, String keyword) throws Exception {
 		int offset = numPerPage * (page - 1);
 		return toolMapper.selectKeywordBorrowableWithOffset(offset, numPerPage, keyword);
-	}
-
-	@Override
-	public int getTotalBorrowableToolPages(int numPerPage) throws Exception {
-		long count = toolMapper.countBorrowable();
-		int totalPages = (int) Math.ceil((double) count / numPerPage);
-		return totalPages > 0 ? totalPages : 1; // totalPagesが0ページ以下だったら、1ページにする
 	}
 	
 	@Override

@@ -90,14 +90,21 @@
         AND tools.status = 'ACT'
 	</select>
 	
-	<select id="countActiveAddedId" parameterType="int" resultType="long">
+	<select id="countKeywordActiveAddedId" resultType="long">
 		SELECT pos
 		FROM (
 		    SELECT
-		        id,
-		        ROW_NUMBER() OVER (ORDER BY mgmt_id) AS pos
+		        tools.id,
+		        ROW_NUMBER() OVER (ORDER BY tools.mgmt_id) AS pos
 		    FROM tools
-		    WHERE status = 'ACT'
+            JOIN maker_types
+			ON tools.maker_type_id = maker_types.id
+		    WHERE
+            	(tools.mgmt_id like CONCAT('%', #{keyword}, '%')
+        		OR tools.name like CONCAT('%', #{keyword}, '%')
+        		OR tools.detail_info like CONCAT('%', #{keyword}, '%')
+        		OR maker_types.name like CONCAT('%', #{keyword}, '%'))
+        		AND tools.status = 'ACT'
 		) AS table_rebuild
 		WHERE id = #{id}
 	</select>
