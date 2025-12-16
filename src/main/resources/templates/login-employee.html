@@ -4,9 +4,9 @@
 <body>
   <div class="container">
     <div class="row">
-      <div class="col-md-6 offset-md-3 mt-4">
+      <div class="col-12 col-md-6 mx-auto mt-4">
         <div class="text-center">
-		  <div class="titleLogo"><img th:src="@{/images/tool_inventory_management_system.png}" width="336" height="130" alt="工具入出庫管理システム"></div>
+		  <div class="titleLogo d-flex justify-content-center"><img th:src="@{/images/tool_inventory_management_system.png}" class="img-fluid" alt="工具入出庫管理システム"></div>
           <h1 class="h3">ログイン(工具入出庫依頼者用)</h1>
           <div class="form-signin">
             <div class="alert alert-success" th:if="${message}">[[${message}]]</div>
