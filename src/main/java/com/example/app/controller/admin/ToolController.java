@@ -122,7 +122,9 @@ public class ToolController {
 		redirectAttributes.addFlashAttribute("message", "工具を追加しました。");
 		
 		// 工具追加後に追加した対象ページに移動
-		int pageTool = service.getTargetIdPage(NUM_PER_PAGE, toolId);
+		String keyword;
+		keyword = (String) session.getAttribute("keyword");
+		int pageTool = service.getKeywordTargetIdPage(NUM_PER_PAGE, toolId, keyword);
 		// 追加後に戻るページ(元のページ)
 		int pageShipped = (int)session.getAttribute("pageShipped");
 		int pageRequested = (int)session.getAttribute("pageRequested");
@@ -183,9 +185,12 @@ public class ToolController {
 		service.deleteToolById(id);
 		redirectAttributes.addFlashAttribute("message", "工具を削除しました。");
 		
+		String keyword;
+		keyword = (String) session.getAttribute("keyword");
+		
 		// 削除後に戻るページ(⇒ページ数が減って、元のページが無くなった場合は最終ページ)
 		int previousPage = (int) session.getAttribute("pageTool");
-		int totalPages = service.getTotalPages(NUM_PER_PAGE);
+		int totalPages = service.getKeywordTotalPages(NUM_PER_PAGE, keyword);
 		int pageTool = previousPage <= totalPages ? previousPage : totalPages;
 		// 削除後に戻るページ(元のページ)
 		int pageShipped = (int)session.getAttribute("pageShipped");

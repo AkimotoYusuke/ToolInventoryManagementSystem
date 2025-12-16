@@ -20,7 +20,7 @@ public interface ToolMapper {
 	List<Tool> selectKeywordLimited(@Param("offset") int offset, @Param("num") int num, @Param("keyword") String keyword) throws Exception;
     long countActive() throws Exception;
     long countKeywordActive(String keyword) throws Exception;
-    long countActiveAddedId(int id) throws Exception;
+    long countKeywordActiveAddedId(@Param("id") int id, @Param("keyword") String keyword) throws Exception;
     
     // ある依頼者の予約済のリストを取得
     List<Tool> selectReservedByEmployeeId(int employeeId) throws Exception;

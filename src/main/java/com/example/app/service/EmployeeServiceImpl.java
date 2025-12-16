@@ -22,11 +22,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 	private final AuthorityTypeMapper authorityTypeMapper;
 
 	@Override
-	public List<Employee> getEmployeeList() throws Exception {
-		return employeeMapper.selectAll();
-	}
-
-	@Override
 	public Employee getEmployeeById(Integer id) throws Exception {
 		return employeeMapper.selectById(id);
 	}
@@ -60,16 +55,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 		String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 		employee.setLoginPass(hashedPassword);
 		employeeMapper.update(employee);
-	}
-
-	@Override
-	public boolean isExsitingEmployee(String loginId) throws Exception {
-		Employee employee = employeeMapper.selectByLoginId(loginId);
-		if(employee != null) {
-			return true;
-		}
-
-		return false;
 	}
 
 	@Override

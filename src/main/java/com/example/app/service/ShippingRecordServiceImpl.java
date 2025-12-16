@@ -16,11 +16,6 @@ import lombok.RequiredArgsConstructor;
 public class ShippingRecordServiceImpl implements ShippingRecordService {
 
 	private final ShippingRecordMapper shippingRecordMapper;
-
-	@Override
-	public List<ShippingRecord> getShippingRecordListByEmployeeId(Integer employeeId) throws Exception {
-		return shippingRecordMapper.selectAllByEmployeeId(employeeId);
-	}
 	
 	@Override
 	public List<ShippingRecord> getLimitedShippingRecordListByEmployeeId(int page, int numPerPage, Integer employeeId) throws Exception {
@@ -33,11 +28,6 @@ public class ShippingRecordServiceImpl implements ShippingRecordService {
 		long count = shippingRecordMapper.countShippingActive(employeeId);
 		int totalPages = (int) Math.ceil((double) count / numPerPage);
 		return totalPages > 0 ? totalPages : 1; // totalPagesが0ページ以下だったら、1ページにする
-	}
-	
-	@Override
-	public List<ShippingRecord> getShippingRecordListIsShippingRequest() throws Exception {
-		return shippingRecordMapper.selectAllIsShippingRequest();
 	}
 	
 	@Override
