@@ -76,8 +76,8 @@
 		<h2 class="h4">工具リスト</h2>
 		<form action="/admin/tool/selectKeyword">
 			<p>
-				キーワード：<input type="text" name="keyword" th:value="${keyword}"/>
-				<input type="submit" value="検索"/>　　
+				キーワード：<input type="text" name="keyword" th:value="${keyword}" class="mb-1"/>
+				<input type="submit" value="検索" class="mb-1"/>　　
 				<a th:href="@{/admin/tool/add}" class="btn btn-primary">工具の追加</a>
 				<a th:href="@{/admin/employee/list}" class="btn btn-light">従業員リスト</a>
 			</p>
