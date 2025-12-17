@@ -101,18 +101,4 @@ public class RentalRecordServiceImpl implements RentalRecordService {
 		return true;
 	}
 
-	@Override
-	public boolean byAuthenticatedEmployee(int employeeId, int toolId) throws Exception {
-		RentalRecord record = rentalRecordMapper.selectBorrowingRecordByToolId(toolId);
-		if(record == null) {
-			return false;
-		}
-
-		if(!record.getEmployeeId().equals(employeeId)) {
-			return false;
-		}
-
-		return true;
-	}
-
 }

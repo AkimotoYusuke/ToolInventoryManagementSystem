@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 public class ShippingRecord {
 	
-	private int id;
+	private Integer id;
 	
 	@NotBlank
 	@Size(max = 30)
