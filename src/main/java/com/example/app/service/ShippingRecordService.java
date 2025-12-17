@@ -10,7 +10,6 @@ public interface ShippingRecordService {
 	int getShippingTotalPages(int numPerPage,  Integer employeeId) throws Exception;
 	List<ShippingRecord> getLimitedShippingRecordListIsShippingRequest(int page, int numPerPage) throws Exception;
 	int getShippingRequestTotalPages(int numPerPage) throws Exception;
-	List<ShippingRecord> getShippingRecordListIsShipped() throws Exception;
 	ShippingRecord getShippingRecordById(Integer id) throws Exception;
 	ShippingRecord getShippingRecordByEmployeeId(Integer employeeId) throws Exception;
 	void deleteShippingRecordById(Integer id) throws Exception;

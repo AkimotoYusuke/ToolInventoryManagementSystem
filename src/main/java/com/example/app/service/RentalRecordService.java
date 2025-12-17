@@ -6,7 +6,7 @@ import com.example.app.domain.RentalRecord;
 
 public interface RentalRecordService {
 
-	// ある工具の最新の出庫履歴
+	// 工具の最新の出庫履歴
 	List<RentalRecord> getLatestRentalRecordListByToolId(int toolId, int num) throws Exception;
   //工具を予約する
 	void reserveTool(int employeeId, int toolId) throws Exception;
@@ -22,7 +22,5 @@ public interface RentalRecordService {
 	boolean onlyOneReturnTool(int toolId, int shippingRecordId) throws Exception;
 	//本人によるキャンセルか確認する
 	boolean cancelByAuthenticatedEmployee(int employeeId, int toolId) throws Exception;
-	// 本人による返却か確認する
-	boolean byAuthenticatedEmployee(int employeeId, int toolId) throws Exception;
 
 }
