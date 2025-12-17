@@ -318,4 +318,12 @@ public class ToolController {
 		return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageRequested=" + pageRequested;
 	}
 	
+	//ヘッダーのタイトルからトップ画面へ遷移
+	@GetMapping("/header")
+	public String header() {
+		// セッションのキーワード検索削除
+		session.removeAttribute("keyword");
+		return "redirect:/admin/tool/list";
+	}
+	
 }

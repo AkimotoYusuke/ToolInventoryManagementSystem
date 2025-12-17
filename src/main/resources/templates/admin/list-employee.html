@@ -11,7 +11,7 @@
       <div class="col-md-12">
         <p>
           <a th:href="@{/admin/employee/add}" class="btn btn-primary">従業員の追加</a>
-          <a th:href="@{/admin/tool/list}" class="btn btn-light">工具リスト</a>
+          <a th:href="@{/admin/tool/list(pageTool=${session.pageTool}, pageShipped=${session.pageShipped}, pageRequested=${session.pageRequested})}" class="btn btn-light">工具リスト</a>
         </p>
         
         <div class="alert alert-success" th:if="${message}">
