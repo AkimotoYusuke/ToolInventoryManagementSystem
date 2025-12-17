@@ -79,7 +79,7 @@
 				キーワード：<input type="text" name="keyword" th:value="${keyword}" class="mb-1"/>
 				<input type="submit" value="検索" class="mb-1"/>　　
 				<a th:href="@{/admin/tool/add}" class="btn btn-primary">工具の追加</a>
-				<a th:href="@{/admin/employee/list}" class="btn btn-light">従業員リスト</a>
+				<a th:href="@{/admin/employee/list(page=${session.page})}" class="btn btn-light">従業員リスト</a>
 			</p>
 		</form>
 		<div th:if="${#lists.size(toolList) < 1}" class="alert alert-danger">登録されている工具はありません</div>

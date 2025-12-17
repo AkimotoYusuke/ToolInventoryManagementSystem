@@ -216,5 +216,13 @@ public class RentalController {
 		int pageReserved = (int)session.getAttribute("pageReserved");
 		return "redirect:/rental?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageReserved=" + pageReserved;
 	}
+	
+	// ヘッダーのタイトルからトップ画面へ遷移
+	@GetMapping("/rental/header")
+	public String header() {
+		// セッションのキーワード検索削除
+		session.removeAttribute("keyword");
+		return "redirect:/rental";
+	}
 
 }
