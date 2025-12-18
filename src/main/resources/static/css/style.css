@@ -58,7 +58,7 @@ label.detailInfo {
 	margin-bottom: 0;
 }
 
-.shippingInfoTable td {
+td {
   word-break: break-all;   /* 強制改行 */
   white-space: normal;
 }
