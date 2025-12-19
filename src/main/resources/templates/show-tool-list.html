@@ -22,30 +22,32 @@
 			<div class="alert alert-success" th:if="${message}">
 				[[${message}]]
 			</div>
-			<table class="table table-bordered text-center">
-			  <thead>
-			    <tr>
-				  <th>管理番号</th>
-			      <th>品名</th>
-			      <th>詳細情報</th>
-			      <th>メーカー</th>
-				  <th:block th:if="${(session.loginStatus.authority == 100) && (shippingRecord.shippedAt != null)}">
-					<th>入庫</th>
-				  </th:block>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <tr th:each="tool : ${borrowingList}">
-				  <td>[[${tool.mgmtId}]]</td>
-			      <td>[[${tool.name}]]</td>
-			      <td>[[${tool.detailInfo}]]</td>
-			      <td>[[${tool.makerType.name}]]</td>
-				  <th:block th:if="${(session.loginStatus.authority == 100) && (shippingRecord.shippedAt != null)}">
-				  	<td><a th:href="@{/admin/tool/onlyOneReturn/{id}/{shippingId}(id=${tool.id}, shippingId=${shippingId})}" class="btn btn-danger btn-sm">入庫</a></td>
-				  </th:block>
-			    </tr>
-			  </tbody>
-			</table>
+			<div class="table-responsive">
+				<table class="table table-bordered text-center">
+				  <thead>
+				    <tr>
+					  <th>管理番号</th>
+				      <th>品名</th>
+				      <th>詳細情報</th>
+				      <th>メーカー</th>
+					  <th:block th:if="${(session.loginStatus.authority == 100) && (shippingRecord.shippedAt != null)}">
+						<th>入庫</th>
+					  </th:block>
+				    </tr>
+				  </thead>
+				  <tbody>
+				    <tr th:each="tool : ${borrowingList}">
+					  <td>[[${tool.mgmtId}]]</td>
+				      <td>[[${tool.name}]]</td>
+				      <td>[[${tool.detailInfo}]]</td>
+				      <td>[[${tool.makerType.name}]]</td>
+					  <th:block th:if="${(session.loginStatus.authority == 100) && (shippingRecord.shippedAt != null)}">
+					  	<td><a th:href="@{/admin/tool/onlyOneReturn/{id}/{shippingId}(id=${tool.id}, shippingId=${shippingId})}" class="btn btn-danger btn-sm">入庫</a></td>
+					  </th:block>
+				    </tr>
+				  </tbody>
+				</table>
+			</div>
 			
 			<p>
 			  <a th:if="${session.loginStatus.authority == 100}" th:href="@{/admin/tool/list(pageTool=${session.pageTool}, pageShipped=${session.pageShipped}, pageRequested=${session.pageRequested})}" class="btn btn-primary">トップに戻る</a>

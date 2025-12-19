@@ -188,6 +188,19 @@ public class ToolController {
 	public String delete(
 			@PathVariable Integer id,
 			RedirectAttributes redirectAttributes) throws Exception {
+		
+		// 削除しようとしている工具が予約・出庫されていないか確認
+		if (!service.hasDelete(id).equals("未予約")) {
+			String message = service.hasDelete(id);
+			redirectAttributes.addFlashAttribute("errorMessage", message);
+			
+			// 戻るページ(元のページ)
+			int pageTool = (int)session.getAttribute("pageTool");
+			int pageShipped = (int)session.getAttribute("pageShipped");
+			int pageRequested = (int)session.getAttribute("pageRequested");
+			return "redirect:/admin/tool/list?pageTool=" + pageTool + "&pageShipped=" + pageShipped + "&pageRequested=" + pageRequested;
+		}
+		
 		service.deleteToolById(id);
 		redirectAttributes.addFlashAttribute("message", "工具を削除しました。");
 		

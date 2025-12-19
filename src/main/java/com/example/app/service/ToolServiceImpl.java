@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.app.domain.Employee;
 import com.example.app.domain.MakerType;
 import com.example.app.domain.Tool;
+import com.example.app.mapper.EmployeeMapper;
 import com.example.app.mapper.MakerTypeMapper;
 import com.example.app.mapper.ToolMapper;
 
@@ -19,6 +21,7 @@ public class ToolServiceImpl implements ToolService {
 
 	private final ToolMapper toolMapper;
 	private final MakerTypeMapper makerTypeMapper;
+	private final EmployeeMapper employeeMapper;
 
 	@Override
 	public Tool getToolById(Integer id) throws Exception {
@@ -111,6 +114,25 @@ public class ToolServiceImpl implements ToolService {
 		}
 
 		return true;
+	}
+	
+	@Override
+	public String hasDelete(Integer toolId) throws Exception {
+		Tool tool = toolMapper.selectById(toolId);
+
+		if(tool.getReservedEmployeeId() != null) {
+			Integer emplyoeeId = tool.getReservedEmployeeId();
+			Employee employee = employeeMapper.selectById(emplyoeeId);
+			return employee.getName() + "さんによって予約済の為、削除不可です";
+		}
+		else if(tool.getRequestedEmployeeId() != null) {
+			Integer emplyoeeId = tool.getRequestedEmployeeId();
+			Employee employee = employeeMapper.selectById(emplyoeeId);
+			return employee.getName() + "さんによって出庫依頼済の為、削除不可です";
+		}
+		else {
+			return "未予約";
+		}
 	}
 
 	@Override
