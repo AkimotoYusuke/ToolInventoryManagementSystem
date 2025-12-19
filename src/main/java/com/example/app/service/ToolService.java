@@ -28,6 +28,8 @@ public interface ToolService {
     int getKeywordTotalBorrowableToolPages(int numPerPage, String keyword) throws Exception;
     // 工具が予約可能か否か判別
     boolean hasReservation(Integer toolId) throws Exception;
+    // 工具の削除可能か否か判別
+    String hasDelete(Integer toolId) throws Exception;
 
 	List<MakerType> getMakerTypeList() throws Exception;
 
